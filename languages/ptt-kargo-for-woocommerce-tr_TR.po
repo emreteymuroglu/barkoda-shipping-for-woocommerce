@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-28T20:35:19+00:00\n"
+"POT-Creation-Date: 2026-09-28T20:40:50+00:00\n"
 "PO-Revision-Date: 2026-09-28 00:00+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ptt-kargo-for-woocommerce\n"
@@ -461,31 +461,36 @@ msgstr "Gönderi Varsayılanları"
 msgid "Payment"
 msgstr "Ödeme"
 
-#: admin/views/settings.php:49
+#: admin/views/settings.php:40
+#: admin/views/settings/customer.php:43
+msgid "Customer Notices"
+msgstr "Müşteri Bildirimleri"
+
+#: admin/views/settings.php:53
 msgid "PTT Kargo for WooCommerce — Settings"
 msgstr "WC PTT Kargo — Ayarlar"
 
-#: admin/views/settings.php:78
+#: admin/views/settings.php:82
 msgid "Save Settings"
 msgstr "Ayarları Kaydet"
 
-#: admin/views/settings.php:83
+#: admin/views/settings.php:87
 msgid "Label Preview"
 msgstr "Etiket Önizleme"
 
-#: admin/views/settings.php:87
+#: admin/views/settings.php:91
 msgid "Live Label Preview"
 msgstr "Canlı Etiket Önizleme"
 
-#: admin/views/settings.php:89
+#: admin/views/settings.php:93
 msgid "The preview refreshes automatically as you change the form."
 msgstr "Form alanları değiştikçe önizleme otomatik yenilenir."
 
-#: admin/views/settings.php:104
+#: admin/views/settings.php:108
 msgid "Label preview"
 msgstr "Etiket önizleme"
 
-#: admin/views/settings.php:108
+#: admin/views/settings.php:112
 msgid "⚠ Rendered with sample data — the order details are placeholders."
 msgstr "⚠ Örnek veriyle render — sipariş bilgileri yer tutucudur."
 
@@ -598,6 +603,46 @@ msgstr "Bağlantıyı Test Et"
 #: admin/views/settings/connection.php:48
 msgid "Sends a sample query to the PTT services using the details above. Works before saving too."
 msgstr "Yukarıdaki bilgilerle PTT servislerine örnek bir sorgu atar. Kaydetmeden önce de çalışır."
+
+#: admin/views/settings/customer.php:45
+msgid "Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT."
+msgstr "Gönderi oluşturulduktan sonra müşteriye takip numarasını ve takip bağlantısını gösterir. PTT'ye gönderilmemiş siparişlerde hiçbir şey görünmez."
+
+#: admin/views/settings/customer.php:50
+msgid "Customer Tracking"
+msgstr "Müşteri Takibi"
+
+#: admin/views/settings/customer.php:54
+msgid "Show tracking details to customers"
+msgstr "Takip bilgilerini müşterilere göster"
+
+#: admin/views/settings/customer.php:57
+msgid "Turn this off to keep tracking visible only to store administrators."
+msgstr "Kapatırsan takip bilgisi yalnızca mağaza yöneticilerine görünür."
+
+#: admin/views/settings/customer.php:63
+msgid "Include in Emails"
+msgstr "E-postalara Ekle"
+
+#: admin/views/settings/customer.php:67
+msgid "No WooCommerce customer emails were found."
+msgstr "WooCommerce müşteri e-postası bulunamadı."
+
+#: admin/views/settings/customer.php:78
+msgid "Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email."
+msgstr "Takip bilgisi seçilen e-postalara eklenir. Mağazanın kargo sonrası gönderdiği e-postayı seç; bu genelde tamamlanan sipariş e-postasıdır."
+
+#: admin/views/settings/customer.php:85
+msgid "My Account Page"
+msgstr "Hesabım Sayfası"
+
+#: admin/views/settings/customer.php:89
+msgid "Show tracking on the customer's order detail page"
+msgstr "Müşterinin sipariş detay sayfasında takip bilgisini göster"
+
+#: admin/views/settings/customer.php:96
+msgid "Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed."
+msgstr "E-postalar WordPress üzerinden gönderilir; mağazanın kullandığı SMTP eklentisi bunları otomatik olarak iletir. Ek ayar gerekmez."
 
 #: admin/views/settings/defaults.php:9
 msgid "PTT requires a weight and volumetric weight on every shipment. The sources below control the auto-compute behaviour; you can override them per order in the Ship popup."
@@ -1131,6 +1176,7 @@ msgid "Order ID: "
 msgstr "Sipariş ID: "
 
 #: includes/class-admin-page.php:200
+#: includes/class-customer-tracking.php:134
 msgid "Shipment Tracking"
 msgstr "Gönderi Takibi"
 
@@ -1270,6 +1316,20 @@ msgstr "Drop point bilgisi alınamadı."
 #: includes/class-admin-page.php:739
 msgid "This order has no barcode or reference number to track."
 msgstr "Bu siparişte takip edilebilecek barkod ya da referans yok."
+
+#: includes/class-customer-tracking.php:135
+msgid "Tracking number:"
+msgstr "Takip numarası:"
+
+#. translators: %d: number of packages in the shipment
+#: includes/class-customer-tracking.php:173
+#, php-format
+msgid "This order ships as %d packages:"
+msgstr "Bu sipariş %d parça halinde gönderiliyor:"
+
+#: includes/class-customer-tracking.php:182
+msgid "Track your shipment"
+msgstr "Gönderini takip et"
 
 #: includes/class-label.php:33
 #: includes/class-label.php:176
@@ -1441,16 +1501,16 @@ msgid "The barcode is not in the PTT system yet, or has not been processed."
 msgstr "Barkod PTT sisteminde bulunamadı veya henüz işlem görmedi."
 
 #. translators: 1: prefix length, 2: range end length, 3: combined length
-#: includes/class-settings.php:226
+#: includes/class-settings.php:233
 #, php-format
 msgid "Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit."
 msgstr "Barkod aralığı geçersiz: prefix (%1$d hane) + bitiş (%2$d hane) toplamı 12 olmalı, şu an %3$d. PTT size 12-haneli aralık tahsis eder (13. hane otomatik check digit)."
 
-#: includes/class-settings.php:233
+#: includes/class-settings.php:240
 msgid "The barcode range start and end must have the same number of digits."
 msgstr "Barkod aralığı başlangıç ve bitiş aynı hane sayısında olmalı."
 
-#: includes/class-settings.php:236
+#: includes/class-settings.php:243
 msgid "The barcode range start cannot be greater than the end."
 msgstr "Barkod aralığı başlangıcı bitişten büyük olamaz."
 
@@ -1468,6 +1528,6 @@ msgstr "PTT Kargo: Toplu Etiket Bas"
 msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
 msgstr "PTT Kargo bulk: %1$d gönderildi, %2$d atlandı (zaten barkodlu), %3$d hata."
 
-#: ptt-kargo-for-woocommerce.php:85
+#: ptt-kargo-for-woocommerce.php:86
 msgid "PTT Kargo for WooCommerce requires WooCommerce to be installed and active."
 msgstr "WC PTT Kargo eklentisi için WooCommerce gereklidir."

@@ -16,6 +16,7 @@ final class Plugin {
 	private $admin_page;
 	private $label;
 	private $wc_integration;
+	private $customer_tracking;
 
 	public static function instance() {
 		if ( self::$instance === null ) {
@@ -32,6 +33,8 @@ final class Plugin {
 		$this->label          = new Label( $this->settings );
 		$this->admin_page     = new Admin_Page( $this->settings, $this->orders, $this->barcode, $this->client, $this->label );
 		$this->wc_integration = new WC_Integration( $this->settings, $this->orders, $this->barcode, $this->client, $this->label );
+
+		$this->customer_tracking = new Customer_Tracking( $this->settings, $this->orders );
 	}
 
 	public function boot() {
@@ -43,6 +46,7 @@ final class Plugin {
 		$this->admin_page->register();
 		$this->label->register();
 		$this->wc_integration->register();
+		$this->customer_tracking->register();
 	}
 
 	public static function on_activation() {

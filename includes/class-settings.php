@@ -71,6 +71,12 @@ final class Settings {
 
 			'order_statuses'            => [ 'processing', 'on-hold' ],
 
+			// Customer-facing tracking: show the barcode and tracking link in WooCommerce
+			// emails and on the My Account order page once a shipment exists.
+			'customer_tracking'         => 1,
+			'customer_tracking_emails'  => [ 'customer_completed_order' ],
+			'customer_tracking_account' => 1,
+
 			// Label appearance
 			'label_logo_url'               => '',
 			'label_header_title'           => '',
@@ -172,6 +178,7 @@ final class Settings {
 			'products'   => [ 'urun_idler', 'order_statuses' ],
 			'defaults'   => [ 'varsayilan_agirlik', 'varsayilan_desi', 'ekhizmet', 'weight_source', 'dimensions_source' ],
 			'payment'    => [ 'cod_payment_methods', 'cod_extra_service_code', 'insurance_extra_service_code' ],
+			'customer'   => [ 'customer_tracking', 'customer_tracking_emails', 'customer_tracking_account' ],
 		];
 
 		// Unknown tab: process every field, for backwards compatibility.
@@ -362,6 +369,17 @@ final class Settings {
 			if ( $clean['cod_extra_service_code'] === '' ) {
 				$clean['cod_extra_service_code'] = 'OS';
 			}
+		}
+
+		if ( $apply( 'customer_tracking' ) ) {
+			$clean['customer_tracking'] = empty( $input['customer_tracking'] ) ? 0 : 1;
+		}
+		if ( $apply( 'customer_tracking_account' ) ) {
+			$clean['customer_tracking_account'] = empty( $input['customer_tracking_account'] ) ? 0 : 1;
+		}
+		if ( $apply( 'customer_tracking_emails' ) ) {
+			$raw_mails                         = $input['customer_tracking_emails'] ?? [];
+			$clean['customer_tracking_emails'] = array_values( array_filter( array_map( 'sanitize_key', (array) $raw_mails ) ) );
 		}
 
 		if ( $apply( 'insurance_extra_service_code' ) ) {

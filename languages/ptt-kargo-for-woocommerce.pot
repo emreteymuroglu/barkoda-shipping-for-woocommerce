@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-28T20:35:19+00:00\n"
+"POT-Creation-Date: 2026-09-28T20:40:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ptt-kargo-for-woocommerce\n"
@@ -459,31 +459,36 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: admin/views/settings.php:49
+#: admin/views/settings.php:40
+#: admin/views/settings/customer.php:43
+msgid "Customer Notices"
+msgstr ""
+
+#: admin/views/settings.php:53
 msgid "PTT Kargo for WooCommerce — Settings"
 msgstr ""
 
-#: admin/views/settings.php:78
+#: admin/views/settings.php:82
 msgid "Save Settings"
 msgstr ""
 
-#: admin/views/settings.php:83
+#: admin/views/settings.php:87
 msgid "Label Preview"
 msgstr ""
 
-#: admin/views/settings.php:87
+#: admin/views/settings.php:91
 msgid "Live Label Preview"
 msgstr ""
 
-#: admin/views/settings.php:89
+#: admin/views/settings.php:93
 msgid "The preview refreshes automatically as you change the form."
 msgstr ""
 
-#: admin/views/settings.php:104
+#: admin/views/settings.php:108
 msgid "Label preview"
 msgstr ""
 
-#: admin/views/settings.php:108
+#: admin/views/settings.php:112
 msgid "⚠ Rendered with sample data — the order details are placeholders."
 msgstr ""
 
@@ -595,6 +600,46 @@ msgstr ""
 
 #: admin/views/settings/connection.php:48
 msgid "Sends a sample query to the PTT services using the details above. Works before saving too."
+msgstr ""
+
+#: admin/views/settings/customer.php:45
+msgid "Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT."
+msgstr ""
+
+#: admin/views/settings/customer.php:50
+msgid "Customer Tracking"
+msgstr ""
+
+#: admin/views/settings/customer.php:54
+msgid "Show tracking details to customers"
+msgstr ""
+
+#: admin/views/settings/customer.php:57
+msgid "Turn this off to keep tracking visible only to store administrators."
+msgstr ""
+
+#: admin/views/settings/customer.php:63
+msgid "Include in Emails"
+msgstr ""
+
+#: admin/views/settings/customer.php:67
+msgid "No WooCommerce customer emails were found."
+msgstr ""
+
+#: admin/views/settings/customer.php:78
+msgid "Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email."
+msgstr ""
+
+#: admin/views/settings/customer.php:85
+msgid "My Account Page"
+msgstr ""
+
+#: admin/views/settings/customer.php:89
+msgid "Show tracking on the customer's order detail page"
+msgstr ""
+
+#: admin/views/settings/customer.php:96
+msgid "Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed."
 msgstr ""
 
 #: admin/views/settings/defaults.php:9
@@ -1129,6 +1174,7 @@ msgid "Order ID: "
 msgstr ""
 
 #: includes/class-admin-page.php:200
+#: includes/class-customer-tracking.php:134
 msgid "Shipment Tracking"
 msgstr ""
 
@@ -1267,6 +1313,20 @@ msgstr ""
 
 #: includes/class-admin-page.php:739
 msgid "This order has no barcode or reference number to track."
+msgstr ""
+
+#: includes/class-customer-tracking.php:135
+msgid "Tracking number:"
+msgstr ""
+
+#. translators: %d: number of packages in the shipment
+#: includes/class-customer-tracking.php:173
+#, php-format
+msgid "This order ships as %d packages:"
+msgstr ""
+
+#: includes/class-customer-tracking.php:182
+msgid "Track your shipment"
 msgstr ""
 
 #: includes/class-label.php:33
@@ -1439,16 +1499,16 @@ msgid "The barcode is not in the PTT system yet, or has not been processed."
 msgstr ""
 
 #. translators: 1: prefix length, 2: range end length, 3: combined length
-#: includes/class-settings.php:226
+#: includes/class-settings.php:233
 #, php-format
 msgid "Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit."
 msgstr ""
 
-#: includes/class-settings.php:233
+#: includes/class-settings.php:240
 msgid "The barcode range start and end must have the same number of digits."
 msgstr ""
 
-#: includes/class-settings.php:236
+#: includes/class-settings.php:243
 msgid "The barcode range start cannot be greater than the end."
 msgstr ""
 
@@ -1466,6 +1526,6 @@ msgstr ""
 msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
 msgstr ""
 
-#: ptt-kargo-for-woocommerce.php:85
+#: ptt-kargo-for-woocommerce.php:86
 msgid "PTT Kargo for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""

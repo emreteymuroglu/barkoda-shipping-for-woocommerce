@@ -64,6 +64,7 @@ function ptt_kargo_wc_load_classes() {
 		'class-label.php',
 		'class-admin-page.php',
 		'class-wc-integration.php',
+		'class-customer-tracking.php',
 		'class-plugin.php',
 	];
 	foreach ( $files as $f ) {

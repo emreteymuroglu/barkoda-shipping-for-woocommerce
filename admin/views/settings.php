@@ -36,6 +36,10 @@ $tabs = [
 		'label' => __( 'Payment', 'ptt-kargo-for-woocommerce' ),
 		'icon'  => 'money-alt',
 	],
+	'customer'   => [
+		'label' => __( 'Customer Notices', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'email-alt',
+	],
 ];
 
 $current_tab = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection';
