@@ -1,13 +1,13 @@
 <?php
-namespace WC_PTT_Kargo;
+namespace PTT_Kargo_WC;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * WooCommerce siparişlerinin kargoya dahil ürün ID'lerine göre filtrelenmesi.
- * HPOS uyumlu; wc_get_orders() kullanır.
+ * Order meta, PTT field mapping and eligibility filtering.
+ * HPOS compatible: reads orders through wc_get_orders().
  */
 final class Orders {
 	public const META_BARKOD    = '_wc_ptt_kargo_barkod';
@@ -18,12 +18,12 @@ final class Orders {
 	public const META_PTT_LOG   = '_wc_ptt_kargo_last_response';
 	public const META_PTT_RAW   = '_wc_ptt_kargo_last_raw';
 	public const META_PTT_REQ   = '_wc_ptt_kargo_last_request';
-	// İptal sırasında PTT'nin barkodVeriSil/referansVeriSil çağrılarına geçilir.
+	// Passed to barkodVeriSil / referansVeriSil when a shipment is cancelled.
 	public const META_DOSYA_ADI = '_wc_ptt_kargo_dosya_adi';
-	// Hata sonrası retry'da reuse edilecek tüketilmiş barkod (PTT cevap dönmediyse veya hata aldıysa).
-	// Yeni gönderim attempt'inde bu meta varsa barcode->next() çağrılmaz, mevcut barkod tekrar kullanılır.
+	// Barcode already consumed by a failed attempt. While this meta exists a retry
+	// reuses it instead of burning a new number from the range.
 	public const META_PENDING_BARKOD = '_wc_ptt_kargo_pending_barkod';
-	// Çok parçalı (parcaliBarkod) gönderim sonrası tüm barkod listesi (JSON array).
+	// JSON array of every barcode of a multi-package (parcaliBarkod) shipment.
 	public const META_PARCA_BARKODLAR = '_wc_ptt_kargo_parca_barkodlar';
 	public const META_PARCA_ADET      = '_wc_ptt_kargo_parca_adet';
 	public const META_IRSALIYE_NO     = '_wc_ptt_kargo_irsaliye_no';
@@ -40,14 +40,16 @@ final class Orders {
 	}
 
 	/**
-	 * Kargoya aday siparişleri listeler — ayarlarda tanımlı ürün ID'lerini içeren,
-	 * seçili durumdaki (processing/on-hold vs) siparişleri döner.
+	 * Lists orders that are candidates for shipping: orders in the configured statuses
+	 * that contain at least one of the configured product ids.
 	 *
 	 * @return \WC_Order[]
 	 */
 	public function eligible_orders( int $limit = 100, string $show = 'pending' ): array {
 		$durumlar = (array) $this->settings->get( 'sipariş_durumlari', [ 'processing' ] );
-		if ( empty( $durumlar ) ) $durumlar = [ 'processing' ];
+		if ( empty( $durumlar ) ) {
+			$durumlar = [ 'processing' ];
+		}
 
 		$args = [
 			'limit'   => $limit,
@@ -60,39 +62,56 @@ final class Orders {
 		if ( $show === 'pending' ) {
 			$args['meta_query'] = [
 				'relation' => 'OR',
-				[ 'key' => self::META_STATUS, 'compare' => 'NOT EXISTS' ],
-				[ 'key' => self::META_STATUS, 'value' => self::STATUS_SENT, 'compare' => '!=' ],
+				[
+					'key'     => self::META_STATUS,
+					'compare' => 'NOT EXISTS',
+				],
+				[
+					'key'     => self::META_STATUS,
+					'value'   => self::STATUS_SENT,
+					'compare' => '!=',
+				],
 			];
 		} elseif ( $show === 'sent' ) {
 			$args['meta_query'] = [
-				[ 'key' => self::META_STATUS, 'value' => self::STATUS_SENT ],
+				[
+					'key'   => self::META_STATUS,
+					'value' => self::STATUS_SENT,
+				],
 			];
 		}
 
-		$args = apply_filters( 'wc_ptt_kargo_eligible_orders_args', $args, $show, $limit );
+		$args = apply_filters( 'ptt_kargo_wc_eligible_orders_args', $args, $show, $limit );
 
 		$orders = wc_get_orders( $args );
-		if ( empty( $orders ) ) return [];
+		if ( empty( $orders ) ) {
+			return [];
+		}
 
 		$filtered = array_values( array_filter( $orders, fn( $order ) => $this->is_eligible( $order ) ) );
-		return apply_filters( 'wc_ptt_kargo_eligible_orders', $filtered, $show, $args );
+		return apply_filters( 'ptt_kargo_wc_eligible_orders', $filtered, $show, $args );
 	}
 
 	/**
-	 * Ürün filtresi varsa sadece o ürünleri içerenler uygun; filtre boşsa tüm uygun durumdaki siparişler.
+	 * With a product filter set, only orders containing those products qualify.
+	 * With an empty filter every order in an eligible status qualifies.
 	 */
 	public function is_eligible( \WC_Order $order ): bool {
 		$product_ids = $this->settings->product_ids();
-		$result = empty( $product_ids ) ? true : $this->order_contains_products( $order, $product_ids );
-		return (bool) apply_filters( 'wc_ptt_kargo_is_eligible', $result, $order, $product_ids );
+		$result      = empty( $product_ids ) ? true : $this->order_contains_products( $order, $product_ids );
+		return (bool) apply_filters( 'ptt_kargo_wc_is_eligible', $result, $order, $product_ids );
 	}
 
 	public function order_contains_products( \WC_Order $order, array $product_ids ): bool {
-		if ( empty( $product_ids ) ) return false;
+		if ( empty( $product_ids ) ) {
+			return false;
+		}
 		foreach ( $order->get_items() as $item ) {
-			if ( ! $item instanceof \WC_Order_Item_Product ) continue;
-			$pid     = (int) $item->get_product_id();
-			$var_id  = (int) $item->get_variation_id();
+			if ( ! $item instanceof \WC_Order_Item_Product ) {
+				continue;
+			}
+			$pid    = (int) $item->get_product_id();
+			$var_id = (int) $item->get_variation_id();
 			if ( in_array( $pid, $product_ids, true ) || ( $var_id > 0 && in_array( $var_id, $product_ids, true ) ) ) {
 				return true;
 			}
@@ -101,25 +120,25 @@ final class Orders {
 	}
 
 	/**
-	 * Sipariştaki alıcı bilgilerini PTT alan adlarına map eder.
-	 * Eksik alanlar 'missing' anahtarı altında listelenir (popup için).
+	 * Maps the order's recipient data onto PTT field names.
+	 * Fields that are missing or too short are listed under 'missing' for the popup.
 	 */
 	public function to_ptt_payload( \WC_Order $order ): array {
-		$ad       = trim( $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name() );
+		$ad = trim( $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name() );
 		if ( $ad === '' ) {
 			$ad = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
 		}
 
-		$adres_1  = $order->get_shipping_address_1() ?: $order->get_billing_address_1();
-		$adres_2  = $order->get_shipping_address_2() ?: $order->get_billing_address_2();
-		$adres    = trim( $adres_1 . ( $adres_2 ? ' ' . $adres_2 : '' ) );
+		$adres_1 = $order->get_shipping_address_1() ?: $order->get_billing_address_1();
+		$adres_2 = $order->get_shipping_address_2() ?: $order->get_billing_address_2();
+		$adres   = trim( $adres_1 . ( $adres_2 ? ' ' . $adres_2 : '' ) );
 
-		$ilce     = $order->get_shipping_city() ?: $order->get_billing_city();
-		$il_kod   = $order->get_shipping_state() ?: $order->get_billing_state();
-		$il       = $this->resolve_state_name( $il_kod );
-		$posta    = $order->get_shipping_postcode() ?: $order->get_billing_postcode();
-		$tel      = $order->get_billing_phone();
-		$email    = $order->get_billing_email();
+		$ilce   = $order->get_shipping_city() ?: $order->get_billing_city();
+		$il_kod = $order->get_shipping_state() ?: $order->get_billing_state();
+		$il     = $this->resolve_state_name( $il_kod );
+		$posta  = $order->get_shipping_postcode() ?: $order->get_billing_postcode();
+		$tel    = $order->get_billing_phone();
+		$email  = $order->get_billing_email();
 
 		$tel_clean = preg_replace( '/\D/', '', (string) $tel );
 		if ( strlen( $tel_clean ) > 10 && strpos( $tel_clean, '90' ) === 0 ) {
@@ -133,11 +152,21 @@ final class Orders {
 		$desi       = $this->resolve_desi( $order, $dimensions );
 
 		$missing = [];
-		if ( mb_strlen( $ad ) < 5 )     $missing['aliciAdi']   = 'Alıcı ad soyad';
-		if ( mb_strlen( $adres ) < 5 )  $missing['aAdres']     = 'Adres';
-		if ( $il === '' )               $missing['aliciIlAdi'] = 'İl';
-		if ( $ilce === '' )             $missing['aliciIlceAdi'] = 'İlçe';
-		if ( strlen( $tel_clean ) !== 10 ) $missing['aliciSms'] = 'Telefon (10 hane)';
+		if ( mb_strlen( $ad ) < 5 ) {
+			$missing['aliciAdi'] = 'Alıcı ad soyad';
+		}
+		if ( mb_strlen( $adres ) < 5 ) {
+			$missing['aAdres'] = 'Adres';
+		}
+		if ( $il === '' ) {
+			$missing['aliciIlAdi'] = 'İl';
+		}
+		if ( $ilce === '' ) {
+			$missing['aliciIlceAdi'] = 'İlçe';
+		}
+		if ( strlen( $tel_clean ) !== 10 ) {
+			$missing['aliciSms'] = 'Telefon (10 hane)';
+		}
 
 		$fields = [
 			'aliciAdi'     => $ad,
@@ -151,11 +180,17 @@ final class Orders {
 			'ekhizmet'     => strtoupper( (string) $this->settings->get( 'ekhizmet', '' ) ),
 		];
 
-		if ( $dimensions['en'] > 0 )         $fields['en']        = $dimensions['en'];
-		if ( $dimensions['boy'] > 0 )        $fields['boy']       = $dimensions['boy'];
-		if ( $dimensions['yukseklik'] > 0 )  $fields['yukseklik'] = $dimensions['yukseklik'];
+		if ( $dimensions['en'] > 0 ) {
+			$fields['en'] = $dimensions['en'];
+		}
+		if ( $dimensions['boy'] > 0 ) {
+			$fields['boy'] = $dimensions['boy'];
+		}
+		if ( $dimensions['yukseklik'] > 0 ) {
+			$fields['yukseklik'] = $dimensions['yukseklik'];
+		}
 
-		// Posta çeki numarası: kapıda ödemeli kargolar için PTT envelope'ında <xsd:rezerve1>.
+		// Postal cheque number goes into <xsd:rezerve1> for cash-on-delivery shipments.
 		$posta_ceki = (string) $this->settings->get( 'posta_ceki_no', '' );
 		if ( $posta_ceki !== '' ) {
 			$fields['rezerve1'] = $posta_ceki;
@@ -163,7 +198,7 @@ final class Orders {
 
 		$this->apply_cod_logic( $order, $fields );
 
-		// Sigorta (Değerli Kargo) otomatik eklenmez — popup'tan manuel toggle ile deger_ucreti + DK eklenir.
+		// Insurance (Degerli Kargo) is never added automatically; the popup toggles deger_ucreti + DK.
 
 		$this->apply_iade_logic( $fields );
 
@@ -174,32 +209,38 @@ final class Orders {
 			'order_no' => $order->get_order_number(),
 			'posta'    => $posta,
 		];
-		return (array) apply_filters( 'wc_ptt_kargo_ptt_payload', $payload, $order );
+		return (array) apply_filters( 'ptt_kargo_wc_ptt_payload', $payload, $order );
 	}
 
 	/**
-	 * Sipariş ağırlığını ayarlanan kaynağa göre PTT'nin beklediği gram cinsinden döner.
-	 * - static: settings'deki varsayilan_agirlik
-	 * - wc_product: tüm line item ürünlerinin (weight × qty) toplamı; ürün ağırlığı yoksa 0 sayar
-	 * - wc_product_fallback: wc_product ile aynı; toplam 0 ise varsayilan'a düşer
+	 * Returns the order weight in grams, per the configured source:
+	 * - static:              the varsayilan_agirlik setting
+	 * - wc_product:          sum of weight x quantity over all line items, 0 when unset
+	 * - wc_product_fallback: same as wc_product, falling back to static when the total is 0
 	 */
 	public function resolve_weight( \WC_Order $order ): int {
 		$source = (string) $this->settings->get( 'weight_source', 'static' );
 		$static = max( 1, (int) $this->settings->get( 'varsayilan_agirlik', 500 ) );
 
 		if ( $source === 'static' ) {
-			return (int) apply_filters( 'wc_ptt_kargo_resolved_weight', $static, $order, $source );
+			return (int) apply_filters( 'ptt_kargo_wc_resolved_weight', $static, $order, $source );
 		}
 
 		$total_g = 0;
 		$wc_unit = function_exists( 'get_option' ) ? (string) get_option( 'woocommerce_weight_unit', 'kg' ) : 'kg';
 		foreach ( $order->get_items() as $item ) {
-			if ( ! $item instanceof \WC_Order_Item_Product ) continue;
+			if ( ! $item instanceof \WC_Order_Item_Product ) {
+				continue;
+			}
 			$product = $item->get_product();
-			if ( ! $product ) continue;
+			if ( ! $product ) {
+				continue;
+			}
 			$w = (float) $product->get_weight();
-			if ( $w <= 0 ) continue;
-			$qty = max( 1, (int) $item->get_quantity() );
+			if ( $w <= 0 ) {
+				continue;
+			}
+			$qty      = max( 1, (int) $item->get_quantity() );
 			$total_g += self::weight_to_grams( $w, $wc_unit ) * $qty;
 		}
 
@@ -209,51 +250,73 @@ final class Orders {
 			$result = $static;
 		}
 		if ( $result <= 0 ) {
-			// Hatalı 0 göndermek yerine static'e düş — PTT 0 ağırlığı reddedebilir.
+			// Fall back to static rather than send 0: PTT may reject a zero weight.
 			$result = $static;
 		}
 
-		return (int) apply_filters( 'wc_ptt_kargo_resolved_weight', $result, $order, $source );
+		return (int) apply_filters( 'ptt_kargo_wc_resolved_weight', $result, $order, $source );
 	}
 
 	/**
-	 * Sipariş kutu boyutlarını cm cinsinden ['en'=>, 'boy'=>, 'yukseklik'=>] döner.
-	 * - static: 0,0,0 (envelope'a eklenmez)
-	 * - wc_product: tek paket varsayımıyla her boyut için tüm ürünlerin max'ı alınır.
-	 *   Çoklu ürün durumunda kullanıcının popup'tan override etmesi beklenir.
+	 * Returns the box dimensions in cm as ['en' =>, 'boy' =>, 'yukseklik' =>].
+	 * - static:     0,0,0, so the fields are omitted from the envelope
+	 * - wc_product: the max of every product per axis, assuming one package. With several
+	 *               products the operator is expected to override them in the popup.
 	 */
 	public function resolve_dimensions( \WC_Order $order ): array {
 		$source = (string) $this->settings->get( 'dimensions_source', 'static' );
 
 		if ( $source !== 'wc_product' ) {
-			return apply_filters( 'wc_ptt_kargo_resolved_dimensions', [ 'en' => 0, 'boy' => 0, 'yukseklik' => 0 ], $order, $source );
+			return apply_filters(
+				'ptt_kargo_wc_resolved_dimensions',
+				[
+					'en'        => 0,
+					'boy'       => 0,
+					'yukseklik' => 0,
+				],
+				$order,
+				$source
+			);
 		}
 
-		$max_l = 0; $max_w = 0; $max_h = 0;
+		$max_l   = 0;
+		$max_w   = 0;
+		$max_h   = 0;
 		$wc_unit = function_exists( 'get_option' ) ? (string) get_option( 'woocommerce_dimension_unit', 'cm' ) : 'cm';
 		foreach ( $order->get_items() as $item ) {
-			if ( ! $item instanceof \WC_Order_Item_Product ) continue;
+			if ( ! $item instanceof \WC_Order_Item_Product ) {
+				continue;
+			}
 			$product = $item->get_product();
-			if ( ! $product ) continue;
+			if ( ! $product ) {
+				continue;
+			}
 			$l = self::length_to_cm( (float) $product->get_length(), $wc_unit );
-			$w = self::length_to_cm( (float) $product->get_width(),  $wc_unit );
+			$w = self::length_to_cm( (float) $product->get_width(), $wc_unit );
 			$h = self::length_to_cm( (float) $product->get_height(), $wc_unit );
-			if ( $l > $max_l ) $max_l = $l;
-			if ( $w > $max_w ) $max_w = $w;
-			if ( $h > $max_h ) $max_h = $h;
+			if ( $l > $max_l ) {
+				$max_l = $l;
+			}
+			if ( $w > $max_w ) {
+				$max_w = $w;
+			}
+			if ( $h > $max_h ) {
+				$max_h = $h;
+			}
 		}
 
-		// PTT boy / en / yukseklik hep numerik 1-4 hane → tamsayıya yuvarla.
+		// PTT expects 1-4 numeric digits for boy / en / yukseklik, so round to integers.
 		$dims = [
 			'en'        => (int) round( $max_w ),
 			'boy'       => (int) round( $max_l ),
 			'yukseklik' => (int) round( $max_h ),
 		];
-		return (array) apply_filters( 'wc_ptt_kargo_resolved_dimensions', $dims, $order, $source );
+		return (array) apply_filters( 'ptt_kargo_wc_resolved_dimensions', $dims, $order, $source );
 	}
 
 	/**
-	 * Desi: dimensions varsa en×boy×yükseklik/3000 formülünden hesaplanır, aksi halde varsayilan_desi.
+	 * Volumetric weight: en x boy x yukseklik / 3000 when dimensions are known,
+	 * otherwise the varsayilan_desi setting.
 	 */
 	public function resolve_desi( \WC_Order $order, array $dimensions ): int {
 		$static = max( 1, (int) $this->settings->get( 'varsayilan_desi', 1 ) );
@@ -266,28 +329,30 @@ final class Orders {
 			$calc = ( $dimensions['en'] * $dimensions['boy'] * $dimensions['yukseklik'] ) / 3000;
 			$desi = max( 1, (int) ceil( $calc ) );
 		}
-		return (int) apply_filters( 'wc_ptt_kargo_resolved_desi', $desi, $order, $dimensions, $source );
+		return (int) apply_filters( 'ptt_kargo_wc_resolved_desi', $desi, $order, $dimensions, $source );
 	}
 
 	/**
-	 * Sipariş'in WC payment method'u kapıda ödeme listesindeyse PTT alanlarını set eder:
-	 *  - odemesekli = 'UA' (Ücreti Alıcıdan)
-	 *  - odeme_sart_ucreti = sipariş toplamı (12,2 ondalık)
-	 *  - ekhizmet'e cod_extra_service_code (default 'OS') eklenir, mevcutla birleştirilir.
+	 * When the order's payment method is on the cash-on-delivery list, sets the PTT fields:
+	 *  - odemesekli = 'UA' (charge the recipient)
+	 *  - odeme_sart_ucreti = order total, 12,2 decimal
+	 *  - cod_extra_service_code (default 'OS') merged into ekhizmet
 	 *
-	 * `wc_ptt_kargo_is_cod_order` filtresi ile davranış override edilebilir.
+	 * The `ptt_kargo_wc_is_cod_order` filter can override the detection.
 	 */
 	private function apply_cod_logic( \WC_Order $order, array &$fields ): void {
 		$cod_methods = $this->settings->cod_payment_methods();
-		$is_cod = ! empty( $cod_methods ) && in_array( (string) $order->get_payment_method(), $cod_methods, true );
-		$is_cod = (bool) apply_filters( 'wc_ptt_kargo_is_cod_order', $is_cod, $order, $cod_methods );
+		$is_cod      = ! empty( $cod_methods ) && in_array( (string) $order->get_payment_method(), $cod_methods, true );
+		$is_cod      = (bool) apply_filters( 'ptt_kargo_wc_is_cod_order', $is_cod, $order, $cod_methods );
 
-		if ( ! $is_cod ) return;
+		if ( ! $is_cod ) {
+			return;
+		}
 
-		// PTT odeme_sart_ucreti: en fazla 12,2 ondalık. WC total float olarak gelir.
+		// odeme_sart_ucreti allows at most 12,2 decimals; WC totals arrive as floats.
 		$total = (float) $order->get_total();
 		if ( $total <= 0 ) {
-			// Sıfır toplamlı sipariş PTT tarafında reddeder; defansif olarak skip et.
+			// PTT rejects zero-total shipments, so skip rather than send one.
 			return;
 		}
 
@@ -301,33 +366,41 @@ final class Orders {
 	}
 
 	/**
-	 * Ek hizmet kodlarını PTT'nin beklediği formatta birleştirir: 2 harflik kodlara böl,
-	 * eklenecek kodlar yoksa ekle, alfabetik sırala (PTT doc örneği "DKUA" alfabetik).
+	 * Merges extra service codes the way PTT expects: split into two-letter codes,
+	 * de-duplicate, then sort alphabetically (the PTT sample "DKUA" is alphabetical).
 	 */
 	public static function merge_extra_service_codes( string $existing, string $add ): string {
 		$existing = strtoupper( preg_replace( '/[^A-Za-z]/', '', $existing ) );
 		$add      = strtoupper( preg_replace( '/[^A-Za-z]/', '', $add ) );
-		if ( $add === '' ) return $existing;
+		if ( $add === '' ) {
+			return $existing;
+		}
 
-		// 2 harflik kodlara böl (PTT kodları hep 2 harf: DK, OS, UA, KÖ vb.)
+		// PTT service codes are always two letters: DK, OS, UA, KO and so on.
 		$codes = [];
 		foreach ( str_split( $existing, 2 ) as $c ) {
-			if ( strlen( $c ) === 2 ) $codes[] = $c;
+			if ( strlen( $c ) === 2 ) {
+				$codes[] = $c;
+			}
 		}
 		foreach ( str_split( $add, 2 ) as $c ) {
-			if ( strlen( $c ) === 2 ) $codes[] = $c;
+			if ( strlen( $c ) === 2 ) {
+				$codes[] = $c;
+			}
 		}
 		$codes = array_unique( $codes );
-		sort( $codes ); // alfabetik
+		sort( $codes );
 		return implode( '', $codes );
 	}
 
 	/**
-	 * Settings'de "İade adresi farklı" işaretliyse PTT envelope'ına iade* alanları enjekte eder.
-	 * Eksik alanlar gönderilmez (PTT default'a, yani gönderici adresine düşer).
+	 * Injects the iade* return-address fields when "different return address" is enabled.
+	 * Empty fields are omitted so PTT falls back to the sender address.
 	 */
 	private function apply_iade_logic( array &$fields ): void {
-		if ( empty( $this->settings->get( 'iade_adresi_farkli', 0 ) ) ) return;
+		if ( empty( $this->settings->get( 'iade_adresi_farkli', 0 ) ) ) {
+			return;
+		}
 
 		$ad    = trim( (string) $this->settings->get( 'iade_ad', '' ) );
 		$adres = trim( (string) $this->settings->get( 'iade_adres', '' ) );
@@ -336,37 +409,60 @@ final class Orders {
 		$tel   = trim( (string) $this->settings->get( 'iade_tel', '' ) );
 		$email = trim( (string) $this->settings->get( 'iade_email', '' ) );
 
-		if ( $ad !== '' )    $fields['iadeAliciAdi']     = $ad;
-		if ( $adres !== '' ) $fields['iadeAAdres']       = $adres;
-		if ( $il !== '' )    $fields['iadeAliciIlAdi']   = $il;
-		if ( $ilce !== '' )  $fields['iadeAliciIlceAdi'] = $ilce;
-		if ( $tel !== '' )   $fields['iadeAliciTel']     = $tel;
-		if ( $email !== '' ) $fields['iadeAliciEmail']   = $email;
+		if ( $ad !== '' ) {
+			$fields['iadeAliciAdi'] = $ad;
+		}
+		if ( $adres !== '' ) {
+			$fields['iadeAAdres'] = $adres;
+		}
+		if ( $il !== '' ) {
+			$fields['iadeAliciIlAdi'] = $il;
+		}
+		if ( $ilce !== '' ) {
+			$fields['iadeAliciIlceAdi'] = $ilce;
+		}
+		if ( $tel !== '' ) {
+			$fields['iadeAliciTel'] = $tel;
+		}
+		if ( $email !== '' ) {
+			$fields['iadeAliciEmail'] = $email;
+		}
 	}
 
 	private static function weight_to_grams( float $value, string $unit ): float {
 		switch ( strtolower( $unit ) ) {
-			case 'g':   return $value;
-			case 'kg':  return $value * 1000.0;
-			case 'lbs': return $value * 453.59237;
-			case 'oz':  return $value * 28.349523125;
+			case 'g':
+				return $value;
+			case 'kg':
+				return $value * 1000.0;
+			case 'lbs':
+				return $value * 453.59237;
+			case 'oz':
+				return $value * 28.349523125;
 		}
-		return $value; // bilinmeyen unit'i dokunmadan dön
+		return $value; // Unknown unit: pass through untouched.
 	}
 
 	private static function length_to_cm( float $value, string $unit ): float {
 		switch ( strtolower( $unit ) ) {
-			case 'mm': return $value / 10.0;
-			case 'cm': return $value;
-			case 'm':  return $value * 100.0;
-			case 'in': return $value * 2.54;
-			case 'yd': return $value * 91.44;
+			case 'mm':
+				return $value / 10.0;
+			case 'cm':
+				return $value;
+			case 'm':
+				return $value * 100.0;
+			case 'in':
+				return $value * 2.54;
+			case 'yd':
+				return $value * 91.44;
 		}
 		return $value;
 	}
 
 	private function resolve_state_name( string $state_code ): string {
-		if ( $state_code === '' ) return '';
+		if ( $state_code === '' ) {
+			return '';
+		}
 		if ( function_exists( 'WC' ) ) {
 			$states = WC()->countries ? WC()->countries->get_states( 'TR' ) : [];
 			if ( is_array( $states ) && isset( $states[ $state_code ] ) ) {
@@ -381,19 +477,29 @@ final class Orders {
 		$order->update_meta_data( self::META_REF, $ref );
 		$order->update_meta_data( self::META_STATUS, self::STATUS_SENT );
 		$order->update_meta_data( self::META_SENT_AT, current_time( 'mysql' ) );
-		if ( $takip_url !== '' ) $order->update_meta_data( self::META_TAKIP_URL, $takip_url );
-		if ( $raw !== '' )       $order->update_meta_data( self::META_PTT_RAW, $raw );
-		if ( $request !== '' )   $order->update_meta_data( self::META_PTT_REQ, $request );
-		if ( $mesaj !== '' )     $order->update_meta_data( self::META_PTT_LOG, $mesaj );
-		if ( $dosya_adi !== '' ) $order->update_meta_data( self::META_DOSYA_ADI, $dosya_adi );
-		// Başarılı gönderim → PENDING (retry için tutulan tüketilmiş barkod) temizlenir.
+		if ( $takip_url !== '' ) {
+			$order->update_meta_data( self::META_TAKIP_URL, $takip_url );
+		}
+		if ( $raw !== '' ) {
+			$order->update_meta_data( self::META_PTT_RAW, $raw );
+		}
+		if ( $request !== '' ) {
+			$order->update_meta_data( self::META_PTT_REQ, $request );
+		}
+		if ( $mesaj !== '' ) {
+			$order->update_meta_data( self::META_PTT_LOG, $mesaj );
+		}
+		if ( $dosya_adi !== '' ) {
+			$order->update_meta_data( self::META_DOSYA_ADI, $dosya_adi );
+		}
+		// A successful shipment clears the barcode that was held back for retries.
 		$order->delete_meta_data( self::META_PENDING_BARKOD );
 		$order->save();
 
 		$order->add_order_note(
 			sprintf(
-				/* translators: 1: barkod 2: referans no 3: PTT açıklama */
-				__( 'PTT Kargo: Gönderi oluşturuldu. Barkod: %1$s, Referans: %2$s. PTT cevabı: %3$s', 'wc-ptt-kargo' ),
+			/* translators: 1: barcode 2: reference number 3: PTT response message */
+				__( 'PTT Kargo: Gönderi oluşturuldu. Barkod: %1$s, Referans: %2$s. PTT cevabı: %3$s', 'ptt-kargo-for-woocommerce' ),
 				$barkod,
 				$ref,
 				$mesaj !== '' ? $mesaj : '-'
@@ -402,26 +508,30 @@ final class Orders {
 	}
 
 	/**
-	 * Hata sonrası tüketilmiş barkodun retry'da reuse edilmesi için META_PENDING_BARKOD'a kaydedilir.
-	 * PTT'nin barkod aralığı kıt kaynak — başarısız gönderim her seferinde yeni barkod yakmasın.
+	 * Records the error and keeps the already-consumed barcode so a retry can reuse it.
+	 * The PTT barcode range is a scarce resource: a failed attempt must not burn a new number.
 	 *
-	 * @param string $pending_barkod  PTT'ye gönderilmiş ama başarılı olmamış barkod (varsa)
+	 * @param string $pending_barkod Barcode sent to PTT that did not succeed, if any.
 	 */
 	public function mark_error( \WC_Order $order, string $mesaj, string $raw = '', string $request = '', string $pending_barkod = '' ): void {
 		$order->update_meta_data( self::META_STATUS, self::STATUS_ERROR );
 		$order->update_meta_data( self::META_PTT_LOG, $mesaj );
-		if ( $raw !== '' )     $order->update_meta_data( self::META_PTT_RAW, $raw );
-		if ( $request !== '' ) $order->update_meta_data( self::META_PTT_REQ, $request );
+		if ( $raw !== '' ) {
+			$order->update_meta_data( self::META_PTT_RAW, $raw );
+		}
+		if ( $request !== '' ) {
+			$order->update_meta_data( self::META_PTT_REQ, $request );
+		}
 		if ( $pending_barkod !== '' ) {
 			$order->update_meta_data( self::META_PENDING_BARKOD, $pending_barkod );
 		}
 		$order->save();
-		$order->add_order_note( __( 'PTT Kargo hatası: ', 'wc-ptt-kargo' ) . $mesaj );
+		$order->add_order_note( __( 'PTT Kargo hatası: ', 'ptt-kargo-for-woocommerce' ) . $mesaj );
 	}
 
 	/**
-	 * Çok parçalı gönderim (kabulEkleParcaliBarkod) sonrası ek meta'ları kaydeder.
-	 * mark_sent'ten hemen sonra çağrılır.
+	 * Stores the extra meta of a multi-package (kabulEkleParcaliBarkod) shipment.
+	 * Called right after mark_sent().
 	 */
 	public function mark_parca( \WC_Order $order, array $barkodlar, string $irsaliye_no = '' ): void {
 		if ( count( $barkodlar ) > 1 ) {
@@ -444,15 +554,14 @@ final class Orders {
 	}
 
 	/**
-	 * Sipariş PTT'den (kabulü yapılmadan) iptal edildiğinde çağrılır.
-	 * Eski barkod/ref/takip URL meta'ları temizlenir → kullanıcı sipariş'i tekrar
-	 * gönderdiğinde yeni bir barkod tüketilir, çakışma olmaz.
-	 * Status STATUS_CANCELED'a çekilir; UI bunu "İptal edildi" badge'i ile gösterir.
+	 * Called when a shipment is cancelled at PTT before acceptance.
+	 * Clears the barcode, reference and tracking meta so a resend consumes a fresh
+	 * barcode without colliding, and sets the status the UI renders as "cancelled".
 	 */
 	public function mark_canceled( \WC_Order $order, string $eski_barkod, string $mesaj = '', string $raw = '', string $request = '' ): void {
 		$order->update_meta_data( self::META_STATUS, self::STATUS_CANCELED );
 
-		// Yeniden gönderim için temiz başlangıç — barkod/ref temizlenir.
+		// Clean slate for a resend: drop the barcode and reference.
 		$order->delete_meta_data( self::META_BARKOD );
 		$order->delete_meta_data( self::META_REF );
 		$order->delete_meta_data( self::META_TAKIP_URL );
@@ -463,15 +572,21 @@ final class Orders {
 		$order->delete_meta_data( self::META_PARCA_ADET );
 		$order->delete_meta_data( self::META_IRSALIYE_NO );
 
-		if ( $mesaj !== '' )   $order->update_meta_data( self::META_PTT_LOG, $mesaj );
-		if ( $raw !== '' )     $order->update_meta_data( self::META_PTT_RAW, $raw );
-		if ( $request !== '' ) $order->update_meta_data( self::META_PTT_REQ, $request );
+		if ( $mesaj !== '' ) {
+			$order->update_meta_data( self::META_PTT_LOG, $mesaj );
+		}
+		if ( $raw !== '' ) {
+			$order->update_meta_data( self::META_PTT_RAW, $raw );
+		}
+		if ( $request !== '' ) {
+			$order->update_meta_data( self::META_PTT_REQ, $request );
+		}
 		$order->save();
 
 		$order->add_order_note(
 			sprintf(
-				/* translators: 1: eski barkod 2: PTT açıklama */
-				__( 'PTT Kargo: Gönderi iptal edildi (eski barkod: %1$s). PTT cevabı: %2$s', 'wc-ptt-kargo' ),
+			/* translators: 1: previous barcode 2: PTT response message */
+				__( 'PTT Kargo: Gönderi iptal edildi (eski barkod: %1$s). PTT cevabı: %2$s', 'ptt-kargo-for-woocommerce' ),
 				$eski_barkod !== '' ? $eski_barkod : '-',
 				$mesaj !== '' ? $mesaj : '-'
 			)

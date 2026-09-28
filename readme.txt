@@ -26,7 +26,7 @@ WC PTT Kargo, WooCommerce mağazalarınız için PTT Kargo entegrasyonunu sağla
 
 == Kurulum ==
 
-1. Eklentiyi `/wp-content/plugins/wc-ptt-kargo/` dizinine kopyalayın ya da admin panelden ZIP olarak yükleyin.
+1. Eklentiyi `/wp-content/plugins/ptt-kargo-for-woocommerce/` dizinine kopyalayın ya da admin panelden ZIP olarak yükleyin.
 2. "WC PTT Kargo"yu aktifleştirin.
 3. Sol menüde "PTT Kargo" → "Ayarlar" sayfasından:
    - Ortam (Test/Canlı)
@@ -44,7 +44,7 @@ Yazıcı işletim sisteminde kurulu olsun yeterli. Eklenti HTML+CSS ile 80mm eti
 
 = Şifre nerede saklanıyor? =
 
-`wp_options` tablosunda `wc_ptt_kargo_settings.sifre_enc` alanında AES-256-CBC ile şifrelenmiş olarak. Anahtar WP'nin `AUTH_KEY`'inden türetilir.
+`wp_options` tablosunda `ptt_kargo_wc_settings.sifre_enc` alanında AES-256-CBC ile şifrelenmiş olarak. Anahtar WP'nin `AUTH_KEY`'inden türetilir.
 
 = Barkod aralığı bittiğinde ne olur? =
 

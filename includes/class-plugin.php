@@ -1,5 +1,5 @@
 <?php
-namespace WC_PTT_Kargo;
+namespace PTT_Kargo_WC;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +35,7 @@ final class Plugin {
 	}
 
 	public function boot() {
-		load_plugin_textdomain( 'wc-ptt-kargo', false, dirname( plugin_basename( WC_PTT_KARGO_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'ptt-kargo-for-woocommerce', false, dirname( plugin_basename( PTT_KARGO_WC_FILE ) ) . '/languages' );
 
 		$this->settings->register();
 		$this->admin_page->register();
@@ -47,16 +47,22 @@ final class Plugin {
 		if ( get_option( Settings::OPTION_KEY, false ) === false ) {
 			add_option( Settings::OPTION_KEY, Settings::defaults() );
 		}
-		// Barkod cursor'unu pre-init et — ilk gönderim sırasında race condition oluşmasın.
-		// add_option idempotent: cursor zaten varsa noop. Varsayılan '0', Barcode::next() ilk
-		// çağrıda kullanıcının range_start'ına çekecek.
+		// Pre-initialise the barcode cursor so the first shipment cannot hit a race.
+		// add_option() is idempotent. The default '0' makes Barcode::next() jump to the
+		// configured range_start on its first call.
 		add_option( Barcode::CURSOR_OPTION, '0', '', 'no' );
 	}
 
-	public function settings()       { return $this->settings; }
-	public function barcode()        { return $this->barcode; }
-	public function client()         { return $this->client; }
-	public function orders()         { return $this->orders; }
-	public function label()          { return $this->label; }
-	public function wc_integration() { return $this->wc_integration; }
+	public function settings() {
+		return $this->settings; }
+	public function barcode() {
+		return $this->barcode; }
+	public function client() {
+		return $this->client; }
+	public function orders() {
+		return $this->orders; }
+	public function label() {
+		return $this->label; }
+	public function wc_integration() {
+		return $this->wc_integration; }
 }

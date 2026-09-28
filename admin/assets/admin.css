@@ -54,7 +54,7 @@
 .wc-ptt-toast.is-success { background: #00a32a; }
 .wc-ptt-toast.is-error   { background: #d63638; }
 
-/* ============ Settings Tabs ============ */
+/* Settings Tabs */
 .wc-ptt-settings-wrap .wc-ptt-tab-nav { margin: 16px 0 0; }
 .wc-ptt-settings-wrap .wc-ptt-tab-nav .nav-tab { display: inline-flex; align-items: center; gap: 6px; }
 .wc-ptt-settings-wrap .wc-ptt-tab-nav .nav-tab .dashicons { font-size: 16px; width: 16px; height: 16px; line-height: 1; }
@@ -100,7 +100,7 @@
 .wc-ptt-product-preview { margin-top: 8px; padding: 8px 12px; background: #f6f7f7; border-radius: 3px; font-size: 12px; }
 .wc-ptt-product-preview ul { margin: 4px 0 0; padding-left: 16px; }
 
-/* ============ WC orders list column ============ */
+/* WC orders list column */
 .wc-ptt-col-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
 .wc-ptt-col-badge.sent { background: #d4edda; color: #155724; }
 .wc-ptt-col-badge.error { background: #f8d7da; color: #721c24; }
@@ -108,12 +108,12 @@
 .wc-ptt-col-badge.canceled { background: #e2e3e5; color: #41464b; }
 .wc-ptt-col-barkod { font-size: 11px; color: #646970; }
 
-/* ============ Order metabox ============ */
+/* Order metabox */
 .wc-ptt-metabox p.wc-ptt-mb-status { margin: 0 0 10px; }
 .wc-ptt-metabox .wc-ptt-mb-actions { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
 .wc-ptt-metabox .wc-ptt-mb-actions .button { margin: 0; }
 
-/* ============ Takip modal ============ */
+/* Track modal */
 .wc-ptt-takip-box { max-width: 720px; }
 .wc-ptt-takip-box h2 code { background: #f0f0f1; padding: 2px 8px; border-radius: 3px; font-size: 14px; }
 .wc-ptt-takip-warn { padding: 14px 18px; border-radius: 4px; margin: 12px 0; font-size: 14px; }
@@ -125,7 +125,7 @@
 .wc-ptt-takip-events th { background: #f6f7f7; font-weight: 600; }
 .wc-ptt-takip-events tr:hover td { background: #fafafa; }
 
-/* ============ Logs page ============ */
+/* Logs page */
 .wc-ptt-logs-table .raw-toggle { margin-top: 4px; }
 .wc-ptt-logs-table .raw-dump { font-size: 10px; max-height: 180px; }
 .wc-ptt-log-msg { font-size: 12px; word-break: break-word; }

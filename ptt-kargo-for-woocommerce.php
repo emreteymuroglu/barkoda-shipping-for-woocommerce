@@ -1,50 +1,58 @@
 <?php
 /**
- * Plugin Name:       WC PTT Kargo
- * Plugin URI:        https://github.com/
- * Description:       WooCommerce siparişlerini PTT Kargo SOAP API'si ile işler, barkod üretir ve termal etiket basar.
+ * Plugin Name:       PTT Kargo for WooCommerce
+ * Plugin URI:        https://github.com/emreteymuroglu/ptt-kargo-for-woocommerce
+ * Description:       Creates PTT Kargo shipments from WooCommerce orders over the PTT SOAP API, generates barcodes, prints 80mm thermal labels and tracks deliveries. Not affiliated with or endorsed by PTT.
  * Version:           2.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Emre Teymuroglu
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       wc-ptt-kargo
+ * Text Domain:       ptt-kargo-for-woocommerce
  * Domain Path:       /languages
  * WC requires at least: 8.0
  * WC tested up to:   10.4.3
+ *
+ * @package PTT_Kargo_WC
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WC_PTT_KARGO_VERSION', '2.0.1' );
-define( 'WC_PTT_KARGO_FILE', __FILE__ );
-define( 'WC_PTT_KARGO_DIR', plugin_dir_path( __FILE__ ) );
-define( 'WC_PTT_KARGO_URL', plugin_dir_url( __FILE__ ) );
-define( 'WC_PTT_KARGO_SLUG', 'wc-ptt-kargo' );
+define( 'PTT_KARGO_WC_VERSION', '2.0.1' );
+define( 'PTT_KARGO_WC_FILE', __FILE__ );
+define( 'PTT_KARGO_WC_DIR', plugin_dir_path( __FILE__ ) );
+define( 'PTT_KARGO_WC_URL', plugin_dir_url( __FILE__ ) );
+define( 'PTT_KARGO_WC_SLUG', 'ptt-kargo-for-woocommerce' );
 
 if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
-	add_action( 'admin_notices', static function () {
-		echo '<div class="notice notice-error"><p>';
-		echo esc_html( sprintf( 'WC PTT Kargo en az PHP 7.4 gerektirir. Sunucunuz: %s', PHP_VERSION ) );
-		echo '</p></div>';
-	} );
+	add_action(
+		'admin_notices',
+		static function () {
+			echo '<div class="notice notice-error"><p>';
+			echo esc_html( sprintf( 'WC PTT Kargo en az PHP 7.4 gerektirir. Sunucunuz: %s', PHP_VERSION ) );
+			echo '</p></div>';
+		}
+	);
 	return;
 }
 
-add_action( 'before_woocommerce_init', static function () {
-	if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
-			'custom_order_tables',
-			WC_PTT_KARGO_FILE,
-			true
-		);
+add_action(
+	'before_woocommerce_init',
+	static function () {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+				'custom_order_tables',
+				PTT_KARGO_WC_FILE,
+				true
+			);
+		}
 	}
-} );
+);
 
-function wc_ptt_kargo_load_classes() {
+function ptt_kargo_wc_load_classes() {
 	$files = [
 		'class-logs.php',
 		'class-settings.php',
@@ -57,38 +65,45 @@ function wc_ptt_kargo_load_classes() {
 		'class-plugin.php',
 	];
 	foreach ( $files as $f ) {
-		$path = WC_PTT_KARGO_DIR . 'includes/' . $f;
+		$path = PTT_KARGO_WC_DIR . 'includes/' . $f;
 		if ( file_exists( $path ) ) {
 			require_once $path;
 		}
 	}
 }
 
-add_action( 'plugins_loaded', static function () {
-	if ( ! class_exists( 'WooCommerce' ) ) {
-		add_action( 'admin_notices', static function () {
-			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'WC PTT Kargo eklentisi için WooCommerce gereklidir.', 'wc-ptt-kargo' );
-			echo '</p></div>';
-		} );
-		return;
+add_action(
+	'plugins_loaded',
+	static function () {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			add_action(
+				'admin_notices',
+				static function () {
+					echo '<div class="notice notice-error"><p>';
+					echo esc_html__( 'WC PTT Kargo eklentisi için WooCommerce gereklidir.', 'ptt-kargo-for-woocommerce' );
+					echo '</p></div>';
+				}
+			);
+			return;
+		}
+
+		ptt_kargo_wc_load_classes();
+
+		if ( class_exists( '\PTT_Kargo_WC\Plugin' ) ) {
+			\PTT_Kargo_WC\Plugin::instance()->boot();
+		}
 	}
+);
 
-	wc_ptt_kargo_load_classes();
-
-	if ( class_exists( '\WC_PTT_Kargo\Plugin' ) ) {
-		\WC_PTT_Kargo\Plugin::instance()->boot();
+register_activation_hook(
+	__FILE__,
+	static function () {
+		ptt_kargo_wc_load_classes();
+		if ( class_exists( '\PTT_Kargo_WC\Logs' ) ) {
+			\PTT_Kargo_WC\Logs::install_table();
+		}
+		if ( class_exists( '\PTT_Kargo_WC\Plugin' ) ) {
+			\PTT_Kargo_WC\Plugin::on_activation();
+		}
 	}
-} );
-
-register_activation_hook( __FILE__, static function () {
-	wc_ptt_kargo_load_classes();
-	if ( class_exists( '\WC_PTT_Kargo\Logs' ) ) {
-		\WC_PTT_Kargo\Logs::install_table();
-	}
-	if ( class_exists( '\WC_PTT_Kargo\Plugin' ) ) {
-		\WC_PTT_Kargo\Plugin::on_activation();
-	}
-} );
-
-
+);

@@ -1,5 +1,5 @@
 <?php
-namespace WC_PTT_Kargo;
+namespace PTT_Kargo_WC;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,9 +15,9 @@ final class Barcode {
 	}
 
 	/**
-	 * Sıradaki 13 haneli barkodu (12 hane + check digit) atomik şekilde alır.
-	 * Aralık bitmişse veya prefix+seri 12 haneye eşit değilse null döner — yanlış
-	 * konfigürasyon sessizce yanlış aralıkta barkod yakmasın diye.
+	 * Atomically reserves the next 13-digit barcode (12 digits + check digit).
+	 * Returns null when the range is exhausted or when prefix + serial is not 12 digits,
+	 * so a misconfiguration cannot quietly burn numbers from the wrong range.
 	 */
 	public function next(): ?string {
 		global $wpdb;
@@ -28,8 +28,8 @@ final class Barcode {
 		$range_end = (string) $this->settings->get( 'barkod_range_end', '9999' );
 		$pad       = strlen( $range_end );
 
-		// Erken doğrulama: prefix + range_end uzunluğu 12 değilse barkod üretme.
-		// (Settings sanitize'da da yakalanıyor; burası defansif yedek.)
+		// Early guard: refuse to mint a barcode unless prefix + range_end is 12 digits.
+		// Settings::sanitize() catches this too; this is a defensive backstop.
 		if ( strlen( $prefix ) + $pad !== 12 || ! ctype_digit( $prefix ) || ! ctype_digit( $range_end ) ) {
 			return null;
 		}
@@ -44,7 +44,7 @@ final class Barcode {
 		);
 
 		if ( ! $row ) {
-			// on_activation pre-init etmiş olmalı; race olduysa burada yine de defansif insert.
+			// on_activation() should have pre-initialised the cursor; insert defensively on a race.
 			$current  = $start;
 			$inserted = $wpdb->insert(
 				$wpdb->options,
@@ -56,7 +56,7 @@ final class Barcode {
 				[ '%s', '%s', '%s' ]
 			);
 			if ( $inserted === false ) {
-				// Başka bir process aynı anda insert etmiş — rollback et, çağrı yeniden denenebilir.
+				// Another process inserted it first. Roll back so the caller can retry.
 				$wpdb->query( 'ROLLBACK' );
 				return null;
 			}
@@ -74,7 +74,7 @@ final class Barcode {
 
 		$twelve = $prefix . str_pad( (string) $current, $pad, '0', STR_PAD_LEFT );
 		if ( strlen( $twelve ) !== 12 || ! ctype_digit( $twelve ) ) {
-			// Bu noktaya gelmemeli (erken doğrulama yapıldı) — ama defansif fail.
+			// Unreachable after the early guard, but fail closed rather than emit a bad barcode.
 			$wpdb->query( 'ROLLBACK' );
 			return null;
 		}
@@ -82,7 +82,7 @@ final class Barcode {
 		$wpdb->update(
 			$wpdb->options,
 			[ 'option_value' => (string) ( $current + 1 ) ],
-			[ 'option_name'  => self::CURSOR_OPTION ],
+			[ 'option_name' => self::CURSOR_OPTION ],
 			[ '%s' ],
 			[ '%s' ]
 		);
@@ -90,13 +90,13 @@ final class Barcode {
 
 		$barkod = $twelve . self::check_digit( $twelve );
 
-		$filtered = apply_filters( 'wc_ptt_kargo_barkod', $barkod, $current, $prefix );
+		$filtered = apply_filters( 'ptt_kargo_wc_barkod', $barkod, $current, $prefix );
 		return is_string( $filtered ) && $filtered !== '' ? $filtered : null;
 	}
 
 	/**
-	 * 12 haneli barkodun check digit'ini döner.
-	 * Her basamak 1,3,1,3,... çarpanlarıyla çarpılır. Toplamı 10'un üst katına tamamlayan rakam check digit'tir.
+	 * Returns the check digit of a 12-digit barcode: each digit is weighted 1,3,1,3,...
+	 * and the digit that rounds the sum up to the next multiple of 10 is the result.
 	 */
 	public static function check_digit( string $twelve ): string {
 		if ( ! preg_match( '/^\d{12}$/', $twelve ) ) {
@@ -104,26 +104,28 @@ final class Barcode {
 		}
 		$sum = 0;
 		for ( $i = 0; $i < 12; $i++ ) {
-			$d       = (int) $twelve[ $i ];
-			$weight  = ( $i % 2 === 0 ) ? 1 : 3;
-			$sum    += $d * $weight;
+			$d      = (int) $twelve[ $i ];
+			$weight = ( $i % 2 === 0 ) ? 1 : 3;
+			$sum   += $d * $weight;
 		}
 		$mod = $sum % 10;
 		return (string) ( $mod === 0 ? 0 : 10 - $mod );
 	}
 
 	/**
-	 * Code128B SVG barkodu üretir. İstenen width = toplam piksel genişliği (modül bazında ölçeklenir).
+	 * Renders the value as a Code128B SVG. $width is the total pixel width, scaled per module.
 	 */
 	public static function svg( string $value, int $height = 80, int $module = 2 ): string {
 		$patterns = self::code128_patterns();
 		$chars    = str_split( $value );
 
-		// Code128B start = 104, Code128C varsa daha kısa ama basitlik için B.
+		// 104 starts Code128B. Code128C would be shorter for digits, but B keeps this simple.
 		$codes = [ 104 ];
 		foreach ( $chars as $c ) {
 			$ord = ord( $c );
-			if ( $ord < 32 || $ord > 126 ) continue;
+			if ( $ord < 32 || $ord > 126 ) {
+				continue;
+			}
 			$codes[] = $ord - 32;
 		}
 
@@ -156,28 +158,113 @@ final class Barcode {
 
 	private static function code128_patterns(): array {
 		return [
-			'11011001100', '11001101100', '11001100110', '10010011000', '10010001100',
-			'10001001100', '10011001000', '10011000100', '10001100100', '11001001000',
-			'11001000100', '11000100100', '10110011100', '10011011100', '10011001110',
-			'10111001100', '10011101100', '10011100110', '11001110010', '11001011100',
-			'11001001110', '11011100100', '11001110100', '11101101110', '11101001100',
-			'11100101100', '11100100110', '11101100100', '11100110100', '11100110010',
-			'11011011000', '11011000110', '11000110110', '10100011000', '10001011000',
-			'10001000110', '10110001000', '10001101000', '10001100010', '11010001000',
-			'11000101000', '11000100010', '10110111000', '10110001110', '10001101110',
-			'10111011000', '10111000110', '10001110110', '11101110110', '11010001110',
-			'11000101110', '11011101000', '11011100010', '11011101110', '11101011000',
-			'11101000110', '11100010110', '11101101000', '11101100010', '11100011010',
-			'11101111010', '11001000010', '11110001010', '10100110000', '10100001100',
-			'10010110000', '10010000110', '10000101100', '10000100110', '10110010000',
-			'10110000100', '10011010000', '10011000010', '10000110100', '10000110010',
-			'11000010010', '11001010000', '11110111010', '11000010100', '10001111010',
-			'10100111100', '10010111100', '10010011110', '10111100100', '10011110100',
-			'10011110010', '11110100100', '11110010100', '11110010010', '11011011110',
-			'11011110110', '11110110110', '10101111000', '10100011110', '10001011110',
-			'10111101000', '10111100010', '11110101000', '11110100010', '10111011110',
-			'10111101110', '11101011110', '11110101110',
-			'11010000100', '11010010000', '11010011100', '11000111010',
+			'11011001100',
+			'11001101100',
+			'11001100110',
+			'10010011000',
+			'10010001100',
+			'10001001100',
+			'10011001000',
+			'10011000100',
+			'10001100100',
+			'11001001000',
+			'11001000100',
+			'11000100100',
+			'10110011100',
+			'10011011100',
+			'10011001110',
+			'10111001100',
+			'10011101100',
+			'10011100110',
+			'11001110010',
+			'11001011100',
+			'11001001110',
+			'11011100100',
+			'11001110100',
+			'11101101110',
+			'11101001100',
+			'11100101100',
+			'11100100110',
+			'11101100100',
+			'11100110100',
+			'11100110010',
+			'11011011000',
+			'11011000110',
+			'11000110110',
+			'10100011000',
+			'10001011000',
+			'10001000110',
+			'10110001000',
+			'10001101000',
+			'10001100010',
+			'11010001000',
+			'11000101000',
+			'11000100010',
+			'10110111000',
+			'10110001110',
+			'10001101110',
+			'10111011000',
+			'10111000110',
+			'10001110110',
+			'11101110110',
+			'11010001110',
+			'11000101110',
+			'11011101000',
+			'11011100010',
+			'11011101110',
+			'11101011000',
+			'11101000110',
+			'11100010110',
+			'11101101000',
+			'11101100010',
+			'11100011010',
+			'11101111010',
+			'11001000010',
+			'11110001010',
+			'10100110000',
+			'10100001100',
+			'10010110000',
+			'10010000110',
+			'10000101100',
+			'10000100110',
+			'10110010000',
+			'10110000100',
+			'10011010000',
+			'10011000010',
+			'10000110100',
+			'10000110010',
+			'11000010010',
+			'11001010000',
+			'11110111010',
+			'11000010100',
+			'10001111010',
+			'10100111100',
+			'10010111100',
+			'10010011110',
+			'10111100100',
+			'10011110100',
+			'10011110010',
+			'11110100100',
+			'11110010100',
+			'11110010010',
+			'11011011110',
+			'11011110110',
+			'11110110110',
+			'10101111000',
+			'10100011110',
+			'10001011110',
+			'10111101000',
+			'10111100010',
+			'11110101000',
+			'11110100010',
+			'10111011110',
+			'10111101110',
+			'11101011110',
+			'11110101110',
+			'11010000100',
+			'11010010000',
+			'11010011100',
+			'11000111010',
 		];
 	}
 }

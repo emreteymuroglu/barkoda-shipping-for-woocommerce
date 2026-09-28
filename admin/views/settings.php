@@ -1,33 +1,57 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-$settings = \WC_PTT_Kargo\Plugin::instance()->settings();
+$settings = \PTT_Kargo_WC\Plugin::instance()->settings();
 $opts     = $settings->all();
-$opt_key  = \WC_PTT_Kargo\Settings::OPTION_KEY;
+$opt_key  = \PTT_Kargo_WC\Settings::OPTION_KEY;
 
 $tabs = [
-	'connection' => [ 'label' => __( 'PTT Bağlantı', 'wc-ptt-kargo' ),    'icon' => 'admin-network' ],
-	'barcode'    => [ 'label' => __( 'Barkod', 'wc-ptt-kargo' ),         'icon' => 'tickets-alt' ],
-	'sender'     => [ 'label' => __( 'Gönderici', 'wc-ptt-kargo' ),      'icon' => 'businessperson' ],
-	'label'      => [ 'label' => __( 'Etiket', 'wc-ptt-kargo' ),         'icon' => 'media-document' ],
-	'products'   => [ 'label' => __( 'Ürün & Filtreler', 'wc-ptt-kargo' ), 'icon' => 'filter' ],
-	'defaults'   => [ 'label' => __( 'Gönderi Varsayılanları', 'wc-ptt-kargo' ), 'icon' => 'archive' ],
-	'payment'    => [ 'label' => __( 'Ödeme', 'wc-ptt-kargo' ),          'icon' => 'money-alt' ],
+	'connection' => [
+		'label' => __( 'PTT Bağlantı', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'admin-network',
+	],
+	'barcode'    => [
+		'label' => __( 'Barkod', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'tickets-alt',
+	],
+	'sender'     => [
+		'label' => __( 'Gönderici', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'businessperson',
+	],
+	'label'      => [
+		'label' => __( 'Etiket', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'media-document',
+	],
+	'products'   => [
+		'label' => __( 'Ürün & Filtreler', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'filter',
+	],
+	'defaults'   => [
+		'label' => __( 'Gönderi Varsayılanları', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'archive',
+	],
+	'payment'    => [
+		'label' => __( 'Ödeme', 'ptt-kargo-for-woocommerce' ),
+		'icon'  => 'money-alt',
+	],
 ];
 
 $current_tab = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection';
-$base_url    = admin_url( 'admin.php?page=' . \WC_PTT_Kargo\Admin_Page::MENU_SLUG . '-ayarlar' );
+$base_url    = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-settings' );
 
-// Önizleme paneli yalnızca etikete etki eden tab'larda görünsün.
+// Preview is shown for these tabs; others are just form fields
 $preview_tabs = [ 'connection', 'barcode', 'sender', 'label', 'products', 'defaults', 'payment' ];
 $show_preview = in_array( $current_tab, $preview_tabs, true );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-settings-wrap">
-	<h1><?php esc_html_e( 'WC PTT Kargo — Ayarlar', 'wc-ptt-kargo' ); ?></h1>
-	<?php settings_errors( \WC_PTT_Kargo\Settings::OPTION_KEY ); ?>
+	<h1><?php esc_html_e( 'WC PTT Kargo — Ayarlar', 'ptt-kargo-for-woocommerce' ); ?></h1>
+	<?php settings_errors( \PTT_Kargo_WC\Settings::OPTION_KEY ); ?>
 
 	<nav class="nav-tab-wrapper wc-ptt-tab-nav">
-		<?php foreach ( $tabs as $slug => $info ) :
+		<?php
+		foreach ( $tabs as $slug => $info ) :
 			$url = add_query_arg( 'tab', $slug, $base_url );
 			$cls = 'nav-tab' . ( $slug === $current_tab ? ' nav-tab-active' : '' );
 			?>
@@ -41,47 +65,47 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 	<div class="wc-ptt-settings-grid <?php echo $show_preview ? 'has-preview' : ''; ?>">
 		<div class="wc-ptt-settings-main">
 			<form id="wc-ptt-settings-form" method="post" action="options.php">
-				<?php settings_fields( 'wc_ptt_kargo_settings_group' ); ?>
+				<?php settings_fields( 'ptt_kargo_wc_settings_group' ); ?>
 				<input type="hidden" name="<?php echo esc_attr( $opt_key ); ?>[__tab]" value="<?php echo esc_attr( $current_tab ); ?>">
 
 				<?php
-				$tab_file = WC_PTT_KARGO_DIR . 'admin/views/settings/' . $current_tab . '.php';
+				$tab_file = PTT_KARGO_WC_DIR . 'admin/views/settings/' . $current_tab . '.php';
 				if ( file_exists( $tab_file ) ) {
 					include $tab_file;
 				}
 				?>
 
-				<?php submit_button( __( 'Ayarları Kaydet', 'wc-ptt-kargo' ) ); ?>
+				<?php submit_button( __( 'Ayarları Kaydet', 'ptt-kargo-for-woocommerce' ) ); ?>
 			</form>
 		</div>
 
 		<?php if ( $show_preview ) : ?>
-		<aside class="wc-ptt-settings-preview" aria-label="<?php esc_attr_e( 'Etiket Önizleme', 'wc-ptt-kargo' ); ?>">
+		<aside class="wc-ptt-settings-preview" aria-label="<?php esc_attr_e( 'Etiket Önizleme', 'ptt-kargo-for-woocommerce' ); ?>">
 			<div class="wc-ptt-preview-card">
 				<h3>
 					<span class="dashicons dashicons-visibility"></span>
-					<?php esc_html_e( 'Canlı Etiket Önizleme', 'wc-ptt-kargo' ); ?>
+					<?php esc_html_e( 'Canlı Etiket Önizleme', 'ptt-kargo-for-woocommerce' ); ?>
 				</h3>
-				<p class="description"><?php esc_html_e( 'Form alanları değiştikçe önizleme otomatik yenilenir.', 'wc-ptt-kargo' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Form alanları değiştikçe önizleme otomatik yenilenir.', 'ptt-kargo-for-woocommerce' ); ?></p>
 
 				<form id="wc-ptt-preview-form"
 					method="post"
 					action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"
 					target="wc-ptt-preview-iframe"
 					style="display:none;">
-					<input type="hidden" name="action" value="wc_ptt_kargo_preview">
-					<?php wp_nonce_field( 'wc_ptt_kargo_preview' ); ?>
+					<input type="hidden" name="action" value="ptt_kargo_wc_preview">
+					<?php wp_nonce_field( 'ptt_kargo_wc_preview' ); ?>
 				</form>
 
 				<div class="wc-ptt-preview-frame-wrap">
 					<iframe id="wc-ptt-preview-iframe"
 						name="wc-ptt-preview-iframe"
 						src="about:blank"
-						title="<?php esc_attr_e( 'Etiket önizleme', 'wc-ptt-kargo' ); ?>"></iframe>
+						title="<?php esc_attr_e( 'Etiket önizleme', 'ptt-kargo-for-woocommerce' ); ?>"></iframe>
 				</div>
 
 				<p class="wc-ptt-preview-meta">
-					<small><?php esc_html_e( '⚠ Örnek veriyle render — sipariş bilgileri yer tutucudur.', 'wc-ptt-kargo' ); ?></small>
+					<small><?php esc_html_e( '⚠ Örnek veriyle render — sipariş bilgileri yer tutucudur.', 'ptt-kargo-for-woocommerce' ); ?></small>
 				</p>
 			</div>
 		</aside>

@@ -1,15 +1,15 @@
 <?php
-namespace WC_PTT_Kargo;
+namespace PTT_Kargo_WC;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * 80mm termal etiket HTML çıktısı + canlı önizleme.
+ * 80mm thermal label output and live preview.
  *
- *  - render()        : gerçek sipariş etiketi, window.print() açar
- *  - render_preview(): ayar formundan POST gelen değerlerle örnek sipariş etiketi (auto-print kapalı)
+ *  - render()        : label for a real order, opens window.print()
+ *  - render_preview(): sample label built from POSTed settings, without auto-print
  */
 final class Label {
 	private Settings $settings;
@@ -19,27 +19,27 @@ final class Label {
 	}
 
 	public function register(): void {
-		add_action( 'admin_post_wc_ptt_kargo_label', [ $this, 'render' ] );
-		add_action( 'admin_post_wc_ptt_kargo_preview', [ $this, 'render_preview' ] );
-		add_action( 'admin_post_wc_ptt_kargo_bulk_label', [ $this, 'render_bulk' ] );
+		add_action( 'admin_post_ptt_kargo_wc_label', [ $this, 'render' ] );
+		add_action( 'admin_post_ptt_kargo_wc_preview', [ $this, 'render_preview' ] );
+		add_action( 'admin_post_ptt_kargo_wc_bulk_label', [ $this, 'render_bulk' ] );
 	}
 
 	/**
-	 * Toplu etiket: birden çok sipariş için tek HTML, her sipariş arasına thermal page-break.
-	 * URL formatı: admin-post.php?action=wc_ptt_kargo_bulk_label&orders=123,456,789&_wpnonce=...
+	 * Bulk labels: one HTML document for several orders with a page break between each.
+	 * URL: admin-post.php?action=ptt_kargo_wc_bulk_label&orders=123,456,789&_wpnonce=...
 	 */
 	public function render_bulk(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Yetkisiz.', 'wc-ptt-kargo' ), 403 );
+			wp_die( esc_html__( 'Yetkisiz.', 'ptt-kargo-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'wc_ptt_kargo_bulk_label' );
+		check_admin_referer( 'ptt_kargo_wc_bulk_label' );
 
 		$orders_raw = isset( $_GET['orders'] ) ? sanitize_text_field( wp_unslash( $_GET['orders'] ) ) : '';
-		$ids = array_filter( array_map( 'intval', explode( ',', $orders_raw ) ) );
+		$ids        = array_filter( array_map( 'intval', explode( ',', $orders_raw ) ) );
 		if ( empty( $ids ) ) {
-			wp_die( esc_html__( 'Etiket basılacak sipariş seçilmedi.', 'wc-ptt-kargo' ), 400 );
+			wp_die( esc_html__( 'Etiket basılacak sipariş seçilmedi.', 'ptt-kargo-for-woocommerce' ), 400 );
 		}
-		$ids = array_slice( $ids, 0, 200 ); // Defansif üst limit — 200 etiket aynı sayfada yeter.
+		$ids = array_slice( $ids, 0, 200 ); // Defensive cap: 200 labels per page is plenty.
 
 		$opts    = $this->settings->all();
 		$blocks  = [];
@@ -47,12 +47,20 @@ final class Label {
 
 		foreach ( $ids as $oid ) {
 			$order = wc_get_order( $oid );
-			if ( ! $order ) { $skipped[] = $oid; continue; }
+			if ( ! $order ) {
+				$skipped[] = $oid;
+				continue; }
 			$barkod = (string) $order->get_meta( Orders::META_BARKOD );
-			if ( $barkod === '' ) { $skipped[] = $oid; continue; }
+			if ( $barkod === '' ) {
+				$skipped[] = $oid;
+				continue; }
 
-			$data    = $this->order_to_data( $order );
-			$blocks[] = [ 'data' => $data, 'barkod' => $barkod, 'order' => $order ];
+			$data     = $this->order_to_data( $order );
+			$blocks[] = [
+				'data'   => $data,
+				'barkod' => $barkod,
+				'order'  => $order,
+			];
 
 			$parca_raw = (string) $order->get_meta( Orders::META_PARCA_BARKODLAR );
 			if ( $parca_raw !== '' ) {
@@ -60,7 +68,11 @@ final class Label {
 				if ( is_array( $parca ) ) {
 					foreach ( $parca as $pb ) {
 						if ( $pb !== '' && $pb !== $barkod ) {
-							$blocks[] = [ 'data' => $data, 'barkod' => (string) $pb, 'order' => $order ];
+							$blocks[] = [
+								'data'   => $data,
+								'barkod' => (string) $pb,
+								'order'  => $order,
+							];
 						}
 					}
 				}
@@ -68,7 +80,7 @@ final class Label {
 		}
 
 		if ( empty( $blocks ) ) {
-			wp_die( esc_html__( 'Hiçbir siparişte basılabilir barkod bulunamadı.', 'wc-ptt-kargo' ), 400 );
+			wp_die( esc_html__( 'Hiçbir siparişte basılabilir barkod bulunamadı.', 'ptt-kargo-for-woocommerce' ), 400 );
 		}
 
 		header( 'Content-Type: text/html; charset=UTF-8' );
@@ -77,19 +89,19 @@ final class Label {
 	}
 
 	private function build_bulk_html( array $blocks, array $opts ): string {
-		// Her etiket için tek build_html çağrısı yapamayız (tam HTML doc dönüyor); sadece body içerikleri gerek.
-		// Çözüm: her etiket için bir block render et, aralarına page-break koy.
+		// build_html() returns a whole document, so render one per label and keep only the
+		// body contents, separated by page breaks.
 		$count = count( $blocks );
 
 		$inner_blocks = [];
 		foreach ( $blocks as $i => $b ) {
 			$is_last = ( $i === $count - 1 );
-			// build_html tam doküman dönüyor; oradan <body>...</body> arasını çek.
+			// Pull <body>...</body> out of the full document build_html() returns.
 			$full = $this->build_html( $b['data'], $opts, $b['barkod'], false, $b['order'] );
 			if ( preg_match( '~<body[^>]*>(.*?)</body>~is', $full, $m ) ) {
 				$body = $m[1];
-				// Auto-print script ve dotted ayraç gereksiz; sadece print için tek script altta olacak.
-				$body = preg_replace( '~<script>.*?</script>~is', '', $body );
+				// Drop the per-label auto-print script; one print script is appended at the end.
+				$body           = preg_replace( '~<script>.*?</script>~is', '', $body );
 				$inner_blocks[] = '<section class="ptt-label">' . $body . '</section>'
 					. ( $is_last ? '' : '<div class="ptt-page-break"></div>' );
 			}
@@ -100,14 +112,14 @@ final class Label {
 <html lang="<?php echo esc_attr( get_bloginfo( 'language' ) ); ?>">
 <head>
 	<meta charset="UTF-8">
-	<title><?php echo esc_html( sprintf( __( 'PTT Toplu Etiket (%d adet)', 'wc-ptt-kargo' ), $count ) ); ?></title>
+	<title><?php echo esc_html( sprintf( __( 'PTT Toplu Etiket (%d adet)', 'ptt-kargo-for-woocommerce' ), $count ) ); ?></title>
 	<style>
 		@page { size: 80mm auto; margin: 0; }
 		* { box-sizing: border-box; }
 		html, body { margin: 0; padding: 0; font-family: 'Courier New', Consolas, monospace; color: #111; }
 		body { width: 80mm; padding: 0; background: #f5f5f5; }
 		.ptt-label { width: 80mm; padding: 4mm 3mm; background: #fff; }
-		/* Önizleme için boşluk; print'te page-break */
+			/* Visible gap in the preview, a page break when printed. */
 		.ptt-page-break { page-break-after: always; height: 6mm; background: #f5f5f5; }
 		@media print {
 			body { background: #fff; padding: 0; }
@@ -136,7 +148,7 @@ final class Label {
 	</style>
 </head>
 <body>
-	<?php echo implode( "\n", $inner_blocks ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		<?php echo implode( "\n", $inner_blocks ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 	<script>
 		window.addEventListener('load', function () {
 			setTimeout(function () { window.print(); }, 300);
@@ -151,9 +163,9 @@ final class Label {
 	public function bulk_url( array $order_ids ): string {
 		return add_query_arg(
 			[
-				'action'   => 'wc_ptt_kargo_bulk_label',
+				'action'   => 'ptt_kargo_wc_bulk_label',
 				'orders'   => implode( ',', array_map( 'intval', $order_ids ) ),
-				'_wpnonce' => wp_create_nonce( 'wc_ptt_kargo_bulk_label' ),
+				'_wpnonce' => wp_create_nonce( 'ptt_kargo_wc_bulk_label' ),
 			],
 			admin_url( 'admin-post.php' )
 		);
@@ -161,19 +173,19 @@ final class Label {
 
 	public function render(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Yetkisiz.', 'wc-ptt-kargo' ), 403 );
+			wp_die( esc_html__( 'Yetkisiz.', 'ptt-kargo-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'wc_ptt_kargo_label' );
+		check_admin_referer( 'ptt_kargo_wc_label' );
 
 		$order_id = isset( $_GET['order'] ) ? (int) $_GET['order'] : 0;
 		$order    = $order_id > 0 ? wc_get_order( $order_id ) : null;
 		if ( ! $order ) {
-			wp_die( esc_html__( 'Sipariş bulunamadı.', 'wc-ptt-kargo' ), 404 );
+			wp_die( esc_html__( 'Sipariş bulunamadı.', 'ptt-kargo-for-woocommerce' ), 404 );
 		}
 
 		$barkod = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $barkod === '' ) {
-			wp_die( esc_html__( 'Bu sipariş için PTT barkodu henüz oluşturulmamış.', 'wc-ptt-kargo' ), 400 );
+			wp_die( esc_html__( 'Bu sipariş için PTT barkodu henüz oluşturulmamış.', 'ptt-kargo-for-woocommerce' ), 400 );
 		}
 
 		$data = $this->order_to_data( $order );
@@ -185,13 +197,13 @@ final class Label {
 	}
 
 	/**
-	 * Canlı önizleme: form POST'undan ayar değerlerini alır, sample sipariş ile etiket render eder.
+	 * Live preview: renders a sample order using the settings POSTed from the form.
 	 */
 	public function render_preview(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Yetkisiz.', 'wc-ptt-kargo' ), 403 );
+			wp_die( esc_html__( 'Yetkisiz.', 'ptt-kargo-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'wc_ptt_kargo_preview' );
+		check_admin_referer( 'ptt_kargo_wc_preview' );
 
 		$base = $this->settings->all();
 
@@ -201,8 +213,8 @@ final class Label {
 
 		$opts = array_merge( $base, $override );
 
-		$data    = $this->sample_data();
-		$barkod  = $this->sample_barkod( $opts );
+		$data   = $this->sample_data();
+		$barkod = $this->sample_barkod( $opts );
 
 		header( 'Content-Type: text/html; charset=UTF-8' );
 		echo $this->build_html( $data, $opts, $barkod, false, null ); // phpcs:ignore WordPress.Security.EscapeOutput
@@ -210,14 +222,21 @@ final class Label {
 	}
 
 	private function sanitize_preview_input( array $input ): array {
-		$out = [];
+		$out       = [];
 		$text_keys = [
-			'gonderici_ad', 'gonderici_adres', 'gonderici_il', 'gonderici_ilce',
-			'gonderici_posta', 'gonderici_tel',
-			'label_header_title', 'label_header_subtitle',
+			'gonderici_ad',
+			'gonderici_adres',
+			'gonderici_il',
+			'gonderici_ilce',
+			'gonderici_posta',
+			'gonderici_tel',
+			'label_header_title',
+			'label_header_subtitle',
 		];
 		foreach ( $text_keys as $k ) {
-			if ( isset( $input[ $k ] ) ) $out[ $k ] = sanitize_text_field( (string) $input[ $k ] );
+			if ( isset( $input[ $k ] ) ) {
+				$out[ $k ] = sanitize_text_field( (string) $input[ $k ] );
+			}
 		}
 		if ( isset( $input['label_logo_url'] ) ) {
 			$out['label_logo_url'] = esc_url_raw( (string) $input['label_logo_url'] );
@@ -235,7 +254,9 @@ final class Label {
 
 	private function order_to_data( \WC_Order $order ): array {
 		$ad = trim( $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name() );
-		if ( $ad === '' ) $ad = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+		if ( $ad === '' ) {
+			$ad = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+		}
 
 		$adres_1 = $order->get_shipping_address_1() ?: $order->get_billing_address_1();
 		$adres_2 = $order->get_shipping_address_2() ?: $order->get_billing_address_2();
@@ -246,7 +267,9 @@ final class Label {
 		$il     = $il_kod;
 		if ( function_exists( 'WC' ) && WC()->countries ) {
 			$states = WC()->countries->get_states( 'TR' );
-			if ( isset( $states[ $il_kod ] ) ) $il = $states[ $il_kod ];
+			if ( isset( $states[ $il_kod ] ) ) {
+				$il = $states[ $il_kod ];
+			}
 		}
 
 		$urunler = [];
@@ -271,13 +294,13 @@ final class Label {
 		return [
 			'siparis_no'    => '1234',
 			'siparis_tarih' => date_i18n( 'd.m.Y H:i' ),
-			'ad'            => __( 'Örnek Müşteri', 'wc-ptt-kargo' ),
-			'adres'         => __( 'Örnek Mah. Numune Sok. No:1 D:2', 'wc-ptt-kargo' ),
-			'ilce'          => __( 'Kadıköy', 'wc-ptt-kargo' ),
-			'il'             => __( 'İstanbul', 'wc-ptt-kargo' ),
+			'ad'            => __( 'Örnek Müşteri', 'ptt-kargo-for-woocommerce' ),
+			'adres'         => __( 'Örnek Mah. Numune Sok. No:1 D:2', 'ptt-kargo-for-woocommerce' ),
+			'ilce'          => __( 'Kadıköy', 'ptt-kargo-for-woocommerce' ),
+			'il'            => __( 'İstanbul', 'ptt-kargo-for-woocommerce' ),
 			'posta'         => '34710',
 			'tel'           => '0555 123 45 67',
-			'urunler'       => [ __( 'Örnek Ürün 1', 'wc-ptt-kargo' ), __( 'Örnek Ürün 2', 'wc-ptt-kargo' ) ],
+			'urunler'       => [ __( 'Örnek Ürün 1', 'ptt-kargo-for-woocommerce' ), __( 'Örnek Ürün 2', 'ptt-kargo-for-woocommerce' ) ],
 		];
 	}
 
@@ -294,11 +317,11 @@ final class Label {
 	}
 
 	/**
-	 * @param array         $data    Sipariş verisi (ad, adres, urunler, vb.)
-	 * @param array         $opts    Settings array
-	 * @param string        $barkod  13 haneli barkod
-	 * @param bool          $auto_print  load'da window.print() çağırılsın mı?
-	 * @param \WC_Order|null $order  Filter'lar için (preview'de null)
+	 * @param array          $data       Order data (name, address, items, ...).
+	 * @param array          $opts       Settings array.
+	 * @param string         $barkod     13-digit barcode.
+	 * @param bool           $auto_print Call window.print() on load?
+	 * @param \WC_Order|null $order      Passed to the filters; null in preview mode.
 	 */
 	private function build_html( array $data, array $opts, string $barkod, bool $auto_print, $order ): string {
 		$gonderici_ad    = (string) ( $opts['gonderici_ad'] ?? '' );
@@ -314,13 +337,17 @@ final class Label {
 		}
 		$header_sub = (string) ( $opts['label_header_subtitle'] ?? '' );
 
-		$header_data = (array) apply_filters( 'wc_ptt_kargo_label_header', [
-			'logo_url' => $logo_url,
-			'title'    => $header_title,
-			'subtitle' => $header_sub,
-		], $order );
+		$header_data = (array) apply_filters(
+			'ptt_kargo_wc_label_header',
+			[
+				'logo_url' => $logo_url,
+				'title'    => $header_title,
+				'subtitle' => $header_sub,
+			],
+			$order
+		);
 
-		$urunler = (array) apply_filters( 'wc_ptt_kargo_label_products', $data['urunler'], $order );
+		$urunler = (array) apply_filters( 'ptt_kargo_wc_label_products', $data['urunler'], $order );
 
 		$show = [
 			'order'     => ! empty( $opts['label_show_order'] ),
@@ -333,7 +360,8 @@ final class Label {
 		$barkod_svg = Barcode::svg( $barkod, 90, 2 );
 
 		ob_start();
-		?><!DOCTYPE html>
+		?>
+		<!DOCTYPE html>
 <html lang="<?php echo esc_attr( get_bloginfo( 'language' ) ); ?>">
 <head>
 	<meta charset="UTF-8">
@@ -368,21 +396,21 @@ final class Label {
 	</style>
 </head>
 <body>
-	<?php if ( ! empty( $header_data['logo_url'] ) || ! empty( $header_data['title'] ) || ! empty( $header_data['subtitle'] ) ) : ?>
+		<?php if ( ! empty( $header_data['logo_url'] ) || ! empty( $header_data['title'] ) || ! empty( $header_data['subtitle'] ) ) : ?>
 	<div class="header">
-		<?php if ( ! empty( $header_data['logo_url'] ) ) : ?>
+			<?php if ( ! empty( $header_data['logo_url'] ) ) : ?>
 			<img class="logo" src="<?php echo esc_url( $header_data['logo_url'] ); ?>" alt="">
 		<?php endif; ?>
-		<?php if ( ! empty( $header_data['title'] ) ) : ?>
+			<?php if ( ! empty( $header_data['title'] ) ) : ?>
 			<h1><?php echo esc_html( mb_strtoupper( $header_data['title'], 'UTF-8' ) ); ?></h1>
 		<?php endif; ?>
-		<?php if ( ! empty( $header_data['subtitle'] ) ) : ?>
+			<?php if ( ! empty( $header_data['subtitle'] ) ) : ?>
 			<p class="sub"><?php echo esc_html( $header_data['subtitle'] ); ?></p>
 		<?php endif; ?>
 	</div>
 	<?php endif; ?>
 
-	<?php if ( $show['order'] ) : ?>
+		<?php if ( $show['order'] ) : ?>
 	<div class="siparis-satir">
 		<strong>#<?php echo esc_html( $data['siparis_no'] ); ?></strong>
 		<span><?php echo esc_html( $data['siparis_tarih'] ); ?></span>
@@ -390,29 +418,29 @@ final class Label {
 	<div class="row-sep"></div>
 	<?php endif; ?>
 
-	<?php if ( $show['recipient'] ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Alıcı', 'wc-ptt-kargo' ); ?></p>
+		<?php if ( $show['recipient'] ) : ?>
+	<p class="bolum-basligi"><?php esc_html_e( 'Alıcı', 'ptt-kargo-for-woocommerce' ); ?></p>
 	<p class="alici-adi"><?php echo esc_html( mb_strtoupper( (string) $data['ad'], 'UTF-8' ) ); ?></p>
 	<p class="alici-adres"><?php echo esc_html( $data['adres'] ); ?></p>
 	<p class="alici-il"><?php echo esc_html( $data['ilce'] ); ?> / <?php echo esc_html( $data['il'] ); ?> <?php echo esc_html( $data['posta'] ); ?></p>
-	<?php if ( ! empty( $data['tel'] ) ) : ?>
+			<?php if ( ! empty( $data['tel'] ) ) : ?>
 	<p class="alici-tel">Tel: <?php echo esc_html( $data['tel'] ); ?></p>
 	<?php endif; ?>
 	<div class="row-sep"></div>
 	<?php endif; ?>
 
-	<?php if ( $show['products'] && ! empty( $urunler ) ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Ürünler', 'wc-ptt-kargo' ); ?></p>
+		<?php if ( $show['products'] && ! empty( $urunler ) ) : ?>
+	<p class="bolum-basligi"><?php esc_html_e( 'Ürünler', 'ptt-kargo-for-woocommerce' ); ?></p>
 	<ul class="urun-listesi">
-		<?php foreach ( $urunler as $u ) : ?>
+			<?php foreach ( $urunler as $u ) : ?>
 			<li>- <?php echo esc_html( $u ); ?></li>
 		<?php endforeach; ?>
 	</ul>
 	<div class="row-sep"></div>
 	<?php endif; ?>
 
-	<?php if ( $show['barcode'] ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Kargo Barkodu', 'wc-ptt-kargo' ); ?></p>
+		<?php if ( $show['barcode'] ) : ?>
+	<p class="bolum-basligi"><?php esc_html_e( 'Kargo Barkodu', 'ptt-kargo-for-woocommerce' ); ?></p>
 	<div class="barkod-bolum">
 		<div class="barkod-svg"><?php echo $barkod_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 		<p class="barkod-no"><?php echo esc_html( $barkod ); ?></p>
@@ -420,18 +448,21 @@ final class Label {
 	<div class="row-sep"></div>
 	<?php endif; ?>
 
-	<?php if ( $show['sender'] ) : ?>
+		<?php if ( $show['sender'] ) : ?>
 	<div class="gonderici">
-		<?php echo esc_html( $gonderici_ad ); ?><br>
-		<?php echo esc_html( $gonderici_adres ); ?><br>
-		<?php echo esc_html( $gonderici_ilce . ' / ' . $gonderici_il ); ?><br>
-		<?php if ( $gonderici_tel ) : ?>Tel: <?php echo esc_html( $gonderici_tel ); ?><?php endif; ?>
+			<?php echo esc_html( $gonderici_ad ); ?><br>
+			<?php echo esc_html( $gonderici_adres ); ?><br>
+			<?php echo esc_html( $gonderici_ilce . ' / ' . $gonderici_il ); ?><br>
+			<?php
+			if ( $gonderici_tel ) :
+				?>
+				Tel: <?php echo esc_html( $gonderici_tel ); ?><?php endif; ?>
 	</div>
 	<?php endif; ?>
 
 	<div class="dotted"></div>
 
-	<?php if ( $auto_print ) : ?>
+		<?php if ( $auto_print ) : ?>
 	<script>
 		window.addEventListener('load', function () {
 			setTimeout(function () { window.print(); }, 200);
@@ -442,23 +473,23 @@ final class Label {
 </html>
 		<?php
 		$html = (string) ob_get_clean();
-		return (string) apply_filters( 'wc_ptt_kargo_label_html', $html, $order, $barkod );
+		return (string) apply_filters( 'ptt_kargo_wc_label_html', $html, $order, $barkod );
 	}
 
 	public function label_url( int $order_id ): string {
-		// wp_nonce_url() HTML-escape uygular (& → &amp;) → JSON üzerinden JS'ye gidince
-		// window.open URL'inde _wpnonce parametresi kaybolur. Raw URL üretmek için add_query_arg.
+		// wp_nonce_url() HTML-escapes the separator (& becomes &amp;), which drops _wpnonce
+		// once the URL travels through JSON into window.open(). add_query_arg keeps it raw.
 		return add_query_arg(
 			[
-				'action'   => 'wc_ptt_kargo_label',
+				'action'   => 'ptt_kargo_wc_label',
 				'order'    => $order_id,
-				'_wpnonce' => wp_create_nonce( 'wc_ptt_kargo_label' ),
+				'_wpnonce' => wp_create_nonce( 'ptt_kargo_wc_label' ),
 			],
 			admin_url( 'admin-post.php' )
 		);
 	}
 
 	public function preview_url(): string {
-		return admin_url( 'admin-post.php?action=wc_ptt_kargo_preview' );
+		return admin_url( 'admin-post.php?action=ptt_kargo_wc_preview' );
 	}
 }

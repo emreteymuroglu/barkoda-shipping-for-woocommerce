@@ -1,13 +1,14 @@
 /**
- * WC PTT Kargo — Ayarlar sayfası enhancement'ları:
- *  - Canlı etiket önizleme iframe'i (form değiştikçe yeniden render)
- *  - WP Media Library logo seçici
- *  - "Bağlantıyı Test Et" butonu (kaydetmeden önce de çalışır)
+ * WC PTT Kargo settings page enhancements:
+ *  - live label preview iframe that re-renders as the form changes
+ *  - WP Media Library logo picker
+ *  - "Test connection" button that works before saving
  */
+
 (function ($) {
 	'use strict';
 
-	// ---------------- Live Preview ----------------
+	// Live Preview
 
 	var $previewForm  = $('#wc-ptt-preview-form');
 	var $mainForm     = $('#wc-ptt-settings-form');
@@ -17,10 +18,8 @@
 	function syncPreview() {
 		if (!$previewForm.length || !$mainForm.length) return;
 
-		// Daha önce eklenmiş preview[*] hidden input'ları temizle
 		$previewForm.find('input[name^="preview["]').remove();
 
-		// Tüm preview-key'li elementlerin değerini hidden olarak preview form'a ekle
 		$mainForm.find('[data-preview-key]').each(function () {
 			var $el = $(this);
 			var key = $el.data('preview-key');
@@ -33,7 +32,6 @@
 			$('<input type="hidden">').attr('name', 'preview[' + key + ']').val(val).appendTo($previewForm);
 		});
 
-		// Native submit() target attribute'una saygı duyar
 		$previewForm[0].submit();
 	}
 
@@ -43,14 +41,11 @@
 	}
 
 	if ($previewForm.length) {
-		// İlk yüklemede önizlemeyi doldur
 		syncPreview();
-
-		// Form değişikliklerini izle
 		$mainForm.on('input change', '[data-preview-key]', debouncedSync);
 	}
 
-	// ---------------- WP Media Library logo seçici ----------------
+	// WP Media Library logo picker
 
 	var mediaFrame = null;
 
@@ -87,29 +82,29 @@
 		$('#wc-ptt-logo-preview').empty().hide();
 	});
 
-	// ---------------- Test Connection ----------------
+	// Test connection
 
 	$(document).on('click', '#wc-ptt-test-conn-btn', function (e) {
 		e.preventDefault();
 		var $btn  = $(this);
 		var $out  = $('#wc-ptt-test-result');
-		var nonce = (window.WcPttKargo && window.WcPttKargo.nonce) || '';
+		var nonce = (window.PttKargoWC && window.PttKargoWC.nonce) || '';
 
 		$out.removeClass('is-success is-error').addClass('is-loading')
 			.html('<span class="dashicons dashicons-update spin"></span> ' +
-				((window.WcPttKargo && window.WcPttKargo.i18n && window.WcPttKargo.i18n.testing) || 'Test ediliyor...'))
+				((window.PttKargoWC && window.PttKargoWC.i18n && window.PttKargoWC.i18n.testing) || 'Test ediliyor...'))
 			.show();
 		$btn.prop('disabled', true);
 
 		var data = {
-			action: 'wc_ptt_kargo_test_conn',
+			action: 'ptt_kargo_wc_test_conn',
 			nonce: nonce,
 			environment: $('#environment').val(),
 			musteri_id: $('#musteri_id').val(),
 			sifre: $('#sifre').val()
 		};
 
-		$.post((window.WcPttKargo && window.WcPttKargo.ajaxUrl) || ajaxurl, data)
+		$.post((window.PttKargoWC && window.PttKargoWC.ajaxUrl) || ajaxurl, data)
 			.done(function (res) {
 				$out.removeClass('is-loading');
 				if (res && res.success) {

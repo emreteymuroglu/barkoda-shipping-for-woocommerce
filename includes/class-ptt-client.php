@@ -1,20 +1,21 @@
 <?php
-namespace WC_PTT_Kargo;
+namespace PTT_Kargo_WC;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * PTT SOAP servisleri için wp_remote_post tabanlı wrapper.
- * Parser namespace-agnostik: simplexml kullanmak yerine regex ile tag extraction yapar,
- * böylece sunucunun farklı prefix/namespace kullanımından etkilenmez.
+ * wp_remote_post wrapper around the PTT SOAP services.
+ *
+ * Responses are read with regex tag extraction instead of SimpleXML so the parser
+ * stays agnostic to whatever namespace prefixes the server happens to return.
  */
 final class PTT_Client {
 	/** @var Settings */
 	private $settings;
 
-	/** @var string Son gönderilen SOAP request body (debug için) */
+	/** @var string Last SOAP request body, kept for debugging. */
 	private $last_request = '';
 
 	public function __construct( Settings $settings ) {
@@ -26,23 +27,32 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' );
-			Logs::record_event( 'kabulEkle2', $order_id, false, $msg, [
-				'reason'        => 'missing_credentials',
-				'has_musteri'   => $musteri_id !== '',
-				'has_sifre'     => $sifre !== '',
-			] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			Logs::record_event(
+				'kabulEkle2',
+				$order_id,
+				false,
+				$msg,
+				[
+					'reason'      => 'missing_credentials',
+					'has_musteri' => $musteri_id !== '',
+					'has_sifre'   => $sifre !== '',
+				]
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$ref_prefix = (string) $this->settings->get( 'referans_prefix', '' );
 		$dosya_pre  = $ref_prefix !== '' ? rtrim( $ref_prefix, '-_' ) : 'WCPTT';
 		$dosya_adi  = $dosya_pre . '-' . gmdate( 'YmdHis' ) . '-' . wp_generate_password( 4, false, false );
 
-		$gonderi = (array) apply_filters( 'wc_ptt_kargo_kabul_fields', $gonderi );
+		$gonderi = (array) apply_filters( 'ptt_kargo_wc_kabul_fields', $gonderi );
 
 		$body = $this->build_kabul_envelope( $musteri_id, $sifre, $dosya_adi, $gonderi );
-		$body = (string) apply_filters( 'wc_ptt_kargo_soap_request_body', $body, 'kabulEkle2', $gonderi );
+		$body = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'kabulEkle2', $gonderi );
 
 		$this->last_request = $body;
 
@@ -50,30 +60,51 @@ final class PTT_Client {
 		$headers  = [
 			'Content-Type' => 'application/soap+xml; charset=utf-8; action="kabulEkle2"',
 		];
-		$req_log = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, 'kabulEkle2' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'kabulEkle2' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'kabulEkle2' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'kabulEkle2' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = 'HTTP hatası: ' . $response->get_error_message();
-			Logs::record_http( 'kabulEkle2', $order_id, false, $msg, $req_log, [
-				'network_error' => $response->get_error_message(),
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg, 'request' => Logs::mask_sensitive( $body ), 'dosya_adi' => $dosya_adi ];
+			Logs::record_http(
+				'kabulEkle2',
+				$order_id,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $response->get_error_message(),
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success'   => false,
+				'mesaj'     => $msg,
+				'request'   => Logs::mask_sensitive( $body ),
+				'dosya_adi' => $dosya_adi,
+			];
 		}
 
-		$code        = (int) wp_remote_retrieve_response_code( $response );
-		$raw         = (string) wp_remote_retrieve_body( $response );
+		$code         = (int) wp_remote_retrieve_response_code( $response );
+		$raw          = (string) wp_remote_retrieve_body( $response );
 		$resp_headers = wp_remote_retrieve_headers( $response );
-		$resp_log    = [
+		$resp_log     = [
 			'code'    => $code,
 			'headers' => $this->headers_to_array( $resp_headers ),
 			'body'    => $raw,
@@ -95,7 +126,7 @@ final class PTT_Client {
 		$parsed              = $this->parse_kabul_response( $raw );
 		$parsed['request']   = Logs::mask_sensitive( $body );
 		$parsed['http_code'] = $code;
-		// dosyaAdi'yı her zaman dön — barkodVeriSil / referansVeriSil ileride kullanır.
+		// Always return dosyaAdi: barkodVeriSil / referansVeriSil need it later.
 		$parsed['dosya_adi'] = $dosya_adi;
 
 		Logs::record_http(
@@ -111,11 +142,13 @@ final class PTT_Client {
 	}
 
 	/**
-	 * wp_remote_retrieve_headers değişken bir nesne (Requests_Utility_CaseInsensitiveDictionary
-	 * eski versiyonlarda) ya da WpOrg\Requests\Utility\... döndürür. Tutarlı array'e çevirir.
+	 * Normalises wp_remote_retrieve_headers() into a plain array. Depending on the
+	 * bundled Requests version it is either an array or a case-insensitive dictionary.
 	 */
 	private function headers_to_array( $headers ): array {
-		if ( is_array( $headers ) ) return $headers;
+		if ( is_array( $headers ) ) {
+			return $headers;
+		}
 		if ( is_object( $headers ) && method_exists( $headers, 'getAll' ) ) {
 			return $headers->getAll();
 		}
@@ -129,12 +162,12 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Henüz PTT tarafında kabulü yapılmamış bir gönderiyi barkod numarası ile siler.
-	 * Kabul endpoint'ine SOAP 1.1 envelope gönderir (PTT bu metot için 1.1 kullanıyor).
+	 * Deletes a shipment PTT has not accepted yet, by barcode.
+	 * Uses a SOAP 1.1 envelope on the kabul endpoint (PTT expects 1.1 for this method).
 	 *
-	 * @param string   $barkod    13 haneli barkod numarası
-	 * @param string   $dosya_adi Orijinal kabulEkle çağrısındaki dosyaAdi (opsiyonel ama varsa daha güvenilir)
-	 * @param int|null $order_id  Log için
+	 * @param string   $barkod    13-digit barcode.
+	 * @param string   $dosya_adi dosyaAdi from the original kabulEkle call; optional but more reliable.
+	 * @param int|null $order_id  Order id, for logging.
 	 * @return array{success:bool,mesaj:string,raw?:string,request?:string,hata_kodu?:int|null}
 	 */
 	public function barkod_veri_sil( string $barkod, string $dosya_adi = '', ?int $order_id = null ): array {
@@ -142,10 +175,16 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 		if ( $barkod === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'Silinecek barkod boş.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'Silinecek barkod boş.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 
 		$e = function ( $v ) {
@@ -165,22 +204,28 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Henüz PTT tarafında kabulü yapılmamış bir gönderiyi müşteri referans numarası ile siler.
-	 * Bu metot, referans numarasına ait TÜM data gruplarını siler — çoklu kayıt durumunda dikkat.
+	 * Deletes a shipment PTT has not accepted yet, by customer reference number.
+	 * Removes every data group tied to that reference, so take care with multiple records.
 	 *
-	 * @param string   $referans  Daha önce gönderilen müşteri referans numarası
-	 * @param string   $dosya_adi Opsiyonel
-	 * @param int|null $order_id  Log için
+	 * @param string   $referans  Customer reference number sent earlier.
+	 * @param string   $dosya_adi Optional.
+	 * @param int|null $order_id  Order id, for logging.
 	 */
 	public function referans_veri_sil( string $referans, string $dosya_adi = '', ?int $order_id = null ): array {
 		$musteri_id = (string) $this->settings->get( 'musteri_id', '' );
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 		if ( $referans === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'Silinecek referans no boş.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'Silinecek referans no boş.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 
 		$e = function ( $v ) {
@@ -200,8 +245,8 @@ final class PTT_Client {
 	}
 
 	/**
-	 * SOAP 1.1 silme isteklerini ortak şekilde gönderir + cevabı parse eder.
-	 * Kabul endpoint'ine gider; SOAPAction header'ı PTT gateway routing'i için zorunlu.
+	 * Sends a SOAP 1.1 delete request and parses the reply.
+	 * Targets the kabul endpoint; the SOAPAction header is required for PTT gateway routing.
 	 */
 	private function dispatch_delete_request( string $operation, string $body, ?int $order_id ): array {
 		$endpoint = $this->settings->endpoint_kabul();
@@ -210,26 +255,46 @@ final class PTT_Client {
 			'SOAPAction'   => '"' . $operation . '"',
 		];
 
-		$req_log = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
-		$logged_request = "POST {$endpoint}\n" . $this->format_headers_for_log( $headers ) . "\n\n" . Logs::mask_sensitive( $body );
+		$req_log            = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
+		$logged_request     = "POST {$endpoint}\n" . $this->format_headers_for_log( $headers ) . "\n\n" . Logs::mask_sensitive( $body );
 		$this->last_request = $body;
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, $operation ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, $operation ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, $operation ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, $operation ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = 'HTTP hatası: ' . $response->get_error_message();
-			Logs::record_http( $operation, $order_id, false, $msg, $req_log, [
-				'network_error' => $response->get_error_message(),
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg, 'request' => $logged_request ];
+			Logs::record_http(
+				$operation,
+				$order_id,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $response->get_error_message(),
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+				'request' => $logged_request,
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -245,7 +310,7 @@ final class PTT_Client {
 		$parsed['request']   = $logged_request;
 		$parsed['http_code'] = $code;
 		if ( $code >= 400 && empty( $parsed['success'] ) && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'wc-ptt-kargo' ), $code );
+			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( $operation, $order_id, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -253,19 +318,29 @@ final class PTT_Client {
 	}
 
 	/**
-	 * barkodVeriSil / referansVeriSil cevaplarını parse eder.
-	 * OutputDelete / OutputRefDelete tipinde sadece aciklama + hataKodu döner.
+	 * Parses barkodVeriSil / referansVeriSil replies.
+	 * OutputDelete / OutputRefDelete carry only aciklama and hataKodu.
 	 */
 	private function parse_delete_response( string $raw ): array {
 		if ( $raw === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT servisinden boş cevap.', 'wc-ptt-kargo' ), 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'raw'     => $raw,
+			];
 		}
 
-		// SOAP 1.1 Fault'unda <faultstring>; SOAP 1.2'de <Text>. İkisini de kontrol et.
+		// SOAP 1.1 faults use <faultstring>, SOAP 1.2 uses <Text>. Check both.
 		$fault_reason = $this->extract_tag( $raw, 'faultstring' );
-		if ( $fault_reason === '' ) $fault_reason = $this->extract_tag( $raw, 'Text' );
+		if ( $fault_reason === '' ) {
+			$fault_reason = $this->extract_tag( $raw, 'Text' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault_reason !== '' ) {
-			return [ 'success' => false, 'mesaj' => 'SOAP Fault: ' . $fault_reason, 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => 'SOAP Fault: ' . $fault_reason,
+				'raw'     => $raw,
+			];
 		}
 
 		$hata_kodu = $this->extract_tag( $raw, 'hataKodu' );
@@ -276,27 +351,27 @@ final class PTT_Client {
 
 		return [
 			'success'   => $success,
-			'mesaj'     => $aciklama !== '' ? $aciklama : ( $success ? __( 'İşlem başarılı.', 'wc-ptt-kargo' ) : __( 'PTT açıklama dönmedi.', 'wc-ptt-kargo' ) ),
+			'mesaj'     => $aciklama !== '' ? $aciklama : ( $success ? __( 'İşlem başarılı.', 'ptt-kargo-for-woocommerce' ) : __( 'PTT açıklama dönmedi.', 'ptt-kargo-for-woocommerce' ) ),
 			'hata_kodu' => $hata_int,
 			'raw'       => $raw,
 		];
 	}
 
 	/**
-	 * Kurye çağırma — PTT'nin müşteriden gönderileri toplaması için sipariş geçer.
+	 * Requests a courier pickup so PTT collects the shipments from the sender.
 	 *
 	 * @param array $params {
-	 *     @type int    $adet           Toplam paket sayısı (zorunlu)
-	 *     @type int    $agirlik        Toplam ağırlık (gram, opsiyonel)
-	 *     @type int    $desi           Toplam desi (opsiyonel)
-	 *     @type int    $en             cm (opsiyonel)
-	 *     @type int    $boy            cm (opsiyonel)
-	 *     @type int    $yukseklik      cm (opsiyonel)
-	 *     @type string $ekhizmet       Ek hizmet kodları (opsiyonel)
-	 *     @type float  $deger_konulmus_ucret Sigorta tutarı (opsiyonel, ekhizmet'e DK eklenmeli)
-	 *     @type string $randevu_baslangic Boş bırakılabilir
-	 *     @type string $randevu_bitis     Boş bırakılabilir
-	 *     @type float  $ucret          0 default
+	 *     @type int    $adet                 Total package count (required).
+	 *     @type int    $agirlik              Total weight in grams (optional).
+	 *     @type int    $desi                 Total volumetric weight (optional).
+	 *     @type int    $en                   Width in cm (optional).
+	 *     @type int    $boy                  Length in cm (optional).
+	 *     @type int    $yukseklik            Height in cm (optional).
+	 *     @type string $ekhizmet             Additional service codes (optional).
+	 *     @type float  $deger_konulmus_ucret Insured value; requires DK in $ekhizmet (optional).
+	 *     @type string $randevu_baslangic    Appointment start, may be empty.
+	 *     @type string $randevu_bitis        Appointment end, may be empty.
+	 *     @type float  $ucret                Defaults to 0.
 	 * }
 	 */
 	public function siparis_istek_ekle2( array $params ): array {
@@ -304,21 +379,33 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' );
+			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$adet = max( 1, (int) ( $params['adet'] ?? 0 ) );
 
 		$gonderici = $this->settings->gonderici_ad_soyad();
 		if ( $gonderici['ad'] === '' || $gonderici['soyad'] === '' ) {
-			$msg = __( 'Gönderici ad veya soyad ayarlarda eksik. Sender sekmesinden ad/soyadı doldurun.', 'wc-ptt-kargo' );
-			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [
-				'reason' => 'missing_sender_name',
-				'gonderici' => $gonderici,
-			] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			$msg = __( 'Gönderici ad veya soyad ayarlarda eksik. Sender sekmesinden ad/soyadı doldurun.', 'ptt-kargo-for-woocommerce' );
+			Logs::record_event(
+				'siparisIstekEkle2',
+				null,
+				false,
+				$msg,
+				[
+					'reason'    => 'missing_sender_name',
+					'gonderici' => $gonderici,
+				]
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$gonderici_il    = (string) $this->settings->get( 'gonderici_il', '' );
@@ -329,47 +416,79 @@ final class PTT_Client {
 		$gonderici_posta = (string) $this->settings->get( 'gonderici_posta', '' );
 
 		if ( $gonderici_il === '' || $gonderici_ilce === '' || $gonderici_adres === '' ) {
-			$msg = __( 'Gönderici il/ilçe/adres ayarlarda eksik.', 'wc-ptt-kargo' );
-			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [
-				'reason' => 'missing_sender_address',
-				'has_il' => $gonderici_il !== '',
-				'has_ilce' => $gonderici_ilce !== '',
-				'has_adres' => $gonderici_adres !== '',
-			] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			$msg = __( 'Gönderici il/ilçe/adres ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			Logs::record_event(
+				'siparisIstekEkle2',
+				null,
+				false,
+				$msg,
+				[
+					'reason'    => 'missing_sender_address',
+					'has_il'    => $gonderici_il !== '',
+					'has_ilce'  => $gonderici_ilce !== '',
+					'has_adres' => $gonderici_adres !== '',
+				]
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 		if ( $gonderici_tel === '' && $gonderici_email === '' ) {
-			$msg = __( 'Gönderici telefon veya e-posta gereklidir (PTT Sms ya da Telefon zorunlu).', 'wc-ptt-kargo' );
+			$msg = __( 'Gönderici telefon veya e-posta gereklidir (PTT Sms ya da Telefon zorunlu).', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [ 'reason' => 'missing_contact' ] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
-		$body = $this->build_siparis_istek_envelope( $musteri_id, $sifre, $adet, $params );
-		$body = (string) apply_filters( 'wc_ptt_kargo_soap_request_body', $body, 'siparisIstekEkle2', $params );
+		$body               = $this->build_siparis_istek_envelope( $musteri_id, $sifre, $adet, $params );
+		$body               = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'siparisIstekEkle2', $params );
 		$this->last_request = $body;
 
 		$endpoint = $this->settings->endpoint_kabul();
 		$headers  = [
 			'Content-Type' => 'application/soap+xml; charset=utf-8; action="siparisIstekEkle2"',
 		];
-		$req_log = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, 'siparisIstekEkle2' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'siparisIstekEkle2' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'siparisIstekEkle2' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'siparisIstekEkle2' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = 'HTTP hatası: ' . $response->get_error_message();
-			Logs::record_http( 'siparisIstekEkle2', null, false, $msg, $req_log, [
-				'network_error' => $response->get_error_message(),
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg, 'request' => Logs::mask_sensitive( $body ) ];
+			Logs::record_http(
+				'siparisIstekEkle2',
+				null,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $response->get_error_message(),
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+				'request' => Logs::mask_sensitive( $body ),
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -385,7 +504,7 @@ final class PTT_Client {
 		$parsed['request']   = Logs::mask_sensitive( $body );
 		$parsed['http_code'] = $code;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'wc-ptt-kargo' ), $code );
+			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( 'siparisIstekEkle2', null, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -393,43 +512,69 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Verilen barkodun şu an bulunduğu PTT işyeri/merkez bilgisini döner.
-	 * WSDL: getDropPointInfo, InputDropPoint type → barcode/password/username (lowercase).
+	 * Returns the PTT branch currently holding the given barcode.
+	 * WSDL getDropPointInfo, InputDropPoint type: barcode/password/username (lowercase).
 	 */
 	public function get_drop_point_info( string $barkod ): array {
 		$musteri_id = (string) $this->settings->get( 'musteri_id', '' );
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' );
+			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'getDropPointInfo', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$body     = $this->build_takip_envelope(
 			'getDropPointInfo',
-			[ 'barcode' => $barkod, 'password' => $sifre, 'username' => $musteri_id ]
+			[
+				'barcode'  => $barkod,
+				'password' => $sifre,
+				'username' => $musteri_id,
+			]
 		);
 		$endpoint = $this->settings->endpoint_takip();
 		$headers  = $this->takip_headers( 'getDropPointInfo' );
-		$req_log  = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 20, 'getDropPointInfo' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'getDropPointInfo' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 20, 'getDropPointInfo' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'getDropPointInfo' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = $response->get_error_message();
-			Logs::record_http( 'getDropPointInfo', null, false, $msg, $req_log, [
-				'network_error' => $msg,
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			Logs::record_http(
+				'getDropPointInfo',
+				null,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $msg,
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -448,45 +593,74 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Müşteri referans numarası ile takip — barkod kayıpsa fallback.
+	 * Tracks a shipment by customer reference number; fallback when the barcode is lost.
 	 */
 	public function takip_sorgula_referans( string $referans ): array {
 		$musteri_id = (string) $this->settings->get( 'musteri_id', '' );
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' );
+			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'gonderiSorgu_referansNo', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 		if ( $referans === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'Referans numarası boş.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'Referans numarası boş.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 
 		$body     = $this->build_takip_envelope(
 			'gonderiSorgu_referansNo',
-			[ 'referansNo' => $referans, 'kullanici' => $musteri_id, 'sifre' => $sifre ]
+			[
+				'referansNo' => $referans,
+				'kullanici'  => $musteri_id,
+				'sifre'      => $sifre,
+			]
 		);
 		$endpoint = $this->settings->endpoint_takip();
 		$headers  = $this->takip_headers( 'gonderiSorgu_referansNo' );
-		$req_log  = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, 'gonderiSorgu_referansNo' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'gonderiSorgu_referansNo' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'gonderiSorgu_referansNo' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'gonderiSorgu_referansNo' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = $response->get_error_message();
-			Logs::record_http( 'gonderiSorgu_referansNo', null, false, $msg, $req_log, [
-				'network_error' => $msg,
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			Logs::record_http(
+				'gonderiSorgu_referansNo',
+				null,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $msg,
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -505,36 +679,42 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Çok parçalı gönderim — kabulEkleParcaliBarkod servisi.
-	 * Her parça için ayrı barkod, hepsi aynı sipariş için tek SOAP call.
+	 * Multi-package shipment through the kabulEkleParcaliBarkod service:
+	 * one barcode per package, all sent for the same order in a single SOAP call.
 	 *
-	 * @param array         $base_fields  Müşteri bilgileri (aliciAdi, aAdres vb.) — her dongu için aynı
-	 * @param array<string> $barkodlar    Tüketilmiş barkodlar (sayısı = parca_adet)
-	 * @param string        $irsaliye_no  Opsiyonel (1-30 hane)
-	 * @param int|null      $order_id     Log için
+	 * @param array         $base_fields Recipient data (aliciAdi, aAdres, ...) repeated for every dongu.
+	 * @param array<string> $barkodlar   Consumed barcodes; the count becomes parca_adet.
+	 * @param string        $irsaliye_no Optional waybill number (1-30 chars).
+	 * @param int|null      $order_id    Order id, for logging.
 	 */
 	public function kabul_ekle_parcali_barkod( array $base_fields, array $barkodlar, string $irsaliye_no = '', ?int $order_id = null ): array {
 		$musteri_id = (string) $this->settings->get( 'musteri_id', '' );
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'wc-ptt-kargo' );
+			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'kabulEkleParcaliBarkod', $order_id, false, $msg, [ 'reason' => 'missing_credentials' ] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 		$adet = count( $barkodlar );
 		if ( $adet < 1 ) {
-			return [ 'success' => false, 'mesaj' => __( 'Parça sayısı geçersiz.', 'wc-ptt-kargo' ) ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'Parça sayısı geçersiz.', 'ptt-kargo-for-woocommerce' ),
+			];
 		}
 
 		$ref_prefix = (string) $this->settings->get( 'referans_prefix', '' );
 		$dosya_pre  = $ref_prefix !== '' ? rtrim( $ref_prefix, '-_' ) : 'WCPTT';
 		$dosya_adi  = $dosya_pre . '-' . gmdate( 'YmdHis' ) . '-' . wp_generate_password( 4, false, false );
 
-		$base_fields = (array) apply_filters( 'wc_ptt_kargo_kabul_fields', $base_fields );
+		$base_fields = (array) apply_filters( 'ptt_kargo_wc_kabul_fields', $base_fields );
 
 		$body = $this->build_kabul_parcali_envelope( $musteri_id, $sifre, $dosya_adi, $base_fields, $barkodlar, $irsaliye_no );
-		$body = (string) apply_filters( 'wc_ptt_kargo_soap_request_body', $body, 'kabulEkleParcaliBarkod', $base_fields );
+		$body = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'kabulEkleParcaliBarkod', $base_fields );
 
 		$this->last_request = $body;
 
@@ -542,24 +722,45 @@ final class PTT_Client {
 		$headers  = [
 			'Content-Type' => 'application/soap+xml; charset=utf-8; action="kabulEkleParcaliBarkod"',
 		];
-		$req_log = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, 'kabulEkleParcaliBarkod' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'kabulEkleParcaliBarkod' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'kabulEkleParcaliBarkod' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'kabulEkleParcaliBarkod' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = 'HTTP hatası: ' . $response->get_error_message();
-			Logs::record_http( 'kabulEkleParcaliBarkod', $order_id, false, $msg, $req_log, [
-				'network_error' => $response->get_error_message(),
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg, 'request' => Logs::mask_sensitive( $body ), 'dosya_adi' => $dosya_adi ];
+			Logs::record_http(
+				'kabulEkleParcaliBarkod',
+				$order_id,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $response->get_error_message(),
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success'   => false,
+				'mesaj'     => $msg,
+				'request'   => Logs::mask_sensitive( $body ),
+				'dosya_adi' => $dosya_adi,
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -571,12 +772,12 @@ final class PTT_Client {
 			'body'    => $raw,
 		];
 
-		$parsed = $this->parse_parcali_response( $raw );
+		$parsed              = $this->parse_parcali_response( $raw );
 		$parsed['request']   = Logs::mask_sensitive( $body );
 		$parsed['http_code'] = $code;
 		$parsed['dosya_adi'] = $dosya_adi;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'wc-ptt-kargo' ), $code );
+			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( 'kabulEkleParcaliBarkod', $order_id, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -589,28 +790,51 @@ final class PTT_Client {
 
 		$body     = $this->build_takip_envelope(
 			'gonderiSorgu',
-			[ 'barkod' => $barkod, 'kullanici' => $musteri_id, 'sifre' => $sifre ]
+			[
+				'barkod'    => $barkod,
+				'kullanici' => $musteri_id,
+				'sifre'     => $sifre,
+			]
 		);
 		$endpoint = $this->settings->endpoint_takip();
 		$headers  = $this->takip_headers( 'gonderiSorgu' );
-		$req_log  = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 30, 'gonderiSorgu' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'gonderiSorgu' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'gonderiSorgu' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'gonderiSorgu' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = $response->get_error_message();
-			Logs::record_http( 'gonderiSorgu', null, false, $msg, $req_log, [
-				'network_error' => $msg,
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			Logs::record_http(
+				'gonderiSorgu',
+				null,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $msg,
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -622,7 +846,7 @@ final class PTT_Client {
 			'body'    => $raw,
 		];
 
-		$parsed = $this->parse_takip_response( $raw );
+		$parsed              = $this->parse_takip_response( $raw );
 		$parsed['http_code'] = $code;
 		Logs::record_http( 'gonderiSorgu', null, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
 		return $parsed;
@@ -641,12 +865,9 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Bağlantıyı test eder: gonderiSorgu (V1) servisine sentetik bir barkod sorgusu atar.
-	 * Auth doğruysa servis "Barkod bulunamadı" tarzı iş cevabı döner — HTTP 200 ve SOAP Fault yok.
-	 * Auth hatalıysa veya yetki yoksa SOAP Fault gelir.
-	 *
-	 * Envelope formatı PTT entegrasyon ekibinin verdiği örneğe birebir uyumlu:
-	 * SOAP 1.1, takip.ptt.gov.tr namespace, <input> wrapper, lowercase tag isimleri.
+	 * Verifies the credentials by querying gonderiSorgu (V1) with a synthetic barcode.
+	 * Valid auth yields a plain "barcode not found" business reply: HTTP 200 and no SOAP Fault.
+	 * Wrong credentials or missing permissions yield a SOAP Fault instead.
 	 *
 	 * @return array{success:bool,mesaj:string,raw?:string,http_code?:int}
 	 */
@@ -655,44 +876,75 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'Müşteri numarası veya şifre girilmemiş.', 'wc-ptt-kargo' );
-			Logs::record_event( 'test_connection', null, false, $msg, [
-				'has_musteri' => $musteri_id !== '',
-				'has_sifre'   => $sifre !== '',
-			] );
-			return [ 'success' => false, 'mesaj' => $msg ];
+			$msg = __( 'Müşteri numarası veya şifre girilmemiş.', 'ptt-kargo-for-woocommerce' );
+			Logs::record_event(
+				'test_connection',
+				null,
+				false,
+				$msg,
+				[
+					'has_musteri' => $musteri_id !== '',
+					'has_sifre'   => $sifre !== '',
+				]
+			);
+			return [
+				'success' => false,
+				'mesaj'   => $msg,
+			];
 		}
 
-		// Sentetik test barkodu: prefix + range_start + check digit. Müşterinin kendi aralığından
-		// 13-haneli geçerli barkod oluşturulur. PTT bunu sorgulayıp "barkod bulunamadı" tarzı iş
-		// cevabı döner — auth çalışıyor demek. Prefix/range henüz yapılandırılmamışsa fallback.
+		// Synthetic barcode from the store's own prefix + range start + check digit. PTT
+		// answers "barcode not found", which is enough to prove the credentials work.
 		$test_barkod = $this->build_test_barkod();
 
 		$body = $this->build_takip_envelope(
 			'gonderiSorgu',
-			[ 'barkod' => $test_barkod, 'kullanici' => $musteri_id, 'sifre' => $sifre ]
+			[
+				'barkod'    => $test_barkod,
+				'kullanici' => $musteri_id,
+				'sifre'     => $sifre,
+			]
 		);
 
 		$endpoint = $this->settings->endpoint_takip();
 		$headers  = $this->takip_headers( 'gonderiSorgu' );
-		$req_log = [ 'method' => 'POST', 'endpoint' => $endpoint, 'headers' => $headers, 'body' => $body ];
+		$req_log  = [
+			'method'   => 'POST',
+			'endpoint' => $endpoint,
+			'headers'  => $headers,
+			'body'     => $body,
+		];
 
 		$started  = microtime( true );
-		$response = wp_remote_post( $endpoint, [
-			'timeout'   => (int) apply_filters( 'wc_ptt_kargo_http_timeout', 15, 'test_connection' ),
-			'sslverify' => (bool) apply_filters( 'wc_ptt_kargo_sslverify', true, 'test_connection' ),
-			'headers'   => $headers,
-			'body'      => $body,
-		] );
+		$response = wp_remote_post(
+			$endpoint,
+			[
+				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 15, 'test_connection' ),
+				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'test_connection' ),
+				'headers'   => $headers,
+				'body'      => $body,
+			]
+		);
 		$duration = ( microtime( true ) - $started ) * 1000.0;
 
 		if ( is_wp_error( $response ) ) {
 			$msg = $response->get_error_message();
-			Logs::record_http( 'test_connection', null, false, $msg, $req_log, [
-				'network_error' => $msg,
-				'wp_error_data' => $response->get_error_data(),
-			], $duration );
-			return [ 'success' => false, 'mesaj' => sprintf( __( 'Bağlantı kurulamadı: %s', 'wc-ptt-kargo' ), $msg ) ];
+			Logs::record_http(
+				'test_connection',
+				null,
+				false,
+				$msg,
+				$req_log,
+				[
+					'network_error' => $msg,
+					'wp_error_data' => $response->get_error_data(),
+				],
+				$duration
+			);
+			return [
+				'success' => false,
+				'mesaj'   => sprintf( __( 'Bağlantı kurulamadı: %s', 'ptt-kargo-for-woocommerce' ), $msg ),
+			];
 		}
 
 		$code         = (int) wp_remote_retrieve_response_code( $response );
@@ -704,14 +956,16 @@ final class PTT_Client {
 			'body'    => $raw,
 		];
 
-		// SOAP Fault: auth/permission hatası
+		// A SOAP Fault means an auth or permission problem.
 		$fault = $this->extract_tag( $raw, 'Text' );
-		if ( $fault === '' ) $fault = $this->extract_tag( $raw, 'faultstring' );
+		if ( $fault === '' ) {
+			$fault = $this->extract_tag( $raw, 'faultstring' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault !== '' ) {
 			Logs::record_http( 'test_connection', null, false, $fault, $req_log, $resp_log, $duration );
 			return [
 				'success'   => false,
-				'mesaj'     => sprintf( __( 'PTT reddetti: %s', 'wc-ptt-kargo' ), $fault ),
+				'mesaj'     => sprintf( __( 'PTT reddetti: %s', 'ptt-kargo-for-woocommerce' ), $fault ),
 				'raw'       => $raw,
 				'http_code' => $code,
 			];
@@ -721,18 +975,18 @@ final class PTT_Client {
 			Logs::record_http( 'test_connection', null, false, 'HTTP ' . $code, $req_log, $resp_log, $duration );
 			return [
 				'success'   => false,
-				'mesaj'     => sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'wc-ptt-kargo' ), $code ),
+				'mesaj'     => sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code ),
 				'raw'       => $raw,
 				'http_code' => $code,
 			];
 		}
 
-		// Auth doğru: servis dummy barkod için "bulunamadı" döndürür ama SOAP Fault yok.
-		$env = $this->settings->get( 'environment' ) === 'prod' ? __( 'CANLI', 'wc-ptt-kargo' ) : __( 'TEST', 'wc-ptt-kargo' );
+		// No fault: credentials are valid, the dummy barcode is simply unknown.
+		$env = $this->settings->get( 'environment' ) === 'prod' ? __( 'CANLI', 'ptt-kargo-for-woocommerce' ) : __( 'TEST', 'ptt-kargo-for-woocommerce' );
 		Logs::record_http( 'test_connection', null, true, 'OK', $req_log, $resp_log, $duration );
 		return [
 			'success'   => true,
-			'mesaj'     => sprintf( __( '✓ Bağlantı başarılı (%s ortamı). Müşteri numarası ve şifre doğru.', 'wc-ptt-kargo' ), $env ),
+			'mesaj'     => sprintf( __( '✓ Bağlantı başarılı (%s ortamı). Müşteri numarası ve şifre doğru.', 'ptt-kargo-for-woocommerce' ), $env ),
 			'http_code' => $code,
 		];
 	}
@@ -742,24 +996,49 @@ final class PTT_Client {
 			return htmlspecialchars( (string) $v, ENT_XML1 | ENT_QUOTES, 'UTF-8' );
 		};
 
-		// WSDL InputDongu2 sequence — gondericibilgi alfabetik olarak 'en' ile 'iadeAAdres' arasında.
-		// Axis2 ADB <xs:sequence> sırasını strict enforce eder; ihlal halinde sessizce parse hatası.
-		$pre_gon = [
-			'aAdres', 'aIlKodu', 'aIlceKodu', 'agirlik', 'aliciAdi',
-			'aliciEmail', 'aliciIlAdi', 'aliciIlceAdi', 'aliciSms', 'aliciTel',
-			'barkodNo', 'boy', 'deger_ucreti', 'desi', 'ekhizmet', 'en',
+		// InputDongu2 sequence: gondericibilgi sorts between 'en' and 'iadeAAdres'.
+		// Axis2 ADB enforces <xs:sequence> order strictly and fails silently otherwise.
+		$pre_gon  = [
+			'aAdres',
+			'aIlKodu',
+			'aIlceKodu',
+			'agirlik',
+			'aliciAdi',
+			'aliciEmail',
+			'aliciIlAdi',
+			'aliciIlceAdi',
+			'aliciSms',
+			'aliciTel',
+			'barkodNo',
+			'boy',
+			'deger_ucreti',
+			'desi',
+			'ekhizmet',
+			'en',
 		];
 		$post_gon = [
-			'iadeAAdres', 'iadeAIlKodu', 'iadeAIlceKodu',
-			'iadeAliciAdi', 'iadeAliciEmail', 'iadeAliciIlAdi', 'iadeAliciIlceAdi', 'iadeAliciTel',
-			'musteriReferansNo', 'odeme_sart_ucreti', 'odemesekli', 'rezerve1',
-			'ucret', 'yukseklik',
+			'iadeAAdres',
+			'iadeAIlKodu',
+			'iadeAIlceKodu',
+			'iadeAliciAdi',
+			'iadeAliciEmail',
+			'iadeAliciIlAdi',
+			'iadeAliciIlceAdi',
+			'iadeAliciTel',
+			'musteriReferansNo',
+			'odeme_sart_ucreti',
+			'odemesekli',
+			'rezerve1',
+			'ucret',
+			'yukseklik',
 		];
 
 		$emit = static function ( array $keys ) use ( $g, $e ): string {
 			$out = '';
 			foreach ( $keys as $f ) {
-				if ( ! isset( $g[ $f ] ) || $g[ $f ] === '' || $g[ $f ] === null ) continue;
+				if ( ! isset( $g[ $f ] ) || $g[ $f ] === '' || $g[ $f ] === null ) {
+					continue;
+				}
 				$out .= '<xsd:' . $f . '>' . $e( $g[ $f ] ) . '</xsd:' . $f . '>';
 			}
 			return $out;
@@ -792,10 +1071,13 @@ final class PTT_Client {
 
 	private function parse_kabul_response( string $raw ) {
 		if ( $raw === '' ) {
-			return [ 'success' => false, 'mesaj' => 'PTT servisinden boş cevap.' ];
+			return [
+				'success' => false,
+				'mesaj'   => 'PTT servisinden boş cevap.',
+			];
 		}
 
-		// SOAP Fault kontrolü (namespace-agnostik)
+		// SOAP Fault check, namespace-agnostic.
 		$fault_reason = $this->extract_tag( $raw, 'Text' );
 		if ( $fault_reason === '' ) {
 			$fault_reason = $this->extract_tag( $raw, 'faultstring' );
@@ -808,15 +1090,17 @@ final class PTT_Client {
 			];
 		}
 
-		$hata_kodu       = $this->extract_tag( $raw, 'hataKodu' );
-		$aciklama        = $this->extract_tag( $raw, 'aciklama' );
-		$dongu_hata      = $this->extract_tag( $raw, 'donguHataKodu' );
-		$dongu_aciklama  = $this->extract_tag( $raw, 'donguAciklama' );
-		$barkod          = $this->extract_tag( $raw, 'barkod' );
-		$quid            = $this->extract_tag( $raw, 'Barkod_quid' );
-		if ( $quid === '' ) $quid = $this->extract_tag( $raw, 'barkod_quid' );
+		$hata_kodu      = $this->extract_tag( $raw, 'hataKodu' );
+		$aciklama       = $this->extract_tag( $raw, 'aciklama' );
+		$dongu_hata     = $this->extract_tag( $raw, 'donguHataKodu' );
+		$dongu_aciklama = $this->extract_tag( $raw, 'donguAciklama' );
+		$barkod         = $this->extract_tag( $raw, 'barkod' );
+		$quid           = $this->extract_tag( $raw, 'Barkod_quid' );
+		if ( $quid === '' ) {
+			$quid = $this->extract_tag( $raw, 'barkod_quid' );
+		}
 
-		// PTT pratikte takip URL'sini donguAciklama içinde http:// ile döndürüyor (doküman ≠ gerçek).
+		// In practice PTT returns the tracking URL inside donguAciklama, unlike the docs.
 		$dongu_is_url = $dongu_aciklama !== '' && preg_match( '~^https?://~i', $dongu_aciklama );
 		if ( $quid === '' && $dongu_is_url ) {
 			$quid = $dongu_aciklama;
@@ -846,20 +1130,28 @@ final class PTT_Client {
 		}
 
 		return [
-			'success'     => false,
-			'mesaj'       => $detay_msg,
-			'hata_kodu'   => $hata_kodu_int,
-			'dongu_hata'  => $dongu_hata_int,
-			'raw'         => $raw,
+			'success'    => false,
+			'mesaj'      => $detay_msg,
+			'hata_kodu'  => $hata_kodu_int,
+			'dongu_hata' => $dongu_hata_int,
+			'raw'        => $raw,
 		];
 	}
 
 	private function parse_takip_response( string $raw ) {
-		if ( $raw === '' ) return [ 'success' => false, 'mesaj' => __( 'PTT servisinden boş cevap.', 'wc-ptt-kargo' ), 'raw' => $raw ];
+		if ( $raw === '' ) {
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'raw'     => $raw,
+			];
+		}
 
-		// SOAP Fault tespiti — hata mesajını yutmaz.
+		// Detect SOAP Faults so the error message is not swallowed.
 		$fault_reason = $this->extract_tag( $raw, 'Text' );
-		if ( $fault_reason === '' ) $fault_reason = $this->extract_tag( $raw, 'faultstring' );
+		if ( $fault_reason === '' ) {
+			$fault_reason = $this->extract_tag( $raw, 'faultstring' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault_reason !== '' ) {
 			return [
 				'success' => false,
@@ -872,13 +1164,13 @@ final class PTT_Client {
 		$barno    = $this->extract_tag( $raw, 'BARNO' );
 		$dongu    = $this->extract_dongu( $raw );
 
-		// PTT'nin sonucKodu değerleri tutarsız: "10" da başarı dönebiliyor (test ortamından doğrulandı:
-		// "islem basarili" → sonucKodu=10). Bu yüzden BARNO veya hareket varlığına göre karar veriyoruz.
+		// sonucKodu is unreliable: the test environment returns 10 for "islem basarili",
+		// so success is decided on the presence of BARNO or movement rows instead.
 		$success = $barno !== '' || ! empty( $dongu );
 
-		// Boş cevap: barkod sistemde bulunamadı veya henüz işlem görmedi.
+		// Empty reply: the barcode is unknown to PTT or has not been scanned yet.
 		if ( ! $success && $aciklama === '' ) {
-			$aciklama = __( 'Barkod PTT sisteminde bulunamadı veya henüz işlem görmedi.', 'wc-ptt-kargo' );
+			$aciklama = __( 'Barkod PTT sisteminde bulunamadı veya henüz işlem görmedi.', 'ptt-kargo-for-woocommerce' );
 		}
 
 		return [
@@ -893,7 +1185,7 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Namespace prefix'i ne olursa olsun verilen tag'in ilk geçtiği değeri döner.
+	 * Returns the first value of the given tag, whatever namespace prefix it carries.
 	 */
 	private function extract_tag( string $xml, string $tag ): string {
 		$pattern = '/<(?:[\w\-]+:)?' . preg_quote( $tag, '/' ) . '(?:\s[^>]*)?>(.*?)<\/(?:[\w\-]+:)?' . preg_quote( $tag, '/' ) . '>/s';
@@ -904,8 +1196,8 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Takip cevabındaki <dongu> elementlerini parse eder. Test ortamından doğrulanmış alanlar:
-	 * siraNo, ITARIH (DD/MM/YYYY), ISAAT (HH:MM:SS), ISLEM (insan-okur durum), IMERK (merkez adı).
+	 * Parses the <dongu> movement rows of a tracking reply. Fields confirmed against the
+	 * test environment: siraNo, ITARIH (DD/MM/YYYY), ISAAT (HH:MM:SS), ISLEM, IMERK.
 	 */
 	private function extract_dongu( string $xml ): array {
 		$results = [];
@@ -924,27 +1216,52 @@ final class PTT_Client {
 	}
 
 	/**
-	 * kabulEkleParcaliBarkod envelope builder. Aynı sipariş için N parça → N dongu (her birinde
-	 * farklı barkodNo, ortak alıcı/adres, parca_adet=N, irsaliye_no opsiyonel).
-	 * kabulEkle2 ile aynı dongu yapısı + parca_adet, posta_ceki_no, urun_ad alanları.
+	 * Builds the kabulEkleParcaliBarkod envelope: N packages become N dongu blocks that share
+	 * the recipient data, each carrying its own barkodNo plus parca_adet and posta_ceki_no.
 	 */
 	private function build_kabul_parcali_envelope( string $musteri_id, string $sifre, string $dosya_adi, array $base, array $barkodlar, string $irsaliye_no ): string {
 		$e = function ( $v ) {
 			return htmlspecialchars( (string) $v, ENT_XML1 | ENT_QUOTES, 'UTF-8' );
 		};
 
-		// WSDL InputParcaliBarkodDongu sequence — gondericibilgi alfabetik olarak 'en' ile 'iadeAAdres' arasında.
-		$pre_gon = [
-			'aAdres', 'aIlKodu', 'aIlceKodu', 'agirlik', 'aliciAdi',
-			'aliciEmail', 'aliciIlAdi', 'aliciIlceAdi', 'aliciSms', 'aliciTel',
-			'barkodNo', 'boy', 'deger_ucreti', 'desi', 'ekhizmet', 'en',
+		// InputParcaliBarkodDongu sequence: gondericibilgi sits between 'en' and 'iadeAAdres'.
+		$pre_gon  = [
+			'aAdres',
+			'aIlKodu',
+			'aIlceKodu',
+			'agirlik',
+			'aliciAdi',
+			'aliciEmail',
+			'aliciIlAdi',
+			'aliciIlceAdi',
+			'aliciSms',
+			'aliciTel',
+			'barkodNo',
+			'boy',
+			'deger_ucreti',
+			'desi',
+			'ekhizmet',
+			'en',
 		];
 		$post_gon = [
-			'iadeAAdres', 'iadeAIlKodu', 'iadeAIlceKodu',
-			'iadeAliciAdi', 'iadeAliciEmail', 'iadeAliciIlAdi', 'iadeAliciIlceAdi', 'iadeAliciTel',
-			'irsaliye_no', 'musteriReferansNo', 'odeme_sart_ucreti', 'odemesekli',
-			'parca_adet', 'posta_ceki_no', 'rezerve1',
-			'ucret', 'urun_ad', 'yukseklik',
+			'iadeAAdres',
+			'iadeAIlKodu',
+			'iadeAIlceKodu',
+			'iadeAliciAdi',
+			'iadeAliciEmail',
+			'iadeAliciIlAdi',
+			'iadeAliciIlceAdi',
+			'iadeAliciTel',
+			'irsaliye_no',
+			'musteriReferansNo',
+			'odeme_sart_ucreti',
+			'odemesekli',
+			'parca_adet',
+			'posta_ceki_no',
+			'rezerve1',
+			'ucret',
+			'urun_ad',
+			'yukseklik',
 		];
 
 		$adet = count( $barkodlar );
@@ -952,17 +1269,23 @@ final class PTT_Client {
 
 		$dongus_xml = '';
 		foreach ( $barkodlar as $bk ) {
-			$row = $base;
+			$row               = $base;
 			$row['barkodNo']   = $bk;
 			$row['parca_adet'] = $adet;
-			if ( $irsaliye_no !== '' ) $row['irsaliye_no'] = $irsaliye_no;
-			// kabulEkle2 rezerve1 kullanır; parcaliBarkod'da posta_ceki_no ayrı alandır (WSDL).
-			if ( $pc !== '' ) $row['posta_ceki_no'] = $pc;
+			if ( $irsaliye_no !== '' ) {
+				$row['irsaliye_no'] = $irsaliye_no;
+			}
+			// kabulEkle2 carries this in rezerve1; parcaliBarkod has a dedicated posta_ceki_no field.
+			if ( $pc !== '' ) {
+				$row['posta_ceki_no'] = $pc;
+			}
 
 			$emit = static function ( array $keys ) use ( $row, $e ): string {
 				$out = '';
 				foreach ( $keys as $f ) {
-					if ( ! isset( $row[ $f ] ) || $row[ $f ] === '' || $row[ $f ] === null ) continue;
+					if ( ! isset( $row[ $f ] ) || $row[ $f ] === '' || $row[ $f ] === null ) {
+						continue;
+					}
 					$out .= '<xsd:' . $f . '>' . $e( $row[ $f ] ) . '</xsd:' . $f . '>';
 				}
 				return $out;
@@ -986,17 +1309,14 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Gönderici bilgisi XML — kabulEkle2, kabulEkleParcaliBarkod ve siparisIstekEkle2 ortak.
+	 * Sender block shared by kabulEkle2, kabulEkleParcaliBarkod and siparisIstekEkle2.
+	 * GondericiBilgi children must be alphabetical (Axis2 convention).
 	 *
-	 * WSDL GondericiBilgi tipinde alanlar alfabetik (Axis2 standardı): gonderici_adi,
-	 * gonderici_adresi, gonderici_email, gonderici_il_ad, gonderici_ilce_ad,
-	 * gonderici_posta_kodu, gonderici_sms, gonderici_soyadi, gonderici_telefonu, gonderici_ulke_id.
-	 *
-	 * Telefon: WSDL'de hem gonderici_sms (GSM bildirimleri için) hem gonderici_telefonu var;
-	 * doc'a göre ikisinden biri zorunlu — defansif olarak ikisini de aynı 10-haneli numerle dolduruyoruz.
+	 * The WSDL exposes both gonderici_sms (GSM notifications) and gonderici_telefonu and
+	 * requires at least one, so both are filled with the same 10-digit number.
 	 */
 	private function build_gondericibilgi_xml(): string {
-		$e = function ( $v ) {
+		$e     = function ( $v ) {
 			return htmlspecialchars( (string) $v, ENT_XML1 | ENT_QUOTES, 'UTF-8' );
 		};
 		$isim  = $this->settings->gonderici_ad_soyad();
@@ -1024,18 +1344,28 @@ final class PTT_Client {
 	}
 
 	/**
-	 * kabulEkleParcaliBarkod cevabı: hataKodu + N tane dongu (her biri donguHataKodu, donguAciklama,
-	 * barkod, Barkod_quid). En az bir parça başarısızsa overall fail.
+	 * Parses kabulEkleParcaliBarkod: hataKodu plus one dongu per package (donguHataKodu,
+	 * donguAciklama, barkod, Barkod_quid). A single failed package fails the whole call.
 	 */
 	private function parse_parcali_response( string $raw ): array {
 		if ( $raw === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT servisinden boş cevap.', 'wc-ptt-kargo' ), 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'raw'     => $raw,
+			];
 		}
 
 		$fault = $this->extract_tag( $raw, 'Text' );
-		if ( $fault === '' ) $fault = $this->extract_tag( $raw, 'faultstring' );
+		if ( $fault === '' ) {
+			$fault = $this->extract_tag( $raw, 'faultstring' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault !== '' ) {
-			return [ 'success' => false, 'mesaj' => 'SOAP Fault: ' . $fault, 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => 'SOAP Fault: ' . $fault,
+				'raw'     => $raw,
+			];
 		}
 
 		$hata_kodu = $this->extract_tag( $raw, 'hataKodu' );
@@ -1062,39 +1392,38 @@ final class PTT_Client {
 			}
 		}
 
-		// İlk başarılı barkod ve takip url'i ana cevap olarak göster (tek-paket UX'ine uygun).
+		// Surface the first successful barcode and URL so single-package UX stays unchanged.
 		$first_barkod = '';
 		$first_url    = '';
 		foreach ( $results as $r ) {
-			if ( $first_barkod === '' && ! empty( $r['barkod'] ) )    $first_barkod = $r['barkod'];
+			if ( $first_barkod === '' && ! empty( $r['barkod'] ) ) {
+				$first_barkod = $r['barkod'];
+			}
 			if ( $first_url === '' && ! empty( $r['takip_url'] ) ) {
 				$cand = $r['takip_url'];
-				// donguAciklama bazen URL — pratikte kabulEkle2 ile aynı
+				// donguAciklama is sometimes the URL, same as in kabulEkle2.
 				$first_url = preg_match( '~^https?://~i', $cand ) ? $cand : '';
 			}
 		}
 
 		return [
-			'success'   => $all_ok,
-			'barkod'    => $first_barkod,
-			'takip_url' => $first_url,
-			'mesaj'     => $aciklama !== '' ? $aciklama : ( $all_ok ? 'Çoklu paket gönderisi oluşturuldu.' : 'Bir veya daha fazla parça reddedildi.' ),
+			'success'       => $all_ok,
+			'barkod'        => $first_barkod,
+			'takip_url'     => $first_url,
+			'mesaj'         => $aciklama !== '' ? $aciklama : ( $all_ok ? 'Çoklu paket gönderisi oluşturuldu.' : 'Bir veya daha fazla parça reddedildi.' ),
 			'parca_results' => $results,
-			'raw'       => $raw,
+			'raw'           => $raw,
 		];
 	}
 
 	/**
-	 * siparisIstekEkle2 envelope builder. WSDL InputIstek2 tipine birebir uyumlu:
-	 *   - Tüm alan isimleri snake_case (ek_hizmetler, randevu_baslangic, randevu_bitis vb.)
-	 *   - gondericibilgi (lowercase) wrapper, içindeki child'lar snake_case (gonderici_adi vs.)
-	 *   - Element sırası alfabetik (Axis2 standardı):
-	 *     adet, agirlik, boy, deger_konulmus_ucret, desi, dosyaAdi, ek_hizmetler, en,
-	 *     gonderiTip, gonderiTur, gondericibilgi, isyeriId, musteriId, musteriKullanici,
-	 *     randevu_baslangic, randevu_bitis, sifre, ucret, urunTipFatura, urunTur, yukseklik
-	 *   - Sabit alanlar: gonderiTip=NORMAL, gonderiTur=KARGO (kabulEkle2 ile uniform),
-	 *     musteriKullanici=admin, isyeriId=0, gonderici_ulke_id=052
-	 *   - Sayısal alanlar xs:double → "0.00" formatında.
+	 * Builds the siparisIstekEkle2 envelope against the WSDL InputIstek2 type:
+	 *   - all field names are snake_case (ek_hizmetler, randevu_baslangic, ...)
+	 *   - gondericibilgi is a lowercase wrapper with snake_case children
+	 *   - elements are emitted alphabetically (Axis2 convention)
+	 *   - fixed values: gonderiTip=NORMAL, gonderiTur=KARGO, musteriKullanici=admin,
+	 *     isyeriId=0, gonderici_ulke_id=052
+	 *   - xs:double fields are formatted as "0.00"
 	 */
 	private function build_siparis_istek_envelope( string $musteri_id, string $sifre, int $adet, array $params ): string {
 		$e = function ( $v ) {
@@ -1105,17 +1434,17 @@ final class PTT_Client {
 			return $e( number_format( (float) $v, 2, '.', '' ) );
 		};
 
-		$lines = [];
+		$lines   = [];
 		$lines[] = '<xsd:adet>' . $e( $adet ) . '</xsd:adet>';
 
-		// xs:double opsiyoneller — boş/sıfır geçilirse XML'e yazılmaz. Alfabetik sıra.
+		// Optional xs:double fields, alphabetical; omitted when empty or zero.
 		foreach ( [ 'agirlik', 'boy', 'deger_konulmus_ucret', 'desi' ] as $k ) {
 			if ( isset( $params[ $k ] ) && (float) $params[ $k ] > 0 ) {
 				$lines[] = '<xsd:' . $k . '>' . $double( $params[ $k ] ) . '</xsd:' . $k . '>';
 			}
 		}
 
-		// dosyaAdi opsiyonel — boş gönderme.
+		// dosyaAdi is optional and deliberately omitted.
 
 		if ( ! empty( $params['ekhizmet'] ) ) {
 			$lines[] = '<xsd:ek_hizmetler>' . $e( strtoupper( (string) $params['ekhizmet'] ) ) . '</xsd:ek_hizmetler>';
@@ -1125,8 +1454,7 @@ final class PTT_Client {
 			$lines[] = '<xsd:en>' . $double( $params['en'] ) . '</xsd:en>';
 		}
 
-		// Sabitler: kabulEkle2 ile uniform (NORMAL/KARGO). Doc 3-3-1 farklı diyor ama WSDL değer enforce
-		// etmiyor, kabulEkle2'nin kanıtlanmış kombinasyonunu uniform tutmak güvenli.
+		// Kept uniform with kabulEkle2 (NORMAL/KARGO); the WSDL does not enforce these values.
 		$lines[] = '<xsd:gonderiTip>NORMAL</xsd:gonderiTip>';
 		$lines[] = '<xsd:gonderiTur>KARGO</xsd:gonderiTur>';
 		$lines[] = $this->build_gondericibilgi_xml();
@@ -1144,7 +1472,7 @@ final class PTT_Client {
 		$lines[] = '<xsd:sifre>' . $e( $sifre ) . '</xsd:sifre>';
 		$lines[] = '<xsd:ucret>' . $double( $params['ucret'] ?? 0 ) . '</xsd:ucret>';
 
-		// urunTipFatura, urunTur opsiyonel — kullanılmıyor, atla.
+		// urunTipFatura and urunTur are optional and unused.
 
 		if ( isset( $params['yukseklik'] ) && (float) $params['yukseklik'] > 0 ) {
 			$lines[] = '<xsd:yukseklik>' . $double( $params['yukseklik'] ) . '</xsd:yukseklik>';
@@ -1158,21 +1486,29 @@ final class PTT_Client {
 	}
 
 	/**
-	 * siparisIstekEkle2 cevabı — WSDL OutputIstek tipine göre: sonucKodu, sonucAciklama, siparisId.
-	 * (kabulEkle2 ailesinin hataKodu/aciklama'sından ayrı şema.)
-	 *
-	 * sonucKodu==1 başarı; gonderiSorgu'da olduğu gibi nadir "10" tarzı varyantlar için siparisId
-	 * varlığını da fallback başarı sinyali sayıyoruz.
+	 * Parses siparisIstekEkle2 (WSDL OutputIstek): sonucKodu, sonucAciklama, siparisId — a
+	 * different schema from the hataKodu/aciklama used by the kabulEkle2 family.
+	 * sonucKodu 1 means success; a returned siparisId is accepted as a fallback signal.
 	 */
 	private function parse_siparis_istek_response( string $raw ): array {
 		if ( $raw === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT servisinden boş cevap.', 'wc-ptt-kargo' ), 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'raw'     => $raw,
+			];
 		}
 
 		$fault = $this->extract_tag( $raw, 'Text' );
-		if ( $fault === '' ) $fault = $this->extract_tag( $raw, 'faultstring' );
+		if ( $fault === '' ) {
+			$fault = $this->extract_tag( $raw, 'faultstring' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault !== '' ) {
-			return [ 'success' => false, 'mesaj' => 'SOAP Fault: ' . $fault, 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => 'SOAP Fault: ' . $fault,
+				'raw'     => $raw,
+			];
 		}
 
 		$sonuc_kodu = $this->extract_tag( $raw, 'sonucKodu' );
@@ -1192,12 +1528,11 @@ final class PTT_Client {
 	}
 
 	/**
-	 * GonderiTakipV2 servisi için ortak SOAP 1.1 envelope inşa eder.
-	 * PTT entegrasyon ekibinin verdiği örnek pattern: takip.ptt.gov.tr namespace,
-	 * tak: + xsd: prefix'leri, <input> wrapper, lowercase parametre tag'leri.
+	 * Builds the shared SOAP 1.1 envelope for the GonderiTakipV2 services:
+	 * takip.ptt.gov.tr namespace, tak:/xsd: prefixes, <input> wrapper, lowercase tags.
 	 *
-	 * @param string $operation gonderiSorgu | gonderiSorgu2 | gonderiSorgu_referansNo gibi
-	 * @param array  $params    Parametre tag adı => değeri (örn. ['barkod'=>..., 'kullanici'=>..., 'sifre'=>...])
+	 * @param string $operation gonderiSorgu, gonderiSorgu2, gonderiSorgu_referansNo, ...
+	 * @param array  $params    Tag name => value, e.g. ['barkod' => ..., 'kullanici' => ...].
 	 */
 	private function build_takip_envelope( string $operation, array $params ): string {
 		$e = function ( $v ) {
@@ -1217,7 +1552,7 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Takip endpoint'i için SOAP 1.1 header seti. Layer7 gateway routing'i SOAPAction'a bakıyor.
+	 * SOAP 1.1 headers for the tracking endpoint; the Layer7 gateway routes on SOAPAction.
 	 */
 	private function takip_headers( string $operation ): array {
 		return [
@@ -1227,9 +1562,8 @@ final class PTT_Client {
 	}
 
 	/**
-	 * Bağlantı testi için sentetik 13-haneli barkod üretir: prefix + range_start + check digit.
-	 * Müşteri prefix/range'i girmemişse veya 12-haneye eşit değilse '0000000000000' fallback.
-	 * Sentetik barkod PTT'de yoktur — servis "barkod bulunamadı" iş cevabı döner, HTTP 200 + SOAP Fault yok.
+	 * Builds the synthetic 13-digit barcode used by the connection test: prefix + range start
+	 * + check digit, falling back to zeros when no range has been configured yet.
 	 */
 	private function build_test_barkod(): string {
 		$prefix      = (string) $this->settings->get( 'barkod_prefix', '' );
@@ -1243,40 +1577,49 @@ final class PTT_Client {
 
 	private function parse_drop_point_response( string $raw ): array {
 		if ( $raw === '' ) {
-			return [ 'success' => false, 'mesaj' => __( 'PTT servisinden boş cevap.', 'wc-ptt-kargo' ), 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'raw'     => $raw,
+			];
 		}
 
 		$fault = $this->extract_tag( $raw, 'Text' );
-		if ( $fault === '' ) $fault = $this->extract_tag( $raw, 'faultstring' );
+		if ( $fault === '' ) {
+			$fault = $this->extract_tag( $raw, 'faultstring' );
+		}
 		if ( stripos( $raw, 'Fault' ) !== false && $fault !== '' ) {
-			return [ 'success' => false, 'mesaj' => 'SOAP Fault: ' . $fault, 'raw' => $raw ];
+			return [
+				'success' => false,
+				'mesaj'   => 'SOAP Fault: ' . $fault,
+				'raw'     => $raw,
+			];
 		}
 
 		$result_code = $this->extract_tag( $raw, 'resultCode' );
 		$result_expl = $this->extract_tag( $raw, 'resultExplanation' );
 
 		$rc = $result_code === '' ? null : (int) $result_code;
-		// Doc'ta resultCode için "0=başarılı" tipik PTT pattern'i ama bazı sürümlerde "1" başarı kodu.
-		// İkisini de toleranslı kabul et — bilgi yoksa boş string'e düş.
+		// PTT documents 0 as success but some versions return 1; accept both.
 		$success = ( $rc === 0 || $rc === 1 ) && $this->extract_tag( $raw, 'dropPointName' ) !== '';
 
 		return [
-			'success'           => $success,
-			'mesaj'             => $result_expl,
-			'result_code'       => $rc,
-			'dropPointCode'     => $this->extract_tag( $raw, 'dropPointCode' ),
-			'dropPointName'     => $this->extract_tag( $raw, 'dropPointName' ),
-			'dropPointCountry'  => $this->extract_tag( $raw, 'dropPointCountry' ),
-			'dropPointProvince' => $this->extract_tag( $raw, 'dropPointProvince' ),
-			'dropPointZipCode'  => $this->extract_tag( $raw, 'dropPointZipCode' ),
+			'success'              => $success,
+			'mesaj'                => $result_expl,
+			'result_code'          => $rc,
+			'dropPointCode'        => $this->extract_tag( $raw, 'dropPointCode' ),
+			'dropPointName'        => $this->extract_tag( $raw, 'dropPointName' ),
+			'dropPointCountry'     => $this->extract_tag( $raw, 'dropPointCountry' ),
+			'dropPointProvince'    => $this->extract_tag( $raw, 'dropPointProvince' ),
+			'dropPointZipCode'     => $this->extract_tag( $raw, 'dropPointZipCode' ),
 			'dropPointFullAddress' => $this->extract_tag( $raw, 'dropPointFullAddress' ),
 			'dropPointPhoneNumber' => $this->extract_tag( $raw, 'dropPointPhoneNumber' ),
-			'dropPointEmail'    => $this->extract_tag( $raw, 'dropPointEmail' ),
-			'dropPointWorkHours' => $this->extract_tag( $raw, 'dropPointWorkHours' ),
-			'dropPointLatitude' => $this->extract_tag( $raw, 'dropPointLatitude' ),
-			'dropPointLongitude' => $this->extract_tag( $raw, 'dropPointLongitude' ),
-			'dropPointDeadLine' => $this->extract_tag( $raw, 'dropPointDeadLine' ),
-			'raw'               => $raw,
+			'dropPointEmail'       => $this->extract_tag( $raw, 'dropPointEmail' ),
+			'dropPointWorkHours'   => $this->extract_tag( $raw, 'dropPointWorkHours' ),
+			'dropPointLatitude'    => $this->extract_tag( $raw, 'dropPointLatitude' ),
+			'dropPointLongitude'   => $this->extract_tag( $raw, 'dropPointLongitude' ),
+			'dropPointDeadLine'    => $this->extract_tag( $raw, 'dropPointDeadLine' ),
+			'raw'                  => $raw,
 		];
 	}
 }

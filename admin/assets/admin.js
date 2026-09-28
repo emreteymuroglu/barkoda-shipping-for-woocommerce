@@ -1,7 +1,7 @@
 (function ($) {
 	'use strict';
 
-	if (typeof WcPttKargo === 'undefined') return;
+	if (typeof PttKargoWC === 'undefined') return;
 
 	var $modal = null;
 	var currentOrder = null;
@@ -16,17 +16,17 @@
 	}
 
 	function ajax(action, data) {
-		return $.post(WcPttKargo.ajaxUrl, $.extend({ action: action, nonce: WcPttKargo.nonce }, data));
+		return $.post(PttKargoWC.ajaxUrl, $.extend({ action: action, nonce: PttKargoWC.nonce }, data));
 	}
 
 	function refreshList() {
 		var show = $('#wc-ptt-refresh').data('show') || 'pending';
 		$('#wc-ptt-refresh').prop('disabled', true);
-		ajax(WcPttKargo.actions.refresh, { show: show })
+		ajax(PttKargoWC.actions.refresh, { show: show })
 			.done(function (res) {
 				if (res && res.success) {
 					$('#wc-ptt-orders-container').html(res.data.html);
-					$('.wc-ptt-count').text(res.data.count + ' ' + WcPttKargo.i18n.orderWord);
+					$('.wc-ptt-count').text(res.data.count + ' ' + PttKargoWC.i18n.orderWord);
 				}
 			})
 			.always(function () { $('#wc-ptt-refresh').prop('disabled', false); });
@@ -41,7 +41,7 @@
 		aliciEmail: 'E-posta'
 	};
 
-	// Sipariş bazında override edilebilir kargo alanları. Boş bırakılırsa auto-compute değer kalır.
+	// Order-level override fields for shipping. If left blank, the auto-computed value is used.
 	var SHIPPING_FIELDS = [
 		{ key: 'agirlik',   label: 'Ağırlık (g)',   type: 'number', step: '1',   min: '1' },
 		{ key: 'desi',      label: 'Desi',          type: 'number', step: '1',   min: '1' },
@@ -53,7 +53,7 @@
 	function openSummaryModal(data) {
 		currentOrder = data;
 		$modal = $('#wc-ptt-modal');
-		$modal.find('.wc-ptt-modal-title').text(WcPttKargo.i18n.summaryTitle + ' — #' + (data.order_no || ''));
+		$modal.find('.wc-ptt-modal-title').text(PttKargoWC.i18n.summaryTitle + ' — #' + (data.order_no || ''));
 
 		var $cust = $modal.find('.wc-ptt-customer').empty();
 		var fields = data.fields || {};
@@ -71,8 +71,8 @@
 			$cust.append($row);
 		});
 
-		// Kargo detayları: auto-compute değerleri placeholder olarak gösterilir.
-		// Kullanıcı bir alanı doldurursa o alan override olur; boş kalan alanlar settings/auto-compute kullanır.
+		// Auto-computed values appear as placeholders. A filled field overrides them;
+		// a blank field falls back to the settings or the auto-computed value.
 		var $ship = $modal.find('.wc-ptt-shipping').empty();
 		SHIPPING_FIELDS.forEach(function (f) {
 			var current = fields[f.key];
@@ -93,12 +93,12 @@
 			$ship.append($row);
 		});
 
-		// COD info kutusu: sipariş kapıda ödemeli ise PTT'ye otomatik UA + odeme_sart_ucreti gider.
+		// COD notice: for cash-on-delivery orders, UA and the handling fee go to PTT automatically.
 		var $payInfo = $modal.find('.wc-ptt-payment-info').empty();
 		if (data.is_cod) {
 			$payInfo.show().html(
 				'<div style="padding:8px 12px; background:#fff3cd; border-left:4px solid #856404; border-radius:3px; font-size:12px; margin:8px 0;">' +
-				'<strong>' + WcPttKargo.i18n.codInfo + '</strong> ' +
+				'<strong>' + PttKargoWC.i18n.codInfo + '</strong> ' +
 				escapeHtml(data.payment_method || '') +
 				' &middot; <code>odemesekli=UA</code> &middot; <code>odeme_sart_ucreti=' + escapeHtml(data.cod_amount || '0') + '</code>' +
 				'</div>'
@@ -107,18 +107,18 @@
 			$payInfo.hide();
 		}
 
-		// Sigorta toggle: settings'e göre default açık/kapalı; kullanıcı popup'tan değiştirebilir.
+		// Insurance toggle: defaults to on/off based on settings; user can change it via the popup.
 		var $ins = $modal.find('.wc-ptt-insurance').empty();
 		var insDefault = !!data.insurance_default;
 		var insAmount = data.insurance_amount || (fields.deger_ucreti || '0');
 		var $insWrap = $('<div></div>');
 		var $insLabel = $('<label style="display:block; margin-bottom:8px;"></label>');
 		var $insChk = $('<input type="checkbox" data-key="__insurance" data-shipping="0" />').prop('checked', insDefault);
-		$insLabel.append($insChk).append(' ').append($('<strong></strong>').text(WcPttKargo.i18n.insuranceLabel));
+		$insLabel.append($insChk).append(' ').append($('<strong></strong>').text(PttKargoWC.i18n.insuranceLabel));
 		$insWrap.append($insLabel);
 
 		var $amountRow = $('<div class="field-row"></div>');
-		$amountRow.append($('<label></label>').attr('for', 'field-deger_ucreti').text(WcPttKargo.i18n.insuranceAmount));
+		$amountRow.append($('<label></label>').attr('for', 'field-deger_ucreti').text(PttKargoWC.i18n.insuranceAmount));
 		var $amountInput = $('<input type="number" step="0.01" min="0" />')
 			.attr({
 				id: 'field-deger_ucreti',
@@ -131,7 +131,7 @@
 		$amountRow.append($amountInput);
 		$insWrap.append($amountRow);
 
-		// Toggle değişince amount input enable/disable.
+		// Enable or disable the amount input alongside the toggle.
 		$insChk.on('change', function () {
 			var on = $(this).is(':checked');
 			$amountInput.prop('disabled', !on);
@@ -142,7 +142,7 @@
 
 		$ins.append($insWrap);
 
-		// Retry bilgilendirme: önceki başarısız denemede tüketilmiş barkod varsa göster.
+		// Retry notice: shown when a barcode was consumed by a previous failed attempt.
 		var $pendingInfo = $modal.find('.wc-ptt-pending-info').empty();
 		if (data.pending_barkod) {
 			$pendingInfo.show().html(
@@ -156,7 +156,7 @@
 			$pendingInfo.hide();
 		}
 
-		// Çoklu paket: kullanıcı parça sayısı + irsaliye no girer. Default 1 (mevcut tek-paket akışı).
+		// Multi-package: package count + waybill number. 1 keeps the single-package flow.
 		var $mp = $modal.find('.wc-ptt-multipackage').empty();
 		var $mpRow = $('<div class="field-row"></div>');
 		$mpRow.append($('<label></label>').attr('for', 'field-parca_adet').text('Parça Adedi'));
@@ -191,7 +191,7 @@
 		if (!currentOrder) return;
 		var orderId = currentOrder.order_id;
 		var $btn = $('tr[data-order-id="' + orderId + '"]').find('.js-ptt-send');
-		$btn.addClass('is-loading').text(WcPttKargo.i18n.sending);
+		$btn.addClass('is-loading').text(PttKargoWC.i18n.sending);
 
 		var override = {};
 		var multipack = { parca_adet: '1', irsaliye_no: '' };
@@ -199,9 +199,8 @@
 		$modal.find('.field-input').each(function () {
 			var $el = $(this);
 			var key = $el.data('key');
-			if ($el.prop('disabled')) return; // disable edilmiş input'u override'a koyma
+			if ($el.prop('disabled')) return; // never override a disabled input
 			var val = ($el.val() || '').trim();
-			// Multi-package alanları override'a değil, ayrı POST parametresine gider.
 			if ($el.data('multipackage')) {
 				multipack[key] = val;
 				return;
@@ -209,7 +208,7 @@
 			override[key] = val;
 		});
 
-		// Sigorta toggle (checkbox); on/off bayrağını backend whitelist'i tanır.
+		// Insurance checkbox; the backend whitelist accepts the on/off flag.
 		var $insChk = $modal.find('input[data-key="__insurance"]');
 		if ($insChk.length) {
 			override['__insurance'] = $insChk.is(':checked') ? 'on' : 'off';
@@ -217,7 +216,7 @@
 
 		closeModal();
 
-		ajax(WcPttKargo.actions.send, {
+		ajax(PttKargoWC.actions.send, {
 			order_id: orderId,
 			override: override,
 			parca_adet: multipack.parca_adet || '1',
@@ -225,7 +224,7 @@
 		})
 			.done(function (res) {
 				if (res && res.success) {
-					var msg = WcPttKargo.i18n.success + res.data.barkod;
+					var msg = PttKargoWC.i18n.success + res.data.barkod;
 					if (res.data.barkodlar && res.data.barkodlar.length > 1) {
 						msg += ' (+' + (res.data.barkodlar.length - 1) + ' ek parça)';
 					}
@@ -233,36 +232,36 @@
 					if (res.data.label_url) window.open(res.data.label_url, '_blank');
 					refreshList();
 				} else {
-					toast(WcPttKargo.i18n.error + ((res && res.data && res.data.message) || WcPttKargo.i18n.unknownErr), 'error');
+					toast(PttKargoWC.i18n.error + ((res && res.data && res.data.message) || PttKargoWC.i18n.unknownErr), 'error');
 					refreshList();
 				}
 			})
 			.fail(function (xhr) {
-				var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || WcPttKargo.i18n.serverErr;
-				toast(WcPttKargo.i18n.error + msg, 'error');
+				var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || PttKargoWC.i18n.serverErr;
+				toast(PttKargoWC.i18n.error + msg, 'error');
 				refreshList();
 			})
 			.always(function () {
-				$btn.removeClass('is-loading').text(WcPttKargo.i18n.shipBtn);
+				$btn.removeClass('is-loading').text(PttKargoWC.i18n.shipBtn);
 			});
 	}
 
 	function prepareAndOpen(orderId) {
-		ajax(WcPttKargo.actions.prepare, { order_id: orderId })
+		ajax(PttKargoWC.actions.prepare, { order_id: orderId })
 			.done(function (res) {
 				if (res && res.success) {
 					openSummaryModal(res.data);
 				} else {
-					toast(WcPttKargo.i18n.error + ((res && res.data && res.data.message) || WcPttKargo.i18n.prepareErr), 'error');
+					toast(PttKargoWC.i18n.error + ((res && res.data && res.data.message) || PttKargoWC.i18n.prepareErr), 'error');
 				}
 			})
 			.fail(function (xhr) {
-				var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || WcPttKargo.i18n.serverErr;
-				toast(WcPttKargo.i18n.error + msg, 'error');
+				var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || PttKargoWC.i18n.serverErr;
+				toast(PttKargoWC.i18n.error + msg, 'error');
 			});
 	}
 
-	// ---- Event delegation ----
+	// Event delegation
 
 	$(document).on('click', '#wc-ptt-refresh', function (e) {
 		e.preventDefault();
@@ -280,51 +279,50 @@
 		e.preventDefault();
 		var orderId = parseInt($(this).data('order-id'), 10);
 		if (!orderId) return;
-		ajax(WcPttKargo.actions.takip, { order_id: orderId }).done(function (res) {
+		ajax(PttKargoWC.actions.takip, { order_id: orderId }).done(function (res) {
 			if (res && res.success) {
 				openTakipModal(res.data);
 			} else {
-				toast(WcPttKargo.i18n.trackErr, 'error');
+				toast(PttKargoWC.i18n.trackErr, 'error');
 			}
 		}).fail(function () {
-			toast(WcPttKargo.i18n.trackErr, 'error');
+			toast(PttKargoWC.i18n.trackErr, 'error');
 		});
 	});
 
-	// PTT gönderisini iptal et: barkodVeriSil → fallback referansVeriSil.
-	// Sadece PTT henüz kabul etmediyse başarılı olur.
+	// Cancel a PTT shipment: barkodVeriSil with a referansVeriSil fallback.
+	// Only succeeds while PTT has not accepted the shipment.
 	$(document).on('click', '.js-ptt-cancel', function (e) {
 		e.preventDefault();
 		var orderId = parseInt($(this).data('order-id'), 10);
 		if (!orderId) return;
 
-		if (!window.confirm(WcPttKargo.i18n.cancelConfirm)) return;
+		if (!window.confirm(PttKargoWC.i18n.cancelConfirm)) return;
 
 		var $btn = $(this);
 		var originalText = $btn.text();
-		$btn.prop('disabled', true).text(WcPttKargo.i18n.canceling);
+		$btn.prop('disabled', true).text(PttKargoWC.i18n.canceling);
 
-		ajax(WcPttKargo.actions.cancelKargo, { order_id: orderId })
+		ajax(PttKargoWC.actions.cancelKargo, { order_id: orderId })
 			.done(function (res) {
 				if (res && res.success) {
-					var msg = WcPttKargo.i18n.cancelOk;
+					var msg = PttKargoWC.i18n.cancelOk;
 					if (res.data && res.data.message) msg += ' (' + res.data.message + ')';
 					toast(msg, 'success');
 					refreshList();
-					// Order edit sayfasındayken metabox'ı yenilemek için sayfa reload.
 					if (window.location.href.indexOf('action=edit') !== -1 ||
 						window.location.href.indexOf('post.php') !== -1) {
 						setTimeout(function () { window.location.reload(); }, 800);
 					}
 				} else {
-					var err = (res && res.data && res.data.message) || WcPttKargo.i18n.unknownErr;
-					toast(WcPttKargo.i18n.cancelErr + err, 'error');
+					var err = (res && res.data && res.data.message) || PttKargoWC.i18n.unknownErr;
+					toast(PttKargoWC.i18n.cancelErr + err, 'error');
 				}
 			})
 			.fail(function (xhr) {
 				var err = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message)
-					|| WcPttKargo.i18n.serverErr;
-				toast(WcPttKargo.i18n.cancelErr + err, 'error');
+					|| PttKargoWC.i18n.serverErr;
+				toast(PttKargoWC.i18n.cancelErr + err, 'error');
 			})
 			.always(function () {
 				$btn.prop('disabled', false).text(originalText);
@@ -352,16 +350,16 @@
 		}
 
 		if (!pttSuccess) {
-			html += '<div class="wc-ptt-takip-warn is-error">⚠ ' + escapeHtml(d.mesaj || WcPttKargo.i18n.trackErr) + '</div>';
+			html += '<div class="wc-ptt-takip-warn is-error">⚠ ' + escapeHtml(d.mesaj || PttKargoWC.i18n.trackErr) + '</div>';
 		} else if (!hasEvents) {
 			html += '<div class="wc-ptt-takip-warn is-info">ℹ ' + escapeHtml(d.mesaj || 'Henüz hareket yok.') + '</div>';
 		} else {
 			html += '<div class="wc-ptt-takip-meta">';
 			if (d.alici)    html += '<p><strong>Alıcı:</strong> ' + escapeHtml(d.alici) + '</p>';
 			if (d.gonderen) html += '<p><strong>Gönderen:</strong> ' + escapeHtml(d.gonderen) + '</p>';
-			if (d.mesaj)    html += '<p><strong>' + escapeHtml(WcPttKargo.i18n.trackStatus) + '</strong> ' + escapeHtml(d.mesaj) + '</p>';
+			if (d.mesaj)    html += '<p><strong>' + escapeHtml(PttKargoWC.i18n.trackStatus) + '</strong> ' + escapeHtml(d.mesaj) + '</p>';
 			html += '</div>';
-			html += '<h3>' + escapeHtml(WcPttKargo.i18n.trackEvents) + '</h3>';
+			html += '<h3>' + escapeHtml(PttKargoWC.i18n.trackEvents) + '</h3>';
 			html += '<table class="wc-ptt-takip-events"><thead><tr><th>Tarih / Saat</th><th>İşlem</th><th>Merkez</th></tr></thead><tbody>';
 			d.dongu.forEach(function (s) {
 				var tarih = (s.ITARIH || '') + (s.ISAAT ? ' ' + s.ISAAT : '');
@@ -374,10 +372,10 @@
 			html += '</tbody></table>';
 		}
 
-		// Drop point bilgisi (ajax_takip otomatik fetch ediyor; success ise göster)
+		// Drop point info
 		if (d.drop_point && d.drop_point.success) {
 			var dp = d.drop_point;
-			html += '<h3 style="margin-top:18px;">📍 ' + escapeHtml(WcPttKargo.i18n.dropPointTitle) + '</h3>';
+			html += '<h3 style="margin-top:18px;">📍 ' + escapeHtml(PttKargoWC.i18n.dropPointTitle) + '</h3>';
 			html += '<div class="wc-ptt-drop-point">';
 			if (dp.dropPointName)        html += '<p><strong>' + escapeHtml(dp.dropPointName) + '</strong>';
 			if (dp.dropPointCode)        html += ' <code>(' + escapeHtml(dp.dropPointCode) + ')</code>';
@@ -395,7 +393,6 @@
 			}
 			html += '</div>';
 		} else if (d.drop_point_error) {
-			// İsteğe bağlı bilgi; hata mesajını sadece small olarak ipucu şeklinde göster.
 			html += '<p style="margin-top:14px; font-size:11px; color:#646970;">'
 				+ '<em>Drop point bilgisi alınamadı: ' + escapeHtml(d.drop_point_error) + '</em></p>';
 		}
@@ -416,7 +413,7 @@
 		$('body').append(html);
 	}
 
-	// ---------- Kurye Çağırma (admin sayfasından) ----------
+	// Courier pickup: package count + waybill number. 1 keeps the single-package flow.
 
 	$(document).on('click', '#wc-ptt-courier-submit', function (e) {
 		e.preventDefault();
@@ -425,7 +422,7 @@
 		var $out   = $('#wc-ptt-courier-result');
 		var origText = $btn.html();
 
-		var data = { action: WcPttKargo.actions.courier, nonce: WcPttKargo.nonce };
+		var data = { action: PttKargoWC.actions.courier, nonce: PttKargoWC.nonce };
 		$form.find('input').each(function () {
 			var name = $(this).attr('name');
 			if (!name) return;
@@ -438,24 +435,24 @@
 			return;
 		}
 
-		$btn.prop('disabled', true).text(WcPttKargo.i18n.courierSending);
-		$out.removeClass('is-success is-error').show().text(WcPttKargo.i18n.courierSending);
+		$btn.prop('disabled', true).text(PttKargoWC.i18n.courierSending);
+		$out.removeClass('is-success is-error').show().text(PttKargoWC.i18n.courierSending);
 
-		$.post(WcPttKargo.ajaxUrl, data)
+		$.post(PttKargoWC.ajaxUrl, data)
 			.done(function (res) {
 				if (res && res.success) {
-					var msg = WcPttKargo.i18n.courierOk;
+					var msg = PttKargoWC.i18n.courierOk;
 					if (res.data && res.data.message) msg += ' — ' + res.data.message;
 					if (res.data && res.data.siparis_id) msg += ' (Sipariş ID: ' + res.data.siparis_id + ')';
 					$out.removeClass('is-error').addClass('is-success').text(msg);
 				} else {
-					var err = (res && res.data && res.data.message) || WcPttKargo.i18n.unknownErr;
-					$out.removeClass('is-success').addClass('is-error').text(WcPttKargo.i18n.courierErr + err);
+					var err = (res && res.data && res.data.message) || PttKargoWC.i18n.unknownErr;
+					$out.removeClass('is-success').addClass('is-error').text(PttKargoWC.i18n.courierErr + err);
 				}
 			})
 			.fail(function (xhr) {
-				var err = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || WcPttKargo.i18n.serverErr;
-				$out.removeClass('is-success').addClass('is-error').text(WcPttKargo.i18n.courierErr + err);
+				var err = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || PttKargoWC.i18n.serverErr;
+				$out.removeClass('is-success').addClass('is-error').text(PttKargoWC.i18n.courierErr + err);
 			})
 			.always(function () {
 				$btn.prop('disabled', false).html(origText);

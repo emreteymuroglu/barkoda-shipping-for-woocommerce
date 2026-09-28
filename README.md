@@ -143,51 +143,51 @@ toplaması için sipariş geçer (`siparisIstekEkle2`).
 
 ```php
 // Envelope alanları PTT'ye gitmeden önce
-apply_filters( 'wc_ptt_kargo_kabul_fields', $fields );
+apply_filters( 'ptt_kargo_wc_kabul_fields', $fields );
 
 // Ham SOAP body üretildikten sonra
-apply_filters( 'wc_ptt_kargo_soap_request_body', $body, $operation, $context );
+apply_filters( 'ptt_kargo_wc_soap_request_body', $body, $operation, $context );
 
 // HTTP timeout (varsayılan 30 sn)
-apply_filters( 'wc_ptt_kargo_http_timeout', 30, $operation );
+apply_filters( 'ptt_kargo_wc_http_timeout', 30, $operation );
 
 // SSL doğrulaması (varsayılan true)
-apply_filters( 'wc_ptt_kargo_sslverify', true, $operation );
+apply_filters( 'ptt_kargo_wc_sslverify', true, $operation );
 
 // Üretilen barkod
-apply_filters( 'wc_ptt_kargo_barkod', $barkod, $cursor, $prefix );
+apply_filters( 'ptt_kargo_wc_barkod', $barkod, $cursor, $prefix );
 
 // Sipariş'in COD sayılıp sayılmayacağı
-apply_filters( 'wc_ptt_kargo_is_cod_order', $is_cod, $order, $cod_methods );
+apply_filters( 'ptt_kargo_wc_is_cod_order', $is_cod, $order, $cod_methods );
 
 // Auto-compute ağırlık / boyut / desi
-apply_filters( 'wc_ptt_kargo_resolved_weight', $grams, $order, $source );
-apply_filters( 'wc_ptt_kargo_resolved_dimensions', $dims, $order, $source );
-apply_filters( 'wc_ptt_kargo_resolved_desi', $desi, $order, $dims, $source );
+apply_filters( 'ptt_kargo_wc_resolved_weight', $grams, $order, $source );
+apply_filters( 'ptt_kargo_wc_resolved_dimensions', $dims, $order, $source );
+apply_filters( 'ptt_kargo_wc_resolved_desi', $desi, $order, $dims, $source );
 
 // Etiket render'ı
-apply_filters( 'wc_ptt_kargo_label_html', $html, $order, $barkod );
-apply_filters( 'wc_ptt_kargo_label_header', $header_data, $order );
-apply_filters( 'wc_ptt_kargo_label_products', $items, $order );
+apply_filters( 'ptt_kargo_wc_label_html', $html, $order, $barkod );
+apply_filters( 'ptt_kargo_wc_label_header', $header_data, $order );
+apply_filters( 'ptt_kargo_wc_label_products', $items, $order );
 
 // Gönderim sonrası
-do_action( 'wc_ptt_kargo_after_send', $order, $barkod, $result );
-do_action( 'wc_ptt_kargo_after_error', $order, $message, $result );
-do_action( 'wc_ptt_kargo_after_cancel', $order, $old_barkod, $result );
-do_action( 'wc_ptt_kargo_after_courier', $params, $result );
+do_action( 'ptt_kargo_wc_after_send', $order, $barkod, $result );
+do_action( 'ptt_kargo_wc_after_error', $order, $message, $result );
+do_action( 'ptt_kargo_wc_after_cancel', $order, $old_barkod, $result );
+do_action( 'ptt_kargo_wc_after_courier', $params, $result );
 ```
 
 ### Sipariş meta anahtarları
 
 | Meta key | Açıklama |
 |---|---|
-| `_wc_ptt_kargo_barkod` | 13 haneli PTT barkodu |
-| `_wc_ptt_kargo_ref` | Müşteri referans numarası |
-| `_wc_ptt_kargo_status` | `pending` / `sent` / `error` / `canceled` |
-| `_wc_ptt_kargo_takip_url` | PTT'nin döndürdüğü takip linki |
-| `_wc_ptt_kargo_dosya_adi` | İptal için kullanılan dosya adı |
-| `_wc_ptt_kargo_pending_barkod` | Hata sonrası retry için saklanan barkod |
-| `_wc_ptt_kargo_parca_barkodlar` | Çoklu paket gönderimde tüm parça barkodları (JSON) |
+| `_ptt_kargo_wc_barkod` | 13 haneli PTT barkodu |
+| `_ptt_kargo_wc_ref` | Müşteri referans numarası |
+| `_ptt_kargo_wc_status` | `pending` / `sent` / `error` / `canceled` |
+| `_ptt_kargo_wc_takip_url` | PTT'nin döndürdüğü takip linki |
+| `_ptt_kargo_wc_dosya_adi` | İptal için kullanılan dosya adı |
+| `_ptt_kargo_wc_pending_barkod` | Hata sonrası retry için saklanan barkod |
+| `_ptt_kargo_wc_parca_barkodlar` | Çoklu paket gönderimde tüm parça barkodları (JSON) |
 
 ### Loglar
 **PTT Kargo → Loglar** sayfasında her SOAP isteğinin tam request/response

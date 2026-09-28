@@ -1,5 +1,7 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /** @var array  $opts */
 /** @var string $opt_key */
 
@@ -7,25 +9,25 @@ $all_statuses = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_status
 
 $selected_pids = $opts['urun_idler'] !== '' ? array_map( 'intval', array_filter( explode( ',', $opts['urun_idler'] ) ) ) : [];
 
-// WC enhanced select / product search desteği için scriptleri enqueue et (settings sayfasında ekstra).
+// Enqueue necessary scripts for the product search.
 if ( function_exists( 'wp_enqueue_script' ) ) {
 	wp_enqueue_script( 'wc-enhanced-select' );
 	wp_enqueue_style( 'woocommerce_admin_styles' );
 }
 ?>
-<h2><?php esc_html_e( 'Sipariş Filtresi', 'wc-ptt-kargo' ); ?></h2>
-<p class="description"><?php esc_html_e( 'Aşağıda ürün seçersen sadece o ürünleri içeren siparişler "Kargo Siparişleri" listesinde görünür. Boş bırakırsan tüm uygun durumdaki siparişler listelenir.', 'wc-ptt-kargo' ); ?></p>
+<h2><?php esc_html_e( 'Sipariş Filtresi', 'ptt-kargo-for-woocommerce' ); ?></h2>
+<p class="description"><?php esc_html_e( 'Aşağıda ürün seçersen sadece o ürünleri içeren siparişler "Kargo Siparişleri" listesinde görünür. Boş bırakırsan tüm uygun durumdaki siparişler listelenir.', 'ptt-kargo-for-woocommerce' ); ?></p>
 
 <table class="form-table" role="presentation">
 	<tr>
-		<th><label for="urun_idler_picker"><?php esc_html_e( 'Kapsama Alınacak Ürünler', 'wc-ptt-kargo' ); ?></label></th>
+		<th><label for="urun_idler_picker"><?php esc_html_e( 'Kapsama Alınacak Ürünler', 'ptt-kargo-for-woocommerce' ); ?></label></th>
 		<td>
 			<?php if ( wp_script_is( 'wc-enhanced-select', 'enqueued' ) ) : ?>
 				<select id="urun_idler_picker"
 					class="wc-product-search"
 					multiple="multiple"
 					style="width: 50%; min-width: 320px;"
-					data-placeholder="<?php esc_attr_e( 'Ürün adına göre ara...', 'wc-ptt-kargo' ); ?>"
+					data-placeholder="<?php esc_attr_e( 'Ürün adına göre ara...', 'ptt-kargo-for-woocommerce' ); ?>"
 					data-action="woocommerce_json_search_products_and_variations">
 					<?php
 					if ( ! empty( $selected_pids ) && function_exists( 'wc_get_product' ) ) {
@@ -39,7 +41,7 @@ if ( function_exists( 'wp_enqueue_script' ) ) {
 					?>
 				</select>
 				<input type="hidden" id="urun_idler" name="<?php echo esc_attr( $opt_key ); ?>[urun_idler]" value="<?php echo esc_attr( $opts['urun_idler'] ); ?>">
-				<p class="description"><?php esc_html_e( 'Ürün adı veya SKU ile arayıp seçin. Seçili ürünleri içeren siparişler kapsama alınır.', 'wc-ptt-kargo' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Ürün adı veya SKU ile arayıp seçin. Seçili ürünleri içeren siparişler kapsama alınır.', 'ptt-kargo-for-woocommerce' ); ?></p>
 				<script>
 				(function($){
 					$(function(){
@@ -52,17 +54,17 @@ if ( function_exists( 'wp_enqueue_script' ) ) {
 				</script>
 			<?php else : ?>
 				<input type="text" id="urun_idler" name="<?php echo esc_attr( $opt_key ); ?>[urun_idler]" value="<?php echo esc_attr( $opts['urun_idler'] ); ?>" class="regular-text" placeholder="17696, 17700, 17701">
-				<p class="description"><?php esc_html_e( 'Virgülle ayrılmış ürün ID listesi. (Ürün arama widget\'ı için WooCommerce admin script\'i yüklenemedi.)', 'wc-ptt-kargo' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Virgülle ayrılmış ürün ID listesi. (Ürün arama widget\'ı için WooCommerce admin script\'i yüklenemedi.)', 'ptt-kargo-for-woocommerce' ); ?></p>
 			<?php endif; ?>
 		</td>
 	</tr>
 
 </table>
 
-<h3><?php esc_html_e( 'Sipariş Durumları', 'wc-ptt-kargo' ); ?></h3>
+<h3><?php esc_html_e( 'Sipariş Durumları', 'ptt-kargo-for-woocommerce' ); ?></h3>
 <table class="form-table" role="presentation">
 	<tr>
-		<th><?php esc_html_e( 'Listelenecek Durumlar', 'wc-ptt-kargo' ); ?></th>
+		<th><?php esc_html_e( 'Listelenecek Durumlar', 'ptt-kargo-for-woocommerce' ); ?></th>
 		<td>
 			<?php
 			$aktif = (array) $opts['sipariş_durumlari'];
@@ -74,7 +76,7 @@ if ( function_exists( 'wp_enqueue_script' ) ) {
 					<?php echo esc_html( $label ); ?>
 				</label>
 			<?php endforeach; ?>
-			<p class="description"><?php esc_html_e( '"Kargo Siparişleri" listesinde sadece seçili durumdaki siparişler gösterilir.', 'wc-ptt-kargo' ); ?></p>
+			<p class="description"><?php esc_html_e( '"Kargo Siparişleri" listesinde sadece seçili durumdaki siparişler gösterilir.', 'ptt-kargo-for-woocommerce' ); ?></p>
 		</td>
 	</tr>
 </table>
