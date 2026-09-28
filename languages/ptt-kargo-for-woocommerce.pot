@@ -1,0 +1,1471 @@
+# Copyright (C) 2026 Emre Teymuroglu
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: PTT Kargo for WooCommerce 2.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordpress-ptt-kargo\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-28T20:30:51+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: ptt-kargo-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+#: ptt-kargo-for-woocommerce.php
+#: includes/class-admin-page.php:56
+msgid "PTT Kargo for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: ptt-kargo-for-woocommerce.php
+msgid "https://github.com/emreteymuroglu/ptt-kargo-for-woocommerce"
+msgstr ""
+
+#. Description of the plugin
+#: ptt-kargo-for-woocommerce.php
+msgid "Creates PTT Kargo shipments from WooCommerce orders over the PTT SOAP API, generates barcodes, prints 80mm thermal labels and tracks deliveries. Not affiliated with or endorsed by PTT."
+msgstr ""
+
+#. Author of the plugin
+#: ptt-kargo-for-woocommerce.php
+msgid "Emre Teymuroglu"
+msgstr ""
+
+#: admin/views/courier.php:23
+msgid "PTT Kargo — Request Courier"
+msgstr ""
+
+#: admin/views/courier.php:25
+msgid "Places a pickup order so PTT collects your shipments from your address (siparisIstekEkle2). Sender details are taken from the Sender tab."
+msgstr ""
+
+#: admin/views/courier.php:30
+msgid "Pickup Details"
+msgstr ""
+
+#: admin/views/courier.php:35
+#: includes/class-admin-page.php:192
+msgid "Package Count"
+msgstr ""
+
+#. translators: %d: number of orders sent to PTT but not yet collected
+#: admin/views/courier.php:42
+#, php-format
+msgid "%d order(s) sent to PTT and awaiting acceptance — shown as a reference for the pickup quantity."
+msgstr ""
+
+#: admin/views/courier.php:49
+msgid "Total Weight (grams)"
+msgstr ""
+
+#: admin/views/courier.php:51
+#: admin/views/courier.php:57
+msgid "Optional"
+msgstr ""
+
+#: admin/views/courier.php:55
+msgid "Total Volumetric Weight"
+msgstr ""
+
+#: admin/views/courier.php:61
+msgid "Estimated Dimensions (cm)"
+msgstr ""
+
+#: admin/views/courier.php:63
+msgid "Width"
+msgstr ""
+
+#: admin/views/courier.php:65
+msgid "Length"
+msgstr ""
+
+#: admin/views/courier.php:67
+msgid "Height"
+msgstr ""
+
+#: admin/views/courier.php:71
+msgid "Additional Services"
+msgstr ""
+
+#: admin/views/courier.php:73
+msgid "e.g. DK (insured), DKUA (insured + charge recipient)"
+msgstr ""
+
+#: admin/views/courier.php:75
+msgid "Ask your PTT regional office which additional service codes your contract includes. Multiple codes are merged alphabetically (e.g. DKUA)."
+msgstr ""
+
+#: admin/views/courier.php:80
+#: includes/class-admin-page.php:167
+msgid "Insured Value (TRY)"
+msgstr ""
+
+#: admin/views/courier.php:82
+msgid "Leave empty if you do not want insurance"
+msgstr ""
+
+#: admin/views/courier.php:83
+msgid "If you fill this in, you must add DK to the additional services field."
+msgstr ""
+
+#: admin/views/courier.php:87
+msgid "Appointment (optional)"
+msgstr ""
+
+#: admin/views/courier.php:89
+msgid "Start"
+msgstr ""
+
+#: admin/views/courier.php:91
+msgid "End"
+msgstr ""
+
+#: admin/views/courier.php:92
+msgid "The appointment format PTT accepts depends on your contract; leaving this empty is usually fine."
+msgstr ""
+
+#: admin/views/courier.php:100
+#: includes/class-admin-page.php:76
+#: includes/class-admin-page.php:77
+msgid "Request Courier"
+msgstr ""
+
+#: admin/views/courier.php:110
+msgid "Pickup Address"
+msgstr ""
+
+#: admin/views/courier.php:123
+msgid "Edit sender settings →"
+msgstr ""
+
+#: admin/views/logs.php:16
+#: includes/class-admin-page.php:94
+msgid "PTT Logs"
+msgstr ""
+
+#: admin/views/logs.php:18
+msgid "Clear All"
+msgstr ""
+
+#. translators: %d: log count
+#: admin/views/logs.php:27
+#, php-format
+msgid "The last %d integration records, newest first. Automatically capped at 500 records."
+msgstr ""
+
+#. translators: %d: total number of log records
+#: admin/views/logs.php:33
+#, php-format
+msgid "%d records in total"
+msgstr ""
+
+#: admin/views/logs.php:41
+#: admin/views/orders-list.php:15
+msgid "All"
+msgstr ""
+
+#: admin/views/logs.php:42
+msgid "Successful"
+msgstr ""
+
+#: admin/views/logs.php:43
+#: admin/views/order-metabox.php:68
+#: admin/views/orders-table.php:131
+#: includes/class-admin-page.php:221
+#: includes/class-wc-integration.php:95
+msgid "Error"
+msgstr ""
+
+#: admin/views/logs.php:58
+#: admin/views/orders-table.php:13
+msgid "Date"
+msgstr ""
+
+#: admin/views/logs.php:59
+msgid "Operation"
+msgstr ""
+
+#: admin/views/logs.php:60
+#: admin/views/orders-table.php:12
+msgid "Order"
+msgstr ""
+
+#: admin/views/logs.php:61
+msgid "Status"
+msgstr ""
+
+#: admin/views/logs.php:62
+msgid "Message"
+msgstr ""
+
+#: admin/views/logs.php:67
+msgid "No log records yet."
+msgstr ""
+
+#: admin/views/logs.php:108
+msgid "Raw data"
+msgstr ""
+
+#: admin/views/logs.php:110
+msgid "Request:"
+msgstr ""
+
+#: admin/views/logs.php:114
+msgid "Response:"
+msgstr ""
+
+#: admin/views/logs.php:134
+msgid "All log records will be deleted. Are you sure?"
+msgstr ""
+
+#: admin/views/order-metabox.php:18
+#: admin/views/orders-list.php:14
+#: admin/views/orders-table.php:77
+#: includes/class-wc-integration.php:92
+msgid "Sent"
+msgstr ""
+
+#: admin/views/order-metabox.php:21
+#: includes/class-admin-page.php:157
+msgid "Barcode:"
+msgstr ""
+
+#: admin/views/order-metabox.php:28
+#: admin/views/orders-table.php:105
+msgid "PTT tracking link"
+msgstr ""
+
+#: admin/views/order-metabox.php:33
+#: admin/views/orders-table.php:162
+msgid "Print Label"
+msgstr ""
+
+#: admin/views/order-metabox.php:36
+#: admin/views/orders-table.php:165
+msgid "Track"
+msgstr ""
+
+#: admin/views/order-metabox.php:42
+#: includes/class-admin-page.php:165
+msgid "Cancel PTT Shipment"
+msgstr ""
+
+#: admin/views/order-metabox.php:45
+msgid "Only possible while PTT has not yet accepted the shipment."
+msgstr ""
+
+#: admin/views/order-metabox.php:50
+msgid "Cancelled"
+msgstr ""
+
+#: admin/views/order-metabox.php:56
+msgid "This order was cancelled at PTT. Resending will consume a new barcode."
+msgstr ""
+
+#: admin/views/order-metabox.php:60
+#: admin/views/orders-table.php:155
+msgid "Resend"
+msgstr ""
+
+#: admin/views/order-metabox.php:70
+#: includes/class-admin-page.php:153
+#: includes/class-admin-page.php:305
+#: includes/class-admin-page.php:506
+msgid "Unknown error"
+msgstr ""
+
+#. translators: %s: pending barcode
+#: admin/views/order-metabox.php:76
+#, php-format
+msgid "Consumed barcode: %s — it will be reused on the next attempt."
+msgstr ""
+
+#: admin/views/order-metabox.php:82
+msgid "Try Again"
+msgstr ""
+
+#: admin/views/order-metabox.php:87
+msgid "Not sent yet"
+msgstr ""
+
+#: admin/views/order-metabox.php:92
+msgid "Send to PTT Kargo"
+msgstr ""
+
+#: admin/views/orders-list.php:9
+msgid "PTT Kargo Orders"
+msgstr ""
+
+#: admin/views/orders-list.php:13
+msgid "Pending"
+msgstr ""
+
+#: admin/views/orders-list.php:20
+msgid "Refresh"
+msgstr ""
+
+#. translators: %d: number of labels
+#: admin/views/orders-list.php:37
+#, php-format
+msgid "Print Labels in Bulk (%d)"
+msgstr ""
+
+#: admin/views/orders-list.php:41
+#: includes/class-admin-page.php:151
+msgid "order"
+msgstr ""
+
+#: admin/views/orders-list.php:53
+#: includes/class-admin-page.php:146
+msgid "Shipment Summary"
+msgstr ""
+
+#: admin/views/orders-list.php:56
+msgid "Some fields are missing — those outlined in red. You can leave them empty or fill them in; confirming sends the shipment."
+msgstr ""
+
+#: admin/views/orders-list.php:61
+msgid "Customer Details"
+msgstr ""
+
+#: admin/views/orders-list.php:64
+msgid "Shipment Details"
+msgstr ""
+
+#: admin/views/orders-list.php:65
+msgid "(leave empty to use the auto-computed value)"
+msgstr ""
+
+#: admin/views/orders-list.php:71
+#: admin/views/settings/payment.php:91
+msgid "Insurance (Valuable Goods)"
+msgstr ""
+
+#: admin/views/orders-list.php:74
+msgid "Multiple Packages"
+msgstr ""
+
+#: admin/views/orders-list.php:75
+msgid "(if the order ships as more than one package)"
+msgstr ""
+
+#: admin/views/orders-list.php:80
+#: admin/views/orders-table.php:121
+#: admin/views/orders-table.php:168
+#: includes/class-admin-page.php:150
+#: includes/class-wc-integration.php:97
+msgid "Cancel"
+msgstr ""
+
+#: admin/views/orders-list.php:81
+#: includes/class-admin-page.php:149
+msgid "Confirm and Send"
+msgstr ""
+
+#: admin/views/orders-table.php:14
+#: includes/class-admin-page.php:147
+msgid "Customer"
+msgstr ""
+
+#: admin/views/orders-table.php:15
+#: admin/views/settings/sender.php:29
+#: includes/class-admin-page.php:176
+msgid "Address"
+msgstr ""
+
+#: admin/views/orders-table.php:16
+#: includes/class-label.php:433
+msgid "Products"
+msgstr ""
+
+#: admin/views/orders-table.php:17
+msgid "PTT Status"
+msgstr ""
+
+#: admin/views/orders-table.php:18
+#: includes/class-admin-page.php:207
+msgid "Action"
+msgstr ""
+
+#: admin/views/orders-table.php:23
+msgid "No orders to show."
+msgstr ""
+
+#. translators: %d: number of packages in the shipment
+#: admin/views/orders-table.php:85
+#, php-format
+msgid "%d packages"
+msgstr ""
+
+#: admin/views/orders-table.php:109
+#: admin/views/orders-table.php:135
+msgid "Show raw data"
+msgstr ""
+
+#: admin/views/orders-table.php:111
+#: admin/views/orders-table.php:137
+msgid "Request (SOAP sent):"
+msgstr ""
+
+#: admin/views/orders-table.php:115
+#: admin/views/orders-table.php:141
+msgid "Response (from PTT):"
+msgstr ""
+
+#: admin/views/orders-table.php:147
+msgid "Waiting"
+msgstr ""
+
+#: admin/views/orders-table.php:156
+#: includes/class-admin-page.php:152
+msgid "Ship"
+msgstr ""
+
+#: admin/views/orders-table.php:167
+msgid "Cancel the PTT shipment (only while it has not been accepted)"
+msgstr ""
+
+#: admin/views/settings.php:12
+msgid "PTT Connection"
+msgstr ""
+
+#: admin/views/settings.php:16
+#: admin/views/settings/label.php:56
+msgid "Barcode"
+msgstr ""
+
+#: admin/views/settings.php:20
+msgid "Sender"
+msgstr ""
+
+#: admin/views/settings.php:24
+msgid "Label"
+msgstr ""
+
+#: admin/views/settings.php:28
+msgid "Products & Filters"
+msgstr ""
+
+#: admin/views/settings.php:32
+#: admin/views/settings/defaults.php:8
+msgid "Shipment Defaults"
+msgstr ""
+
+#: admin/views/settings.php:36
+msgid "Payment"
+msgstr ""
+
+#: admin/views/settings.php:49
+msgid "PTT Kargo for WooCommerce — Settings"
+msgstr ""
+
+#: admin/views/settings.php:78
+msgid "Save Settings"
+msgstr ""
+
+#: admin/views/settings.php:83
+msgid "Label Preview"
+msgstr ""
+
+#: admin/views/settings.php:87
+msgid "Live Label Preview"
+msgstr ""
+
+#: admin/views/settings.php:89
+msgid "The preview refreshes automatically as you change the form."
+msgstr ""
+
+#: admin/views/settings.php:104
+msgid "Label preview"
+msgstr ""
+
+#: admin/views/settings.php:108
+msgid "⚠ Rendered with sample data — the order details are placeholders."
+msgstr ""
+
+#: admin/views/settings/barcode.php:10
+msgid "Barcode Range and Reference"
+msgstr ""
+
+#: admin/views/settings/barcode.php:11
+msgid "PTT allocates you a 13-digit barcode range. The first 8 digits are a fixed prefix, the next 4 are a sequential serial number, and the last digit is an automatically calculated check digit."
+msgstr ""
+
+#: admin/views/settings/barcode.php:15
+msgid "Barcode Prefix (8 digits)"
+msgstr ""
+
+#: admin/views/settings/barcode.php:18
+msgid "The fixed 8-digit prefix stated in your PTT integration letter."
+msgstr ""
+
+#: admin/views/settings/barcode.php:22
+msgid "Serial Number Range"
+msgstr ""
+
+#: admin/views/settings/barcode.php:28
+msgid "The start and end serial numbers PTT allocated to you. Prefix + serial = 12 digits."
+msgstr ""
+
+#: admin/views/settings/barcode.php:30
+msgid "Next serial to be used:"
+msgstr ""
+
+#. translators: %d: barcodes left in the allocated range
+#: admin/views/settings/barcode.php:35
+#, php-format
+msgid "%d remaining"
+msgstr ""
+
+#: admin/views/settings/barcode.php:42
+msgid "Customer Reference Prefix"
+msgstr ""
+
+#: admin/views/settings/barcode.php:45
+msgid "A prefix added before the order ID. For example SHOP- sends SHOP-12345 to PTT. Can be left empty."
+msgstr ""
+
+#: admin/views/settings/barcode.php:51
+msgid "Example:"
+msgstr ""
+
+#: admin/views/settings/barcode.php:52
+msgid "Prefix \"27918802\" + serial \"0001\" → 12 digits \"279188020001\" + check digit (automatic) → 13 digits \"2791880200017\"."
+msgstr ""
+
+#: admin/views/settings/connection.php:8
+msgid "PTT Connection Details"
+msgstr ""
+
+#: admin/views/settings/connection.php:9
+msgid "Enter the customer number and password PTT issued for the integration service. Verify against the Test environment first."
+msgstr ""
+
+#: admin/views/settings/connection.php:13
+msgid "Environment"
+msgstr ""
+
+#: admin/views/settings/connection.php:16
+msgid "Test"
+msgstr ""
+
+#: admin/views/settings/connection.php:17
+msgid "Live (Production)"
+msgstr ""
+
+#: admin/views/settings/connection.php:19
+msgid "Switch to Live after PTT approves your integration."
+msgstr ""
+
+#: admin/views/settings/connection.php:23
+msgid "Customer Number"
+msgstr ""
+
+#: admin/views/settings/connection.php:26
+msgid "The numeric customer ID PTT issued when approving your integration."
+msgstr ""
+
+#: admin/views/settings/connection.php:30
+msgid "Password"
+msgstr ""
+
+#: admin/views/settings/connection.php:32
+msgid "Enter a new password to change it"
+msgstr ""
+
+#: admin/views/settings/connection.php:34
+msgid "A password is stored (AES-256 encrypted). Leave empty to keep it unchanged."
+msgstr ""
+
+#: admin/views/settings/connection.php:36
+msgid "Stored AES-256 encrypted, keyed from the WordPress AUTH_KEY."
+msgstr ""
+
+#: admin/views/settings/connection.php:41
+msgid "Connection Test"
+msgstr ""
+
+#: admin/views/settings/connection.php:45
+msgid "Test Connection"
+msgstr ""
+
+#: admin/views/settings/connection.php:48
+msgid "Sends a sample query to the PTT services using the details above. Works before saving too."
+msgstr ""
+
+#: admin/views/settings/defaults.php:9
+msgid "PTT requires a weight and volumetric weight on every shipment. The sources below control the auto-compute behaviour; you can override them per order in the Ship popup."
+msgstr ""
+
+#: admin/views/settings/defaults.php:11
+msgid "Weight / Volumetric Weight Source"
+msgstr ""
+
+#: admin/views/settings/defaults.php:14
+msgid "Weight Source"
+msgstr ""
+
+#: admin/views/settings/defaults.php:18
+msgid "Use a fixed default"
+msgstr ""
+
+#: admin/views/settings/defaults.php:19
+msgid "Calculate from WooCommerce product weight (Σ weight × quantity)"
+msgstr ""
+
+#: admin/views/settings/defaults.php:20
+msgid "Calculate from product weight, falling back to the fixed default"
+msgstr ""
+
+#: admin/views/settings/defaults.php:23
+msgid "The WooCommerce weight unit is converted to grams automatically (g/kg/lbs/oz supported). Current unit:"
+msgstr ""
+
+#: admin/views/settings/defaults.php:29
+msgid "Fixed Weight (grams)"
+msgstr ""
+
+#: admin/views/settings/defaults.php:32
+msgid "grams"
+msgstr ""
+
+#: admin/views/settings/defaults.php:33
+msgid "When \"Use a fixed default\" is selected above, every shipment uses this value. It is also the fallback in fallback mode."
+msgstr ""
+
+#: admin/views/settings/defaults.php:37
+msgid "Dimension Source"
+msgstr ""
+
+#: admin/views/settings/defaults.php:41
+msgid "Do not send dimensions (volumetric weight only)"
+msgstr ""
+
+#: admin/views/settings/defaults.php:42
+msgid "Calculate from WooCommerce product dimensions (maximum per axis)"
+msgstr ""
+
+#: admin/views/settings/defaults.php:45
+msgid "With product dimensions selected, the maximum width/length/height across all line items is used, assuming a single package. The volumetric weight formula is width × length × height / 3000."
+msgstr ""
+
+#: admin/views/settings/defaults.php:47
+msgid "Current WooCommerce dimension unit:"
+msgstr ""
+
+#: admin/views/settings/defaults.php:53
+msgid "Fixed Volumetric Weight"
+msgstr ""
+
+#: admin/views/settings/defaults.php:56
+msgid "Used when the dimension source is set to not send dimensions. Start with 1 and adjust to your package volume."
+msgstr ""
+
+#: admin/views/settings/defaults.php:60
+msgid "Additional Service Code"
+msgstr ""
+
+#: admin/views/settings/defaults.php:62
+msgid "Can be left empty"
+msgstr ""
+
+#: admin/views/settings/defaults.php:64
+msgid "PTT service codes are uppercase and alphabetical (e.g. DK = Valuable Goods). Several codes can be combined, such as DKUA. When cash on delivery is active, OS is added automatically and does not need to be entered here."
+msgstr ""
+
+#: admin/views/settings/defaults.php:71
+msgid "If a product has no weight, fill in Product → General → Weight. The weight unit can be changed under WooCommerce > Settings > Products > Measurements."
+msgstr ""
+
+#: admin/views/settings/label.php:8
+msgid "Label Appearance"
+msgstr ""
+
+#: admin/views/settings/label.php:9
+msgid "Controls the label text and which blocks appear. The live preview on the right updates as you make changes."
+msgstr ""
+
+#: admin/views/settings/label.php:11
+msgid "Branding Block (Top)"
+msgstr ""
+
+#: admin/views/settings/label.php:14
+msgid "Logo"
+msgstr ""
+
+#: admin/views/settings/label.php:18
+msgid "Select Image"
+msgstr ""
+
+#: admin/views/settings/label.php:19
+msgid "Remove"
+msgstr ""
+
+#: admin/views/settings/label.php:26
+msgid "Pick from the WordPress Media Library or enter a URL directly. It appears at roughly 60mm × 18mm on the label."
+msgstr ""
+
+#: admin/views/settings/label.php:30
+msgid "Title"
+msgstr ""
+
+#: admin/views/settings/label.php:33
+msgid "The heading printed at the top of the label, in uppercase. If empty, the sender name is used; if that is also empty, the site name."
+msgstr ""
+
+#: admin/views/settings/label.php:37
+msgid "Subtitle"
+msgstr ""
+
+#: admin/views/settings/label.php:40
+msgid "Small text printed under the title. Can be left empty."
+msgstr ""
+
+#: admin/views/settings/label.php:45
+msgid "Label Sections"
+msgstr ""
+
+#: admin/views/settings/label.php:46
+msgid "Tick the sections you want on the label. Section headings are hidden automatically when empty."
+msgstr ""
+
+#: admin/views/settings/label.php:49
+msgid "Visible Blocks"
+msgstr ""
+
+#: admin/views/settings/label.php:53
+msgid "Order Number + Date"
+msgstr ""
+
+#: admin/views/settings/label.php:54
+msgid "Recipient Details"
+msgstr ""
+
+#: admin/views/settings/label.php:55
+msgid "Product List"
+msgstr ""
+
+#: admin/views/settings/label.php:57
+msgid "Sender Block (Bottom)"
+msgstr ""
+
+#: admin/views/settings/payment.php:26
+msgid "Cash on Delivery (COD) Mapping"
+msgstr ""
+
+#: admin/views/settings/payment.php:28
+msgid "The WooCommerce payment methods you tick here count as cash on delivery. Orders paid with them are sent to PTT with:"
+msgstr ""
+
+#: admin/views/settings/payment.php:36
+msgid "⚠ When COD is active, Sender → Postal Cheque Account Number must be filled in, otherwise PTT rejects the shipment."
+msgstr ""
+
+#: admin/views/settings/payment.php:41
+msgid "Cash on Delivery Methods"
+msgstr ""
+
+#: admin/views/settings/payment.php:44
+msgid "No payment methods found. Enable at least one under WooCommerce > Settings > Payments."
+msgstr ""
+
+#: admin/views/settings/payment.php:59
+msgid "currently inactive"
+msgstr ""
+
+#: admin/views/settings/payment.php:65
+msgid "The usual choice is WooCommerce Cash on Delivery (cod). Card and online payments count as normal shipments and should not be ticked."
+msgstr ""
+
+#: admin/views/settings/payment.php:71
+msgid "COD Additional Service Code"
+msgstr ""
+
+#: admin/views/settings/payment.php:75
+msgid "PTT's payment-on-delivery service code — default: "
+msgstr ""
+
+#: admin/views/settings/payment.php:77
+msgid "Change this if the PTT integration team gave you a different code, such as the combination DKUA."
+msgstr ""
+
+#: admin/views/settings/payment.php:80
+msgid "The code is merged automatically with the fixed code in Shipment Defaults → Additional Service Code, for example DK + OS = DKOS."
+msgstr ""
+
+#: admin/views/settings/payment.php:87
+msgid "Reminder:"
+msgstr ""
+
+#: admin/views/settings/payment.php:88
+msgid "Cash-on-delivery shipments are sent to PTT as collect-on-delivery. PTT transfers the collected amount to your Postal Cheque account. Contact your PTT branch to verify the account."
+msgstr ""
+
+#: admin/views/settings/payment.php:93
+msgid "Insurance is toggled per order in the Ship popup. When enabled, the PTT envelope carries:"
+msgstr ""
+
+#: admin/views/settings/payment.php:102
+msgid "Insurance Additional Service Code"
+msgstr ""
+
+#: admin/views/settings/payment.php:106
+msgid "PTT's Valuable Goods code — default: "
+msgstr ""
+
+#: admin/views/settings/payment.php:114
+msgid "When both cash on delivery and valuable goods are active, the service codes are merged in the PTT envelope, for example DKUA + OS = DKUAOS."
+msgstr ""
+
+#: admin/views/settings/products.php:18
+msgid "Order Filter"
+msgstr ""
+
+#: admin/views/settings/products.php:19
+msgid "If you select products below, only orders containing them appear in the Orders list. Leave empty to list every order in an eligible status."
+msgstr ""
+
+#: admin/views/settings/products.php:23
+msgid "Products to Include"
+msgstr ""
+
+#: admin/views/settings/products.php:30
+msgid "Search by product name..."
+msgstr ""
+
+#: admin/views/settings/products.php:44
+msgid "Search by product name or SKU. Orders containing the selected products are included."
+msgstr ""
+
+#: admin/views/settings/products.php:57
+msgid "Comma-separated list of product IDs. The WooCommerce admin script needed for the product search widget could not be loaded."
+msgstr ""
+
+#: admin/views/settings/products.php:64
+msgid "Order Statuses"
+msgstr ""
+
+#: admin/views/settings/products.php:67
+msgid "Statuses to List"
+msgstr ""
+
+#: admin/views/settings/products.php:79
+msgid "Only orders in the selected statuses appear in the Orders list."
+msgstr ""
+
+#: admin/views/settings/sender.php:8
+msgid "Sender Details"
+msgstr ""
+
+#: admin/views/settings/sender.php:9
+msgid "These details go into the shipment record sent to PTT and appear at the bottom of the label. Filling in every field avoids missing-data errors when sending."
+msgstr ""
+
+#: admin/views/settings/sender.php:13
+msgid "Sender Name"
+msgstr ""
+
+#: admin/views/settings/sender.php:16
+msgid "Your shop or company name, sent with kabulEkle2. Also used as the label title when the title field is empty."
+msgstr ""
+
+#: admin/views/settings/sender.php:20
+msgid "Sender Surname"
+msgstr ""
+
+#: admin/views/settings/sender.php:24
+msgid "Only the PTT courier service (siparisIstekEkle2) expects the first and last name separately. If empty, the last word of the sender name is used as the surname."
+msgstr ""
+
+#: admin/views/settings/sender.php:32
+msgid "Neighbourhood, street, building and apartment."
+msgstr ""
+
+#: admin/views/settings/sender.php:36
+#: includes/class-admin-page.php:177
+msgid "Province"
+msgstr ""
+
+#: admin/views/settings/sender.php:40
+#: includes/class-admin-page.php:178
+msgid "District"
+msgstr ""
+
+#: admin/views/settings/sender.php:44
+msgid "Postcode"
+msgstr ""
+
+#: admin/views/settings/sender.php:48
+msgid "Phone"
+msgstr ""
+
+#: admin/views/settings/sender.php:51
+msgid "PTT expects 10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
+msgstr ""
+
+#: admin/views/settings/sender.php:55
+#: includes/class-admin-page.php:180
+msgid "Email"
+msgstr ""
+
+#: admin/views/settings/sender.php:59
+msgid "Postal Cheque Account Number"
+msgstr ""
+
+#: admin/views/settings/sender.php:63
+msgid "The 8-digit PTT Bank account number opened at a PTT branch. It is stated in your PTT integration email."
+msgstr ""
+
+#: admin/views/settings/sender.php:65
+msgid "Required for cash-on-delivery shipments — sent in the PTT envelope as the <code>rezerve1</code> field."
+msgstr ""
+
+#: admin/views/settings/sender.php:71
+#: admin/views/settings/sender.php:94
+msgid "Return Address"
+msgstr ""
+
+#: admin/views/settings/sender.php:73
+msgid "By default, undeliverable parcels are returned to the sender address. Fill in the fields below if returns should go somewhere else, such as a warehouse."
+msgstr ""
+
+#: admin/views/settings/sender.php:78
+msgid "Different Return Address"
+msgstr ""
+
+#: admin/views/settings/sender.php:82
+msgid "The return address differs from the sender address"
+msgstr ""
+
+#: admin/views/settings/sender.php:85
+msgid "When unticked, the fields below are not sent to PTT and returns go to the sender address."
+msgstr ""
+
+#: admin/views/settings/sender.php:90
+msgid "Return Recipient Name"
+msgstr ""
+
+#: admin/views/settings/sender.php:98
+msgid "Return Province"
+msgstr ""
+
+#: admin/views/settings/sender.php:102
+msgid "Return District"
+msgstr ""
+
+#: admin/views/settings/sender.php:106
+msgid "Return Phone"
+msgstr ""
+
+#: admin/views/settings/sender.php:109
+msgid "10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
+msgstr ""
+
+#: admin/views/settings/sender.php:113
+msgid "Return Email"
+msgstr ""
+
+#: includes/class-admin-page.php:57
+#: includes/class-wc-integration.php:53
+#: includes/class-wc-integration.php:57
+#: includes/class-wc-integration.php:237
+msgid "PTT Kargo"
+msgstr ""
+
+#: includes/class-admin-page.php:67
+#: includes/class-admin-page.php:68
+msgid "Orders"
+msgstr ""
+
+#: includes/class-admin-page.php:85
+#: includes/class-admin-page.php:86
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin-page.php:95
+msgid "Logs"
+msgstr ""
+
+#: includes/class-admin-page.php:143
+msgid "Sending..."
+msgstr ""
+
+#: includes/class-admin-page.php:144
+msgid "Success! Barcode: "
+msgstr ""
+
+#: includes/class-admin-page.php:145
+msgid "Error: "
+msgstr ""
+
+#: includes/class-admin-page.php:148
+msgid "Some fields are missing. You can leave them empty or fill them in below."
+msgstr ""
+
+#: includes/class-admin-page.php:154
+msgid "Server error."
+msgstr ""
+
+#: includes/class-admin-page.php:155
+msgid "Could not prepare the shipment."
+msgstr ""
+
+#: includes/class-admin-page.php:156
+msgid "Could not query tracking."
+msgstr ""
+
+#: includes/class-admin-page.php:158
+msgid "Status:"
+msgstr ""
+
+#: includes/class-admin-page.php:159
+msgid "Movements:"
+msgstr ""
+
+#: includes/class-admin-page.php:160
+msgid "Testing..."
+msgstr ""
+
+#: includes/class-admin-page.php:161
+msgid "The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?"
+msgstr ""
+
+#: includes/class-admin-page.php:162
+msgid "Cancelling..."
+msgstr ""
+
+#: includes/class-admin-page.php:163
+#: includes/class-admin-page.php:626
+msgid "The PTT shipment was cancelled."
+msgstr ""
+
+#: includes/class-admin-page.php:164
+msgid "Cancellation failed: "
+msgstr ""
+
+#: includes/class-admin-page.php:166
+msgid "Send Insured (Valuable Goods)"
+msgstr ""
+
+#: includes/class-admin-page.php:168
+msgid "Cash on delivery active:"
+msgstr ""
+
+#: includes/class-admin-page.php:169
+msgid "Current PTT branch"
+msgstr ""
+
+#: includes/class-admin-page.php:170
+msgid "Requesting courier..."
+msgstr ""
+
+#: includes/class-admin-page.php:171
+msgid "Courier request accepted!"
+msgstr ""
+
+#: includes/class-admin-page.php:172
+msgid "Courier request failed: "
+msgstr ""
+
+#: includes/class-admin-page.php:175
+msgid "Recipient Name"
+msgstr ""
+
+#: includes/class-admin-page.php:179
+msgid "Phone (10 digits, no leading zero)"
+msgstr ""
+
+#: includes/class-admin-page.php:183
+msgid "Weight (g)"
+msgstr ""
+
+#: includes/class-admin-page.php:184
+msgid "Volumetric Weight"
+msgstr ""
+
+#: includes/class-admin-page.php:185
+msgid "Width (cm)"
+msgstr ""
+
+#: includes/class-admin-page.php:186
+msgid "Length (cm)"
+msgstr ""
+
+#: includes/class-admin-page.php:187
+msgid "Height (cm)"
+msgstr ""
+
+#: includes/class-admin-page.php:190
+msgid "Retry:"
+msgstr ""
+
+#: includes/class-admin-page.php:191
+msgid "will be reused — no new barcode is consumed."
+msgstr ""
+
+#: includes/class-admin-page.php:193
+msgid "Waybill Number (optional)"
+msgstr ""
+
+#: includes/class-admin-page.php:194
+msgid "A count above 1 switches to PTT's kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range."
+msgstr ""
+
+#: includes/class-admin-page.php:195
+msgid "more packages"
+msgstr ""
+
+#: includes/class-admin-page.php:196
+#: includes/class-admin-page.php:659
+msgid "Enter a valid package count."
+msgstr ""
+
+#: includes/class-admin-page.php:197
+msgid "Order ID: "
+msgstr ""
+
+#: includes/class-admin-page.php:200
+msgid "Shipment Tracking"
+msgstr ""
+
+#: includes/class-admin-page.php:201
+msgid "The barcode query returned nothing; the shipment was found by reference number."
+msgstr ""
+
+#: includes/class-admin-page.php:202
+msgid "Queried by reference number."
+msgstr ""
+
+#: includes/class-admin-page.php:203
+msgid "No movements yet."
+msgstr ""
+
+#: includes/class-admin-page.php:204
+msgid "Recipient:"
+msgstr ""
+
+#: includes/class-admin-page.php:205
+msgid "Sender:"
+msgstr ""
+
+#: includes/class-admin-page.php:206
+msgid "Date / Time"
+msgstr ""
+
+#: includes/class-admin-page.php:208
+msgid "Branch"
+msgstr ""
+
+#: includes/class-admin-page.php:209
+msgid "Close"
+msgstr ""
+
+#: includes/class-admin-page.php:212
+msgid "Collection deadline:"
+msgstr ""
+
+#: includes/class-admin-page.php:213
+msgid "Show on map"
+msgstr ""
+
+#: includes/class-admin-page.php:214
+msgid "Could not retrieve drop point information: "
+msgstr ""
+
+#: includes/class-admin-page.php:215
+msgid "Raw PTT response"
+msgstr ""
+
+#: includes/class-admin-page.php:216
+msgid "Raw drop point response"
+msgstr ""
+
+#: includes/class-admin-page.php:219
+msgid "Select Logo"
+msgstr ""
+
+#: includes/class-admin-page.php:220
+msgid "Use this image"
+msgstr ""
+
+#: includes/class-admin-page.php:229
+#: includes/class-admin-page.php:240
+#: includes/class-admin-page.php:247
+#: includes/class-admin-page.php:254
+#: includes/class-admin-page.php:263
+#: includes/class-admin-page.php:311
+#: includes/class-admin-page.php:321
+#: includes/class-admin-page.php:342
+#: includes/class-admin-page.php:390
+#: includes/class-admin-page.php:570
+#: includes/class-admin-page.php:641
+#: includes/class-admin-page.php:692
+#: includes/class-admin-page.php:726
+msgid "Unauthorised"
+msgstr ""
+
+#: includes/class-admin-page.php:315
+msgid "Logs cleared."
+msgstr ""
+
+#: includes/class-admin-page.php:348
+#: includes/class-admin-page.php:398
+#: includes/class-admin-page.php:576
+#: includes/class-admin-page.php:732
+#: includes/class-label.php:183
+msgid "Order not found."
+msgstr ""
+
+#: includes/class-admin-page.php:353
+#: includes/class-admin-page.php:403
+msgid "A barcode already exists for this order: "
+msgstr ""
+
+#: includes/class-admin-page.php:475
+msgid "The barcode range is exhausted. Please define a new range in the settings."
+msgstr ""
+
+#: includes/class-admin-page.php:487
+msgid "The barcode range is too small; there are not enough barcodes for every package."
+msgstr ""
+
+#: includes/class-admin-page.php:519
+msgid "Sending to PTT failed."
+msgstr ""
+
+#: includes/class-admin-page.php:554
+msgid "Shipment created."
+msgstr ""
+
+#: includes/class-admin-page.php:586
+msgid "No cancellable PTT record was found for this order."
+msgstr ""
+
+#: includes/class-admin-page.php:602
+msgid "The PTT cancellation request failed."
+msgstr ""
+
+#: includes/class-admin-page.php:668
+msgid "Courier request accepted."
+msgstr ""
+
+#: includes/class-admin-page.php:677
+msgid "Courier request failed."
+msgstr ""
+
+#: includes/class-admin-page.php:705
+msgid "A barcode is required."
+msgstr ""
+
+#: includes/class-admin-page.php:715
+msgid "Could not retrieve drop point information."
+msgstr ""
+
+#: includes/class-admin-page.php:739
+msgid "This order has no barcode or reference number to track."
+msgstr ""
+
+#: includes/class-label.php:33
+#: includes/class-label.php:176
+#: includes/class-label.php:204
+msgid "Unauthorised."
+msgstr ""
+
+#: includes/class-label.php:40
+msgid "No orders were selected for label printing."
+msgstr ""
+
+#: includes/class-label.php:83
+msgid "None of the selected orders has a printable barcode."
+msgstr ""
+
+#. translators: %d: number of labels in the document
+#: includes/class-label.php:115
+#, php-format
+msgid "PTT Bulk Labels (%d)"
+msgstr ""
+
+#: includes/class-label.php:188
+msgid "No PTT barcode has been created for this order yet."
+msgstr ""
+
+#: includes/class-label.php:297
+msgid "Sample Customer"
+msgstr ""
+
+#: includes/class-label.php:298
+msgid "Sample Neighbourhood, Example Street No:1 Apt:2"
+msgstr ""
+
+#: includes/class-label.php:299
+msgid "Kadıköy"
+msgstr ""
+
+#: includes/class-label.php:300
+msgid "İstanbul"
+msgstr ""
+
+#: includes/class-label.php:303
+msgid "Sample Product 1"
+msgstr ""
+
+#: includes/class-label.php:303
+msgid "Sample Product 2"
+msgstr ""
+
+#: includes/class-label.php:422
+msgid "Recipient"
+msgstr ""
+
+#: includes/class-label.php:443
+msgid "Shipment Barcode"
+msgstr ""
+
+#. translators: 1: barcode 2: reference number 3: PTT response message
+#: includes/class-orders.php:502
+#, php-format
+msgid "PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
+msgstr ""
+
+#: includes/class-orders.php:529
+msgid "PTT Kargo error: "
+msgstr ""
+
+#. translators: 1: previous barcode 2: PTT response message
+#: includes/class-orders.php:589
+#, php-format
+msgid "PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
+msgstr ""
+
+#: includes/class-ptt-client.php:30
+#: includes/class-ptt-client.php:180
+#: includes/class-ptt-client.php:221
+#: includes/class-ptt-client.php:383
+#: includes/class-ptt-client.php:524
+#: includes/class-ptt-client.php:604
+#: includes/class-ptt-client.php:696
+msgid "The PTT customer number or password is missing from the settings."
+msgstr ""
+
+#: includes/class-ptt-client.php:186
+msgid "The barcode to delete is empty."
+msgstr ""
+
+#: includes/class-ptt-client.php:227
+msgid "The reference number to delete is empty."
+msgstr ""
+
+#. translators: %d: HTTP status code
+#: includes/class-ptt-client.php:314
+#: includes/class-ptt-client.php:508
+#: includes/class-ptt-client.php:781
+#: includes/class-ptt-client.php:981
+#, php-format
+msgid "The PTT service returned HTTP status %d."
+msgstr ""
+
+#: includes/class-ptt-client.php:329
+#: includes/class-ptt-client.php:1149
+#: includes/class-ptt-client.php:1358
+#: includes/class-ptt-client.php:1501
+#: includes/class-ptt-client.php:1586
+msgid "Empty response from the PTT service."
+msgstr ""
+
+#: includes/class-ptt-client.php:355
+msgid "Operation successful."
+msgstr ""
+
+#: includes/class-ptt-client.php:355
+msgid "PTT returned no explanation."
+msgstr ""
+
+#: includes/class-ptt-client.php:395
+msgid "The sender first or last name is missing. Fill them in on the Sender tab."
+msgstr ""
+
+#: includes/class-ptt-client.php:420
+msgid "The sender province, district or address is missing from the settings."
+msgstr ""
+
+#: includes/class-ptt-client.php:439
+msgid "A sender phone number or email is required; PTT needs at least one of them."
+msgstr ""
+
+#: includes/class-ptt-client.php:614
+msgid "The reference number is empty."
+msgstr ""
+
+#: includes/class-ptt-client.php:707
+msgid "The package count is invalid."
+msgstr ""
+
+#: includes/class-ptt-client.php:880
+msgid "No customer number or password has been entered."
+msgstr ""
+
+#. translators: %s: network error message
+#: includes/class-ptt-client.php:948
+#, php-format
+msgid "Could not connect: %s"
+msgstr ""
+
+#. translators: %s: SOAP fault reason returned by PTT
+#: includes/class-ptt-client.php:971
+#, php-format
+msgid "PTT rejected the request: %s"
+msgstr ""
+
+#: includes/class-ptt-client.php:988
+msgid "LIVE"
+msgstr ""
+
+#: includes/class-ptt-client.php:988
+msgid "TEST"
+msgstr ""
+
+#. translators: %s: environment name, TEST or LIVE
+#: includes/class-ptt-client.php:993
+#, php-format
+msgid "✓ Connection successful (%s environment). The customer number and password are correct."
+msgstr ""
+
+#: includes/class-ptt-client.php:1177
+msgid "The barcode is not in the PTT system yet, or has not been processed."
+msgstr ""
+
+#. translators: 1: prefix length, 2: range end length, 3: combined length
+#: includes/class-settings.php:226
+#, php-format
+msgid "Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit."
+msgstr ""
+
+#: includes/class-settings.php:233
+msgid "The barcode range start and end must have the same number of digits."
+msgstr ""
+
+#: includes/class-settings.php:236
+msgid "The barcode range start cannot be greater than the end."
+msgstr ""
+
+#: includes/class-wc-integration.php:105
+msgid "PTT Kargo: Send"
+msgstr ""
+
+#: includes/class-wc-integration.php:106
+msgid "PTT Kargo: Print Labels in Bulk"
+msgstr ""
+
+#. translators: 1: sent count, 2: skipped count, 3: error count
+#: includes/class-wc-integration.php:214
+#, php-format
+msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
+msgstr ""
+
+#: ptt-kargo-for-woocommerce.php:84
+msgid "PTT Kargo for WooCommerce requires WooCommerce to be installed and active."
+msgstr ""

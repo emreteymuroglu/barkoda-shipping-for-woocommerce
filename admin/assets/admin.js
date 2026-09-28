@@ -33,21 +33,21 @@
 	}
 
 	var FIELD_LABELS = {
-		aliciAdi: 'Alıcı Ad Soyad',
-		aAdres: 'Adres',
-		aliciIlAdi: 'İl',
-		aliciIlceAdi: 'İlçe',
-		aliciSms: 'Telefon (10 hane, başında 0 yok)',
-		aliciEmail: 'E-posta'
+		aliciAdi: PttKargoWC.i18n.fieldRecipient,
+		aAdres: PttKargoWC.i18n.fieldAddress,
+		aliciIlAdi: PttKargoWC.i18n.fieldProvince,
+		aliciIlceAdi: PttKargoWC.i18n.fieldDistrict,
+		aliciSms: PttKargoWC.i18n.fieldPhone,
+		aliciEmail: PttKargoWC.i18n.fieldEmail
 	};
 
 	// Order-level override fields for shipping. If left blank, the auto-computed value is used.
 	var SHIPPING_FIELDS = [
-		{ key: 'agirlik',   label: 'Ağırlık (g)',   type: 'number', step: '1',   min: '1' },
-		{ key: 'desi',      label: 'Desi',          type: 'number', step: '1',   min: '1' },
-		{ key: 'en',        label: 'En (cm)',       type: 'number', step: '1',   min: '0' },
-		{ key: 'boy',       label: 'Boy (cm)',      type: 'number', step: '1',   min: '0' },
-		{ key: 'yukseklik', label: 'Yükseklik (cm)', type: 'number', step: '1',   min: '0' }
+		{ key: 'agirlik',   label: PttKargoWC.i18n.fieldWeight,   type: 'number', step: '1',   min: '1' },
+		{ key: 'desi',      label: PttKargoWC.i18n.fieldDesi,          type: 'number', step: '1',   min: '1' },
+		{ key: 'en',        label: PttKargoWC.i18n.fieldWidth,       type: 'number', step: '1',   min: '0' },
+		{ key: 'boy',       label: PttKargoWC.i18n.fieldLength,      type: 'number', step: '1',   min: '0' },
+		{ key: 'yukseklik', label: PttKargoWC.i18n.fieldHeight, type: 'number', step: '1',   min: '0' }
 	];
 
 	function openSummaryModal(data) {
@@ -147,9 +147,9 @@
 		if (data.pending_barkod) {
 			$pendingInfo.show().html(
 				'<div style="padding:8px 12px; background:#cce5ff; border-left:4px solid #0c63e4; border-radius:3px; font-size:12px; margin:8px 0;">' +
-				'🔁 <strong>Yeniden deneme:</strong> Önceki denemede tüketilmiş barkod <code>' +
+				'🔁 <strong>' + escapeHtml(PttKargoWC.i18n.retryLabel) + '</strong> <code>' +
 				escapeHtml(data.pending_barkod) +
-				'</code> tekrar kullanılacak — yeni barkod yakılmayacak.' +
+				'</code> ' + escapeHtml(PttKargoWC.i18n.retryNotice) +
 				'</div>'
 			);
 		} else {
@@ -159,7 +159,7 @@
 		// Multi-package: package count + waybill number. 1 keeps the single-package flow.
 		var $mp = $modal.find('.wc-ptt-multipackage').empty();
 		var $mpRow = $('<div class="field-row"></div>');
-		$mpRow.append($('<label></label>').attr('for', 'field-parca_adet').text('Parça Adedi'));
+		$mpRow.append($('<label></label>').attr('for', 'field-parca_adet').text(PttKargoWC.i18n.packageCount));
 		var $mpInput = $('<input type="number" min="1" max="99" value="1" />')
 			.attr({ id: 'field-parca_adet', 'data-key': 'parca_adet', 'data-multipackage': '1' })
 			.addClass('field-input multi-input');
@@ -167,7 +167,7 @@
 		$mp.append($mpRow);
 
 		var $irsRow = $('<div class="field-row"></div>').css('margin-top', '8px');
-		$irsRow.append($('<label></label>').attr('for', 'field-irsaliye_no').text('İrsaliye No (opsiyonel)'));
+		$irsRow.append($('<label></label>').attr('for', 'field-irsaliye_no').text(PttKargoWC.i18n.waybillNo));
 		var $irsInput = $('<input type="text" maxlength="30" />')
 			.attr({ id: 'field-irsaliye_no', 'data-key': 'irsaliye_no', 'data-multipackage': '1' })
 			.addClass('field-input multi-input');
@@ -175,7 +175,7 @@
 		$mp.append($irsRow);
 
 		var $mpHint = $('<p style="font-size:11px; color:#646970; margin:4px 0 0;"></p>')
-			.text('Adet > 1 ise PTT\'nin kabulEkleParcaliBarkod servisine geçilir. Her parça aynı barkod aralığından bir barkod tüketir.');
+			.text(PttKargoWC.i18n.multiHint);
 		$mp.append($mpHint);
 
 		$modal.find('.missing-warn').toggle(Object.keys(missing).length > 0);
@@ -226,7 +226,7 @@
 				if (res && res.success) {
 					var msg = PttKargoWC.i18n.success + res.data.barkod;
 					if (res.data.barkodlar && res.data.barkodlar.length > 1) {
-						msg += ' (+' + (res.data.barkodlar.length - 1) + ' ek parça)';
+						msg += ' (+' + (res.data.barkodlar.length - 1) + ' ' + PttKargoWC.i18n.extraPackages + ')';
 					}
 					toast(msg, 'success');
 					if (res.data.label_url) window.open(res.data.label_url, '_blank');
@@ -337,30 +337,30 @@
 		var html = '<div id="wc-ptt-takip-modal" class="wc-ptt-modal">'
 			+ '<div class="wc-ptt-modal-overlay"></div>'
 			+ '<div class="wc-ptt-modal-box wc-ptt-takip-box">'
-			+ '<h2>Gönderi Takibi — <code>' + escapeHtml(d.barkod || '-') + '</code></h2>';
+			+ '<h2>' + escapeHtml(PttKargoWC.i18n.trackTitle) + ' — <code>' + escapeHtml(d.barkod || '-') + '</code></h2>';
 
 		if (d.ref_fallback) {
 			html += '<div style="padding:6px 10px; background:#fff3cd; border-left:4px solid #856404; border-radius:3px; font-size:11px; margin-bottom:10px;">'
-				+ '⚠ Barkod sorgusu sonuç vermedi; <strong>referans numarası</strong> ile bulundu.'
+				+ '⚠ ' + escapeHtml(PttKargoWC.i18n.trackRefFound)
 				+ '</div>';
 		} else if (d.used_method === 'gonderiSorgu_referansNo') {
 			html += '<div style="padding:6px 10px; background:#d1ecf1; border-left:4px solid #0c5460; border-radius:3px; font-size:11px; margin-bottom:10px;">'
-				+ 'ℹ Referans numarası ile sorgulandı.'
+				+ 'ℹ ' + escapeHtml(PttKargoWC.i18n.trackByRef)
 				+ '</div>';
 		}
 
 		if (!pttSuccess) {
 			html += '<div class="wc-ptt-takip-warn is-error">⚠ ' + escapeHtml(d.mesaj || PttKargoWC.i18n.trackErr) + '</div>';
 		} else if (!hasEvents) {
-			html += '<div class="wc-ptt-takip-warn is-info">ℹ ' + escapeHtml(d.mesaj || 'Henüz hareket yok.') + '</div>';
+			html += '<div class="wc-ptt-takip-warn is-info">ℹ ' + escapeHtml(d.mesaj || PttKargoWC.i18n.trackNoEvents) + '</div>';
 		} else {
 			html += '<div class="wc-ptt-takip-meta">';
-			if (d.alici)    html += '<p><strong>Alıcı:</strong> ' + escapeHtml(d.alici) + '</p>';
-			if (d.gonderen) html += '<p><strong>Gönderen:</strong> ' + escapeHtml(d.gonderen) + '</p>';
+			if (d.alici)    html += '<p><strong>' + escapeHtml(PttKargoWC.i18n.trackRecipient) + '</strong> ' + escapeHtml(d.alici) + '</p>';
+			if (d.gonderen) html += '<p><strong>' + escapeHtml(PttKargoWC.i18n.trackSender) + '</strong> ' + escapeHtml(d.gonderen) + '</p>';
 			if (d.mesaj)    html += '<p><strong>' + escapeHtml(PttKargoWC.i18n.trackStatus) + '</strong> ' + escapeHtml(d.mesaj) + '</p>';
 			html += '</div>';
 			html += '<h3>' + escapeHtml(PttKargoWC.i18n.trackEvents) + '</h3>';
-			html += '<table class="wc-ptt-takip-events"><thead><tr><th>Tarih / Saat</th><th>İşlem</th><th>Merkez</th></tr></thead><tbody>';
+			html += '<table class="wc-ptt-takip-events"><thead><tr><th>' + escapeHtml(PttKargoWC.i18n.trackColDate) + '</th><th>' + escapeHtml(PttKargoWC.i18n.trackColAction) + '</th><th>' + escapeHtml(PttKargoWC.i18n.trackColCenter) + '</th></tr></thead><tbody>';
 			d.dongu.forEach(function (s) {
 				var tarih = (s.ITARIH || '') + (s.ISAAT ? ' ' + s.ISAAT : '');
 				html += '<tr>'
@@ -385,29 +385,29 @@
 			if (dp.dropPointPhoneNumber) html += '<p>📞 ' + escapeHtml(dp.dropPointPhoneNumber) + '</p>';
 			if (dp.dropPointEmail)       html += '<p>✉ ' + escapeHtml(dp.dropPointEmail) + '</p>';
 			if (dp.dropPointWorkHours)   html += '<p>🕒 ' + escapeHtml(dp.dropPointWorkHours) + '</p>';
-			if (dp.dropPointDeadLine)    html += '<p><strong>Son teslim alınma:</strong> ' + escapeHtml(dp.dropPointDeadLine) + '</p>';
+			if (dp.dropPointDeadLine)    html += '<p><strong>' + escapeHtml(PttKargoWC.i18n.dropDeadline) + '</strong> ' + escapeHtml(dp.dropPointDeadLine) + '</p>';
 			if (dp.dropPointLatitude && dp.dropPointLongitude) {
 				html += '<p><a href="https://www.google.com/maps/search/?api=1&query='
 					+ encodeURIComponent(dp.dropPointLatitude + ',' + dp.dropPointLongitude)
-					+ '" target="_blank">📍 Haritada göster</a></p>';
+					+ '" target="_blank">📍 ' + escapeHtml(PttKargoWC.i18n.showOnMap) + '</a></p>';
 			}
 			html += '</div>';
 		} else if (d.drop_point_error) {
 			html += '<p style="margin-top:14px; font-size:11px; color:#646970;">'
-				+ '<em>Drop point bilgisi alınamadı: ' + escapeHtml(d.drop_point_error) + '</em></p>';
+				+ '<em>' + escapeHtml(PttKargoWC.i18n.dropPointErr) + escapeHtml(d.drop_point_error) + '</em></p>';
 		}
 
 		if (d.raw) {
-			html += '<details class="raw-toggle" style="margin-top:14px;"><summary>Ham PTT cevabı</summary>'
+			html += '<details class="raw-toggle" style="margin-top:14px;"><summary>' + escapeHtml(PttKargoWC.i18n.rawResponse) + '</summary>'
 				+ '<pre class="raw-dump">' + escapeHtml(d.raw) + '</pre></details>';
 		}
 		if (d.drop_point && d.drop_point.raw) {
-			html += '<details class="raw-toggle" style="margin-top:6px;"><summary>Drop point ham cevabı</summary>'
+			html += '<details class="raw-toggle" style="margin-top:6px;"><summary>' + escapeHtml(PttKargoWC.i18n.rawDropPoint) + '</summary>'
 				+ '<pre class="raw-dump">' + escapeHtml(d.drop_point.raw) + '</pre></details>';
 		}
 
 		html += '<div class="wc-ptt-modal-actions">'
-			+ '<button type="button" class="button" data-action="cancel">Kapat</button>'
+			+ '<button type="button" class="button" data-action="cancel">' + escapeHtml(PttKargoWC.i18n.close) + '</button>'
 			+ '</div></div></div>';
 
 		$('body').append(html);
@@ -431,7 +431,7 @@
 
 		if (!data.adet || parseInt(data.adet, 10) <= 0) {
 			$out.removeClass('is-success').addClass('is-error').show()
-				.text('Geçerli bir paket sayısı gir.');
+				.text(PttKargoWC.i18n.badPackageCount);
 			return;
 		}
 
@@ -443,7 +443,7 @@
 				if (res && res.success) {
 					var msg = PttKargoWC.i18n.courierOk;
 					if (res.data && res.data.message) msg += ' — ' + res.data.message;
-					if (res.data && res.data.siparis_id) msg += ' (Sipariş ID: ' + res.data.siparis_id + ')';
+					if (res.data && res.data.siparis_id) msg += ' (' + PttKargoWC.i18n.courierOrderId + res.data.siparis_id + ')';
 					$out.removeClass('is-error').addClass('is-success').text(msg);
 				} else {
 					var err = (res && res.data && res.data.message) || PttKargoWC.i18n.unknownErr;

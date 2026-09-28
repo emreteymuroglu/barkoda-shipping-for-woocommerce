@@ -89,12 +89,12 @@ final class WC_Integration {
 
 		ob_start();
 		if ( $status === Orders::STATUS_SENT && $barkod !== '' ) {
-			echo '<span class="wc-ptt-col-badge sent">✓ ' . esc_html__( 'Gönderildi', 'ptt-kargo-for-woocommerce' ) . '</span>';
+			echo '<span class="wc-ptt-col-badge sent">✓ ' . esc_html__( 'Sent', 'ptt-kargo-for-woocommerce' ) . '</span>';
 			echo '<br><code class="wc-ptt-col-barkod">' . esc_html( $barkod ) . '</code>';
 		} elseif ( $status === Orders::STATUS_ERROR ) {
-			echo '<span class="wc-ptt-col-badge error">!</span> ' . esc_html__( 'Hata', 'ptt-kargo-for-woocommerce' );
+			echo '<span class="wc-ptt-col-badge error">!</span> ' . esc_html__( 'Error', 'ptt-kargo-for-woocommerce' );
 		} elseif ( $status === Orders::STATUS_CANCELED ) {
-			echo '<span class="wc-ptt-col-badge canceled">⊘ ' . esc_html__( 'İptal', 'ptt-kargo-for-woocommerce' ) . '</span>';
+			echo '<span class="wc-ptt-col-badge canceled">⊘ ' . esc_html__( 'Cancel', 'ptt-kargo-for-woocommerce' ) . '</span>';
 		} else {
 			echo '<span class="wc-ptt-col-badge pending">—</span>';
 		}
@@ -102,8 +102,8 @@ final class WC_Integration {
 	}
 
 	public function add_bulk_action( array $actions ): array {
-		$actions['ptt_kargo_wc_send']  = __( 'PTT Kargo: Gönder', 'ptt-kargo-for-woocommerce' );
-		$actions['ptt_kargo_wc_label'] = __( 'PTT Kargo: Toplu Etiket Bas', 'ptt-kargo-for-woocommerce' );
+		$actions['ptt_kargo_wc_send']  = __( 'PTT Kargo: Send', 'ptt-kargo-for-woocommerce' );
+		$actions['ptt_kargo_wc_label'] = __( 'PTT Kargo: Print Labels in Bulk', 'ptt-kargo-for-woocommerce' );
 		return $actions;
 	}
 
@@ -211,7 +211,7 @@ final class WC_Integration {
 		echo esc_html(
 			sprintf(
 				/* translators: 1: sent count, 2: skipped count, 3: error count */
-				__( 'PTT Kargo bulk: %1$d gönderildi, %2$d atlandı (zaten barkodlu), %3$d hata.', 'ptt-kargo-for-woocommerce' ),
+				__( 'PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed.', 'ptt-kargo-for-woocommerce' ),
 				$sent,
 				$skip,
 				$err

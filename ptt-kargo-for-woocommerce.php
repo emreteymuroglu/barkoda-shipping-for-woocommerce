@@ -81,7 +81,7 @@ add_action(
 				'admin_notices',
 				static function () {
 					echo '<div class="notice notice-error"><p>';
-					echo esc_html__( 'WC PTT Kargo eklentisi için WooCommerce gereklidir.', 'ptt-kargo-for-woocommerce' );
+					echo esc_html__( 'PTT Kargo for WooCommerce requires WooCommerce to be installed and active.', 'ptt-kargo-for-woocommerce' );
 					echo '</p></div>';
 				}
 			);

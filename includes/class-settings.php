@@ -223,17 +223,17 @@ final class Settings {
 			if ( strlen( $bp . $be ) !== 12 ) {
 				$errors[] = sprintf(
 				/* translators: 1: prefix length, 2: range end length, 3: combined length */
-					__( 'Barkod aralığı geçersiz: prefix (%1$d hane) + bitiş (%2$d hane) toplamı 12 olmalı, şu an %3$d. PTT size 12-haneli aralık tahsis eder (13. hane otomatik check digit).', 'ptt-kargo-for-woocommerce' ),
+					__( 'Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit.', 'ptt-kargo-for-woocommerce' ),
 					strlen( $bp ),
 					strlen( $be ),
 					strlen( $bp . $be )
 				);
 			}
 			if ( strlen( $bs ) !== strlen( $be ) ) {
-				$errors[] = __( 'Barkod aralığı başlangıç ve bitiş aynı hane sayısında olmalı.', 'ptt-kargo-for-woocommerce' );
+				$errors[] = __( 'The barcode range start and end must have the same number of digits.', 'ptt-kargo-for-woocommerce' );
 			}
 			if ( strlen( $bs ) === strlen( $be ) && $bs !== '' && (int) $bs > (int) $be ) {
-				$errors[] = __( 'Barkod aralığı başlangıcı bitişten büyük olamaz.', 'ptt-kargo-for-woocommerce' );
+				$errors[] = __( 'The barcode range start cannot be greater than the end.', 'ptt-kargo-for-woocommerce' );
 			}
 
 			if ( ! empty( $errors ) ) {

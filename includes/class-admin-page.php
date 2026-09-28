@@ -53,7 +53,7 @@ final class Admin_Page {
 
 	public function menu(): void {
 		add_menu_page(
-			__( 'WC PTT Kargo', 'ptt-kargo-for-woocommerce' ),
+			__( 'PTT Kargo for WooCommerce', 'ptt-kargo-for-woocommerce' ),
 			__( 'PTT Kargo', 'ptt-kargo-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
@@ -64,8 +64,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Kargo Siparişleri', 'ptt-kargo-for-woocommerce' ),
-			__( 'Kargo Siparişleri', 'ptt-kargo-for-woocommerce' ),
+			__( 'Orders', 'ptt-kargo-for-woocommerce' ),
+			__( 'Orders', 'ptt-kargo-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
 			[ $this, 'render_orders_page' ]
@@ -73,8 +73,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Kurye Çağır', 'ptt-kargo-for-woocommerce' ),
-			__( 'Kurye Çağır', 'ptt-kargo-for-woocommerce' ),
+			__( 'Request Courier', 'ptt-kargo-for-woocommerce' ),
+			__( 'Request Courier', 'ptt-kargo-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-kurye',
 			[ $this, 'render_courier_page' ]
@@ -82,8 +82,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Ayarlar', 'ptt-kargo-for-woocommerce' ),
-			__( 'Ayarlar', 'ptt-kargo-for-woocommerce' ),
+			__( 'Settings', 'ptt-kargo-for-woocommerce' ),
+			__( 'Settings', 'ptt-kargo-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-settings',
 			[ $this, 'render_settings_page' ]
@@ -91,8 +91,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'PTT Loglar', 'ptt-kargo-for-woocommerce' ),
-			__( 'Loglar', 'ptt-kargo-for-woocommerce' ),
+			__( 'PTT Logs', 'ptt-kargo-for-woocommerce' ),
+			__( 'Logs', 'ptt-kargo-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-logs',
 			[ $this, 'render_logs_page' ]
@@ -140,36 +140,85 @@ final class Admin_Page {
 					'dropPoint'   => self::AJAX_DROP_POINT,
 				],
 				'i18n'    => [
-					'sending'         => __( 'Gönderiliyor...', 'ptt-kargo-for-woocommerce' ),
-					'success'         => __( 'Başarılı! Barkod: ', 'ptt-kargo-for-woocommerce' ),
-					'error'           => __( 'Hata: ', 'ptt-kargo-for-woocommerce' ),
-					'summaryTitle'    => __( 'Kargo Özeti', 'ptt-kargo-for-woocommerce' ),
-					'customer'        => __( 'Müşteri', 'ptt-kargo-for-woocommerce' ),
-					'missingWarn'     => __( 'Bazı alanlar eksik. Boş bırakabilirsin ya da aşağıdan doldur.', 'ptt-kargo-for-woocommerce' ),
-					'confirm'         => __( 'Onayla ve Gönder', 'ptt-kargo-for-woocommerce' ),
-					'cancel'          => __( 'İptal', 'ptt-kargo-for-woocommerce' ),
-					'orderWord'       => __( 'sipariş', 'ptt-kargo-for-woocommerce' ),
-					'shipBtn'         => __( 'Kargoya İlet', 'ptt-kargo-for-woocommerce' ),
-					'unknownErr'      => __( 'Bilinmeyen hata', 'ptt-kargo-for-woocommerce' ),
-					'serverErr'       => __( 'Sunucu hatası.', 'ptt-kargo-for-woocommerce' ),
-					'prepareErr'      => __( 'Hazırlanamadı.', 'ptt-kargo-for-woocommerce' ),
-					'trackErr'        => __( 'Takip sorgulanamadı.', 'ptt-kargo-for-woocommerce' ),
-					'trackBarkod'     => __( 'Barkod:', 'ptt-kargo-for-woocommerce' ),
-					'trackStatus'     => __( 'Durum:', 'ptt-kargo-for-woocommerce' ),
-					'trackEvents'     => __( 'Hareketler:', 'ptt-kargo-for-woocommerce' ),
-					'testing'         => __( 'Test ediliyor...', 'ptt-kargo-for-woocommerce' ),
-					'cancelConfirm'   => __( "Bu sipariş için PTT'ye gönderilen kayıt silinecek. Eski barkod yeniden kullanılamaz; sipariş tekrar gönderilirse yeni bir barkod tüketilir. Devam edilsin mi?", 'ptt-kargo-for-woocommerce' ),
-					'canceling'       => __( 'İptal ediliyor...', 'ptt-kargo-for-woocommerce' ),
-					'cancelOk'        => __( 'PTT gönderisi iptal edildi.', 'ptt-kargo-for-woocommerce' ),
-					'cancelErr'       => __( 'İptal başarısız: ', 'ptt-kargo-for-woocommerce' ),
-					'cancelBtn'       => __( 'PTT Gönderisini İptal Et', 'ptt-kargo-for-woocommerce' ),
-					'insuranceLabel'  => __( 'Sigortalı Gönder (Değerli Kargo)', 'ptt-kargo-for-woocommerce' ),
-					'insuranceAmount' => __( 'Sigorta Tutarı (TL)', 'ptt-kargo-for-woocommerce' ),
-					'codInfo'         => __( 'Kapıda Ödeme aktif:', 'ptt-kargo-for-woocommerce' ),
-					'dropPointTitle'  => __( 'Şu an bulunduğu PTT şubesi', 'ptt-kargo-for-woocommerce' ),
-					'courierSending'  => __( 'Kurye çağrılıyor...', 'ptt-kargo-for-woocommerce' ),
-					'courierOk'       => __( 'Kurye siparişi alındı!', 'ptt-kargo-for-woocommerce' ),
-					'courierErr'      => __( 'Kurye çağırma başarısız: ', 'ptt-kargo-for-woocommerce' ),
+					'sending'         => __( 'Sending...', 'ptt-kargo-for-woocommerce' ),
+					'success'         => __( 'Success! Barcode: ', 'ptt-kargo-for-woocommerce' ),
+					'error'           => __( 'Error: ', 'ptt-kargo-for-woocommerce' ),
+					'summaryTitle'    => __( 'Shipment Summary', 'ptt-kargo-for-woocommerce' ),
+					'customer'        => __( 'Customer', 'ptt-kargo-for-woocommerce' ),
+					'missingWarn'     => __( 'Some fields are missing. You can leave them empty or fill them in below.', 'ptt-kargo-for-woocommerce' ),
+					'confirm'         => __( 'Confirm and Send', 'ptt-kargo-for-woocommerce' ),
+					'cancel'          => __( 'Cancel', 'ptt-kargo-for-woocommerce' ),
+					'orderWord'       => __( 'order', 'ptt-kargo-for-woocommerce' ),
+					'shipBtn'         => __( 'Ship', 'ptt-kargo-for-woocommerce' ),
+					'unknownErr'      => __( 'Unknown error', 'ptt-kargo-for-woocommerce' ),
+					'serverErr'       => __( 'Server error.', 'ptt-kargo-for-woocommerce' ),
+					'prepareErr'      => __( 'Could not prepare the shipment.', 'ptt-kargo-for-woocommerce' ),
+					'trackErr'        => __( 'Could not query tracking.', 'ptt-kargo-for-woocommerce' ),
+					'trackBarkod'     => __( 'Barcode:', 'ptt-kargo-for-woocommerce' ),
+					'trackStatus'     => __( 'Status:', 'ptt-kargo-for-woocommerce' ),
+					'trackEvents'     => __( 'Movements:', 'ptt-kargo-for-woocommerce' ),
+					'testing'         => __( 'Testing...', 'ptt-kargo-for-woocommerce' ),
+					'cancelConfirm'   => __( 'The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?', 'ptt-kargo-for-woocommerce' ),
+					'canceling'       => __( 'Cancelling...', 'ptt-kargo-for-woocommerce' ),
+					'cancelOk'        => __( 'The PTT shipment was cancelled.', 'ptt-kargo-for-woocommerce' ),
+					'cancelErr'       => __( 'Cancellation failed: ', 'ptt-kargo-for-woocommerce' ),
+					'cancelBtn'       => __( 'Cancel PTT Shipment', 'ptt-kargo-for-woocommerce' ),
+					'insuranceLabel'  => __( 'Send Insured (Valuable Goods)', 'ptt-kargo-for-woocommerce' ),
+					'insuranceAmount' => __( 'Insured Value (TRY)', 'ptt-kargo-for-woocommerce' ),
+					'codInfo'         => __( 'Cash on delivery active:', 'ptt-kargo-for-woocommerce' ),
+					'dropPointTitle'  => __( 'Current PTT branch', 'ptt-kargo-for-woocommerce' ),
+					'courierSending'  => __( 'Requesting courier...', 'ptt-kargo-for-woocommerce' ),
+					'courierOk'       => __( 'Courier request accepted!', 'ptt-kargo-for-woocommerce' ),
+					'courierErr'      => __( 'Courier request failed: ', 'ptt-kargo-for-woocommerce' ),
+
+					// Recipient fields shown in the shipment popup.
+					'fieldRecipient'  => __( 'Recipient Name', 'ptt-kargo-for-woocommerce' ),
+					'fieldAddress'    => __( 'Address', 'ptt-kargo-for-woocommerce' ),
+					'fieldProvince'   => __( 'Province', 'ptt-kargo-for-woocommerce' ),
+					'fieldDistrict'   => __( 'District', 'ptt-kargo-for-woocommerce' ),
+					'fieldPhone'      => __( 'Phone (10 digits, no leading zero)', 'ptt-kargo-for-woocommerce' ),
+					'fieldEmail'      => __( 'Email', 'ptt-kargo-for-woocommerce' ),
+
+					// Per-order shipping overrides.
+					'fieldWeight'     => __( 'Weight (g)', 'ptt-kargo-for-woocommerce' ),
+					'fieldDesi'       => __( 'Volumetric Weight', 'ptt-kargo-for-woocommerce' ),
+					'fieldWidth'      => __( 'Width (cm)', 'ptt-kargo-for-woocommerce' ),
+					'fieldLength'     => __( 'Length (cm)', 'ptt-kargo-for-woocommerce' ),
+					'fieldHeight'     => __( 'Height (cm)', 'ptt-kargo-for-woocommerce' ),
+
+					// Retry and multi-package controls.
+					'retryLabel'      => __( 'Retry:', 'ptt-kargo-for-woocommerce' ),
+					'retryNotice'     => __( 'will be reused — no new barcode is consumed.', 'ptt-kargo-for-woocommerce' ),
+					'packageCount'    => __( 'Package Count', 'ptt-kargo-for-woocommerce' ),
+					'waybillNo'       => __( 'Waybill Number (optional)', 'ptt-kargo-for-woocommerce' ),
+					'multiHint'       => __( 'A count above 1 switches to PTT\'s kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range.', 'ptt-kargo-for-woocommerce' ),
+					'extraPackages'   => __( 'more packages', 'ptt-kargo-for-woocommerce' ),
+					'badPackageCount' => __( 'Enter a valid package count.', 'ptt-kargo-for-woocommerce' ),
+					'courierOrderId'  => __( 'Order ID: ', 'ptt-kargo-for-woocommerce' ),
+
+					// Tracking modal.
+					'trackTitle'      => __( 'Shipment Tracking', 'ptt-kargo-for-woocommerce' ),
+					'trackRefFound'   => __( 'The barcode query returned nothing; the shipment was found by reference number.', 'ptt-kargo-for-woocommerce' ),
+					'trackByRef'      => __( 'Queried by reference number.', 'ptt-kargo-for-woocommerce' ),
+					'trackNoEvents'   => __( 'No movements yet.', 'ptt-kargo-for-woocommerce' ),
+					'trackRecipient'  => __( 'Recipient:', 'ptt-kargo-for-woocommerce' ),
+					'trackSender'     => __( 'Sender:', 'ptt-kargo-for-woocommerce' ),
+					'trackColDate'    => __( 'Date / Time', 'ptt-kargo-for-woocommerce' ),
+					'trackColAction'  => __( 'Action', 'ptt-kargo-for-woocommerce' ),
+					'trackColCenter'  => __( 'Branch', 'ptt-kargo-for-woocommerce' ),
+					'close'           => __( 'Close', 'ptt-kargo-for-woocommerce' ),
+
+					// Drop point block.
+					'dropDeadline'    => __( 'Collection deadline:', 'ptt-kargo-for-woocommerce' ),
+					'showOnMap'       => __( 'Show on map', 'ptt-kargo-for-woocommerce' ),
+					'dropPointErr'    => __( 'Could not retrieve drop point information: ', 'ptt-kargo-for-woocommerce' ),
+					'rawResponse'     => __( 'Raw PTT response', 'ptt-kargo-for-woocommerce' ),
+					'rawDropPoint'    => __( 'Raw drop point response', 'ptt-kargo-for-woocommerce' ),
+
+					// Settings screen.
+					'mediaTitle'      => __( 'Select Logo', 'ptt-kargo-for-woocommerce' ),
+					'mediaButton'     => __( 'Use this image', 'ptt-kargo-for-woocommerce' ),
+					'genericErr'      => __( 'Error', 'ptt-kargo-for-woocommerce' ),
 				],
 			]
 		);
@@ -177,7 +226,7 @@ final class Admin_Page {
 
 	public function render_orders_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
 		}
 
 		$show   = isset( $_GET['show'] ) && in_array( $_GET['show'], [ 'pending', 'sent', 'all' ], true ) ? $_GET['show'] : 'pending';
@@ -188,21 +237,21 @@ final class Admin_Page {
 
 	public function render_settings_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
 		}
 		include PTT_KARGO_WC_DIR . 'admin/views/settings.php';
 	}
 
 	public function render_logs_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
 		}
 		include PTT_KARGO_WC_DIR . 'admin/views/logs.php';
 	}
 
 	public function render_courier_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
 		}
 		$settings = $this->settings;
 		include PTT_KARGO_WC_DIR . 'admin/views/courier.php';
@@ -211,7 +260,7 @@ final class Admin_Page {
 	public function ajax_test_connection(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		// Optional: test with credentials typed into the form but not yet saved. PTT_Client
@@ -253,23 +302,23 @@ final class Admin_Page {
 		if ( ! empty( $result['success'] ) ) {
 			wp_send_json_success( [ 'message' => $result['mesaj'] ] );
 		}
-		wp_send_json_error( [ 'message' => $result['mesaj'] ?? __( 'Bilinmeyen hata', 'ptt-kargo-for-woocommerce' ) ] );
+		wp_send_json_error( [ 'message' => $result['mesaj'] ?? __( 'Unknown error', 'ptt-kargo-for-woocommerce' ) ] );
 	}
 
 	public function ajax_clear_logs(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		Logs::clear();
-		wp_send_json_success( [ 'message' => __( 'Loglar temizlendi.', 'ptt-kargo-for-woocommerce' ) ] );
+		wp_send_json_success( [ 'message' => __( 'Logs cleared.', 'ptt-kargo-for-woocommerce' ) ] );
 	}
 
 	public function ajax_refresh(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$show   = isset( $_POST['show'] ) ? sanitize_key( $_POST['show'] ) : 'pending';
@@ -290,18 +339,18 @@ final class Admin_Page {
 	public function ajax_prepare(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Sipariş bulunamadı.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
 		}
 
 		$existing = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $existing !== '' ) {
-			wp_send_json_error( [ 'message' => __( 'Bu sipariş için zaten barkod oluşturulmuş: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
+			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
 		}
 
 		$payload = $this->orders->to_ptt_payload( $order );
@@ -338,7 +387,7 @@ final class Admin_Page {
 	public function ajax_send(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
@@ -346,12 +395,12 @@ final class Admin_Page {
 
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Sipariş bulunamadı.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
 		}
 
 		$existing = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $existing !== '' ) {
-			wp_send_json_error( [ 'message' => __( 'Bu sipariş için zaten barkod oluşturulmuş: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
+			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
 		}
 
 		$payload = $this->orders->to_ptt_payload( $order );
@@ -423,7 +472,7 @@ final class Admin_Page {
 			} else {
 				$next = $this->barcode->next();
 				if ( $next === null ) {
-					wp_send_json_error( [ 'message' => __( 'Barkod aralığı tükendi. Lütfen ayarlardan yeni aralık tanımlayın.', 'ptt-kargo-for-woocommerce' ) ], 500 );
+					wp_send_json_error( [ 'message' => __( 'The barcode range is exhausted. Please define a new range in the settings.', 'ptt-kargo-for-woocommerce' ) ], 500 );
 				}
 				$barkodlar[] = $next;
 			}
@@ -435,7 +484,7 @@ final class Admin_Page {
 			while ( count( $barkodlar ) < $parca_adet ) {
 				$next = $this->barcode->next();
 				if ( $next === null ) {
-					wp_send_json_error( [ 'message' => __( 'Barkod aralığı yetersiz; tüm parçalar için yeterli barkod yok.', 'ptt-kargo-for-woocommerce' ) ], 500 );
+					wp_send_json_error( [ 'message' => __( 'The barcode range is too small; there are not enough barcodes for every package.', 'ptt-kargo-for-woocommerce' ) ], 500 );
 				}
 				$barkodlar[] = $next;
 			}
@@ -454,7 +503,7 @@ final class Admin_Page {
 		}
 
 		if ( empty( $result['success'] ) ) {
-			$err_msg = (string) ( $result['mesaj'] ?? __( 'Bilinmeyen hata', 'ptt-kargo-for-woocommerce' ) );
+			$err_msg = (string) ( $result['mesaj'] ?? __( 'Unknown error', 'ptt-kargo-for-woocommerce' ) );
 			// Keep the first consumed barcode as pending; a retry tops the rest up via next().
 			$pending_to_store = $barkodlar[0] ?? '';
 			$this->orders->mark_error(
@@ -467,7 +516,7 @@ final class Admin_Page {
 			do_action( 'ptt_kargo_wc_after_error', $order, $err_msg, $result );
 			wp_send_json_error(
 				[
-					'message'       => $result['mesaj'] ?? __( 'PTT gönderimi başarısız.', 'ptt-kargo-for-woocommerce' ),
+					'message'       => $result['mesaj'] ?? __( 'Sending to PTT failed.', 'ptt-kargo-for-woocommerce' ),
 					'raw'           => $result['raw'] ?? '',
 					'request'       => $result['request'] ?? '',
 					'parca_results' => $result['parca_results'] ?? null,
@@ -502,7 +551,7 @@ final class Admin_Page {
 				'barkodlar'     => $barkodlar,
 				'takip_url'     => $takip_url,
 				'label_url'     => $this->label->label_url( $order_id ),
-				'mesaj'         => $result['mesaj'] ?? __( 'Gönderi oluşturuldu.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'         => $result['mesaj'] ?? __( 'Shipment created.', 'ptt-kargo-for-woocommerce' ),
 				'parca_results' => $result['parca_results'] ?? null,
 			]
 		);
@@ -518,13 +567,13 @@ final class Admin_Page {
 	public function ajax_cancel(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Sipariş bulunamadı.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
 		}
 
 		$status = (string) $order->get_meta( Orders::META_STATUS );
@@ -534,7 +583,7 @@ final class Admin_Page {
 
 		if ( $status !== Orders::STATUS_SENT || $barkod === '' ) {
 			wp_send_json_error(
-				[ 'message' => __( 'Bu sipariş için iptal edilebilir bir PTT kaydı bulunamadı.', 'ptt-kargo-for-woocommerce' ) ],
+				[ 'message' => __( 'No cancellable PTT record was found for this order.', 'ptt-kargo-for-woocommerce' ) ],
 				400
 			);
 		}
@@ -550,7 +599,7 @@ final class Admin_Page {
 		}
 
 		if ( empty( $result['success'] ) ) {
-			$err = (string) ( $result['mesaj'] ?? __( 'PTT iptal isteği başarısız.', 'ptt-kargo-for-woocommerce' ) );
+			$err = (string) ( $result['mesaj'] ?? __( 'The PTT cancellation request failed.', 'ptt-kargo-for-woocommerce' ) );
 			do_action( 'ptt_kargo_wc_after_cancel_error', $order, $barkod, $err, $result );
 			wp_send_json_error(
 				[
@@ -574,7 +623,7 @@ final class Admin_Page {
 
 		wp_send_json_success(
 			[
-				'message'     => $result['mesaj'] ?? __( 'PTT gönderisi iptal edildi.', 'ptt-kargo-for-woocommerce' ),
+				'message'     => $result['mesaj'] ?? __( 'The PTT shipment was cancelled.', 'ptt-kargo-for-woocommerce' ),
 				'old_barkod'  => $barkod,
 				'used_method' => $result['fallback'] ?? 'barkodVeriSil',
 			]
@@ -589,7 +638,7 @@ final class Admin_Page {
 	public function ajax_courier(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$params = [
@@ -607,7 +656,7 @@ final class Admin_Page {
 		];
 
 		if ( $params['adet'] <= 0 ) {
-			wp_send_json_error( [ 'message' => __( 'Geçerli bir paket sayısı girin.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'Enter a valid package count.', 'ptt-kargo-for-woocommerce' ) ], 400 );
 		}
 
 		$result = $this->client->siparis_istek_ekle2( $params );
@@ -616,7 +665,7 @@ final class Admin_Page {
 			do_action( 'ptt_kargo_wc_after_courier', $params, $result );
 			wp_send_json_success(
 				[
-					'message'    => $result['mesaj'] ?? __( 'Kurye siparişi alındı.', 'ptt-kargo-for-woocommerce' ),
+					'message'    => $result['mesaj'] ?? __( 'Courier request accepted.', 'ptt-kargo-for-woocommerce' ),
 					'siparis_id' => $result['siparis_id'] ?? '',
 					'http_code'  => $result['http_code'] ?? null,
 				]
@@ -625,7 +674,7 @@ final class Admin_Page {
 
 		wp_send_json_error(
 			[
-				'message' => $result['mesaj'] ?? __( 'Kurye siparişi başarısız.', 'ptt-kargo-for-woocommerce' ),
+				'message' => $result['mesaj'] ?? __( 'Courier request failed.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $result['raw'] ?? '',
 				'request' => $result['request'] ?? '',
 			],
@@ -640,7 +689,7 @@ final class Admin_Page {
 	public function ajax_drop_point(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
@@ -653,7 +702,7 @@ final class Admin_Page {
 			}
 		}
 		if ( $barkod === '' ) {
-			wp_send_json_error( [ 'message' => __( 'Barkod gerekli.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'A barcode is required.', 'ptt-kargo-for-woocommerce' ) ], 400 );
 		}
 
 		$result = $this->client->get_drop_point_info( $barkod );
@@ -663,7 +712,7 @@ final class Admin_Page {
 		}
 		wp_send_json_error(
 			[
-				'message'   => $result['mesaj'] ?? __( 'Drop point bilgisi alınamadı.', 'ptt-kargo-for-woocommerce' ),
+				'message'   => $result['mesaj'] ?? __( 'Could not retrieve drop point information.', 'ptt-kargo-for-woocommerce' ),
 				'raw'       => $result['raw'] ?? '',
 				'http_code' => $result['http_code'] ?? null,
 			],
@@ -674,20 +723,20 @@ final class Admin_Page {
 	public function ajax_takip(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Yetkisiz', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Sipariş bulunamadı.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
 		}
 
 		$barkod = (string) $order->get_meta( Orders::META_BARKOD );
 		$ref    = (string) $order->get_meta( Orders::META_REF );
 
 		if ( $barkod === '' && $ref === '' ) {
-			wp_send_json_error( [ 'message' => __( 'Bu siparişte takip edilebilecek barkod ya da referans yok.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'This order has no barcode or reference number to track.', 'ptt-kargo-for-woocommerce' ) ], 400 );
 		}
 
 		$result       = [];

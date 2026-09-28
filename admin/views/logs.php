@@ -13,9 +13,9 @@ $total = \PTT_Kargo_WC\Logs::count();
 $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-logs-wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Loglar', 'ptt-kargo-for-woocommerce' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Logs', 'ptt-kargo-for-woocommerce' ); ?></h1>
 	<button type="button" class="page-title-action" id="wc-ptt-clear-logs" data-nonce="<?php echo esc_attr( $nonce ); ?>">
-		<?php esc_html_e( 'Tümünü Temizle', 'ptt-kargo-for-woocommerce' ); ?>
+		<?php esc_html_e( 'Clear All', 'ptt-kargo-for-woocommerce' ); ?>
 	</button>
 	<hr class="wp-header-end">
 
@@ -24,13 +24,13 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 		echo esc_html(
 			sprintf(
 			/* translators: %d: log count */
-				__( 'Son %d adet PTT entegrasyon kaydı (en yeni üstte). Otomatik 500 kayıtta sınırlandırılır.', 'ptt-kargo-for-woocommerce' ),
+				__( 'The last %d integration records, newest first. Automatically capped at 500 records.', 'ptt-kargo-for-woocommerce' ),
 				count( $logs )
 			)
 		);
 		?>
 		<?php if ( $total > count( $logs ) ) : ?>
-			<em>(<?php echo esc_html( sprintf( __( 'Toplam %d kayıt', 'ptt-kargo-for-woocommerce' ), $total ) ); ?>)</em>
+			<em>(<?php /* translators: %d: total number of log records */ echo esc_html( sprintf( __( '%d records in total', 'ptt-kargo-for-woocommerce' ), $total ) ); ?>)</em>
 		<?php endif; ?>
 	</p>
 
@@ -38,9 +38,9 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 		<?php
 		$base           = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-logs' );
 		$filters        = [
-			''        => __( 'Tümü', 'ptt-kargo-for-woocommerce' ),
-			'success' => __( 'Başarılı', 'ptt-kargo-for-woocommerce' ),
-			'error'   => __( 'Hata', 'ptt-kargo-for-woocommerce' ),
+			''        => __( 'All', 'ptt-kargo-for-woocommerce' ),
+			'success' => __( 'Successful', 'ptt-kargo-for-woocommerce' ),
+			'error'   => __( 'Error', 'ptt-kargo-for-woocommerce' ),
 		];
 		$current_filter = isset( $_GET['filter'] ) ? $_GET['filter'] : '';
 		$last_key       = array_key_last( $filters );
@@ -55,16 +55,16 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 	<table class="wp-list-table widefat fixed striped wc-ptt-logs-table">
 		<thead>
 			<tr>
-				<th style="width:140px;"><?php esc_html_e( 'Tarih', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:120px;"><?php esc_html_e( 'Operasyon', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:80px;"><?php esc_html_e( 'Sipariş', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:80px;"><?php esc_html_e( 'Durum', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th><?php esc_html_e( 'Mesaj', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th style="width:140px;"><?php esc_html_e( 'Date', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th style="width:120px;"><?php esc_html_e( 'Operation', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th style="width:80px;"><?php esc_html_e( 'Order', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th style="width:80px;"><?php esc_html_e( 'Status', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th><?php esc_html_e( 'Message', 'ptt-kargo-for-woocommerce' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if ( empty( $logs ) ) : ?>
-				<tr><td colspan="5" style="text-align:center; padding:2em;"><?php esc_html_e( 'Henüz log kaydı yok.', 'ptt-kargo-for-woocommerce' ); ?></td></tr>
+				<tr><td colspan="5" style="text-align:center; padding:2em;"><?php esc_html_e( 'No log records yet.', 'ptt-kargo-for-woocommerce' ); ?></td></tr>
 				<?php
 			else :
 				foreach ( $logs as $log ) :
@@ -105,13 +105,13 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 						<div class="wc-ptt-log-msg"><?php echo esc_html( $log['message'] ?: '—' ); ?></div>
 						<?php if ( ! empty( $log['request'] ) || ! empty( $log['response'] ) ) : ?>
 							<details class="raw-toggle">
-								<summary><?php esc_html_e( 'Ham veri', 'ptt-kargo-for-woocommerce' ); ?></summary>
+								<summary><?php esc_html_e( 'Raw data', 'ptt-kargo-for-woocommerce' ); ?></summary>
 								<?php if ( ! empty( $log['request'] ) ) : ?>
-									<strong><?php esc_html_e( 'İstek:', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Request:', 'ptt-kargo-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $log['request'] ); ?></pre>
 								<?php endif; ?>
 								<?php if ( ! empty( $log['response'] ) ) : ?>
-									<strong><?php esc_html_e( 'Cevap:', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Response:', 'ptt-kargo-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $log['response'] ); ?></pre>
 								<?php endif; ?>
 							</details>
@@ -131,7 +131,7 @@ endif;
 	var btn = document.getElementById('wc-ptt-clear-logs');
 	if (!btn) return;
 	btn.addEventListener('click', function(){
-		if (!confirm('<?php echo esc_js( __( 'Tüm log kayıtları silinecek. Emin misin?', 'ptt-kargo-for-woocommerce' ) ); ?>')) return;
+		if (!confirm('<?php echo esc_js( __( 'All log records will be deleted. Are you sure?', 'ptt-kargo-for-woocommerce' ) ); ?>')) return;
 		var fd = new FormData();
 		fd.append('action', 'ptt_kargo_wc_clear_logs');
 		fd.append('nonce', btn.dataset.nonce);

@@ -23,9 +23,9 @@ if ( function_exists( 'WC' ) && WC()->payment_gateways ) {
 
 $selected = (array) ( $opts['cod_payment_methods'] ?? [] );
 ?>
-<h2><?php esc_html_e( 'Kapıda Ödeme (COD) Eşleşmesi', 'ptt-kargo-for-woocommerce' ); ?></h2>
+<h2><?php esc_html_e( 'Cash on Delivery (COD) Mapping', 'ptt-kargo-for-woocommerce' ); ?></h2>
 <p class="description">
-	<?php esc_html_e( "Burada işaretlediğin WooCommerce ödeme yöntemleri \"kapıda ödeme\" sayılır. Bu yöntemlerle tamamlanmış siparişler PTT'ye iletilirken:", 'ptt-kargo-for-woocommerce' ); ?>
+	<?php esc_html_e( 'The WooCommerce payment methods you tick here count as cash on delivery. Orders paid with them are sent to PTT with:', 'ptt-kargo-for-woocommerce' ); ?>
 </p>
 <ul style="list-style:disc; margin-left:24px; font-size:13px; color:#50575e;">
 	<li><code>odemesekli</code> = <strong>UA</strong> (Ücreti Alıcıdan)</li>
@@ -33,15 +33,15 @@ $selected = (array) ( $opts['cod_payment_methods'] ?? [] );
 	<li><code>ekhizmet</code> alanına aşağıdaki kod (varsayılan <strong>OS</strong>) eklenir</li>
 </ul>
 <p class="description">
-	<?php esc_html_e( '⚠ COD aktifse "Gönderici → Posta Çeki Hesap No" alanı doldurulmuş olmalıdır; aksi halde PTT gönderiyi reddeder.', 'ptt-kargo-for-woocommerce' ); ?>
+	<?php esc_html_e( '⚠ When COD is active, Sender → Postal Cheque Account Number must be filled in, otherwise PTT rejects the shipment.', 'ptt-kargo-for-woocommerce' ); ?>
 </p>
 
 <table class="form-table" role="presentation">
 	<tr>
-		<th><?php esc_html_e( 'Kapıda Ödeme Yöntemleri', 'ptt-kargo-for-woocommerce' ); ?></th>
+		<th><?php esc_html_e( 'Cash on Delivery Methods', 'ptt-kargo-for-woocommerce' ); ?></th>
 		<td>
 			<?php if ( empty( $gateways ) ) : ?>
-				<p><em><?php esc_html_e( 'Hiç ödeme yöntemi tespit edilemedi. WooCommerce > Ayarlar > Ödemeler\'den en az bir yöntem etkinleştirin.', 'ptt-kargo-for-woocommerce' ); ?></em></p>
+				<p><em><?php esc_html_e( 'No payment methods found. Enable at least one under WooCommerce > Settings > Payments.', 'ptt-kargo-for-woocommerce' ); ?></em></p>
 			<?php else : ?>
 				<fieldset>
 					<?php
@@ -56,41 +56,41 @@ $selected = (array) ( $opts['cod_payment_methods'] ?? [] );
 							<strong><?php echo esc_html( $gw['title'] ); ?></strong>
 							<code style="background:#f0f0f1; padding:1px 6px; border-radius:2px; font-size:11px;"><?php echo esc_html( $gw_id ); ?></code>
 							<?php if ( ! $gw['enabled'] ) : ?>
-								<small style="color:#646970;">(<?php esc_html_e( 'şu an pasif', 'ptt-kargo-for-woocommerce' ); ?>)</small>
+								<small style="color:#646970;">(<?php esc_html_e( 'currently inactive', 'ptt-kargo-for-woocommerce' ); ?>)</small>
 							<?php endif; ?>
 						</label>
 					<?php endforeach; ?>
 				</fieldset>
 				<p class="description">
-					<?php esc_html_e( 'Tipik seçim: WooCommerce Cash on Delivery (cod). Sanal POS / kart ödemeleri NORMAL gönderim sayılır, işaretlenmemelidir.', 'ptt-kargo-for-woocommerce' ); ?>
+					<?php esc_html_e( 'The usual choice is WooCommerce Cash on Delivery (cod). Card and online payments count as normal shipments and should not be ticked.', 'ptt-kargo-for-woocommerce' ); ?>
 				</p>
 			<?php endif; ?>
 		</td>
 	</tr>
 	<tr>
-		<th><label for="cod_extra_service_code"><?php esc_html_e( 'COD Ek Hizmet Kodu', 'ptt-kargo-for-woocommerce' ); ?></label></th>
+		<th><label for="cod_extra_service_code"><?php esc_html_e( 'COD Additional Service Code', 'ptt-kargo-for-woocommerce' ); ?></label></th>
 		<td>
 			<input type="text" id="cod_extra_service_code" name="<?php echo esc_attr( $opt_key ); ?>[cod_extra_service_code]" value="<?php echo esc_attr( $opts['cod_extra_service_code'] ?? 'OS' ); ?>" class="small-text" maxlength="10" pattern="[A-Za-z]+">
 			<p class="description">
-				<?php esc_html_e( "PTT'nin \"Ödeme Şartlı\" ek hizmet kodu — varsayılan: ", 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'PTT\'s payment-on-delivery service code — default: ', 'ptt-kargo-for-woocommerce' ); ?>
 				<code>OS</code>.
-				<?php esc_html_e( 'PTT entegrasyon ekibinden farklı bir kod aldıysan değiştirebilirsin (örn. kombinasyon: DKUA).', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'Change this if the PTT integration team gave you a different code, such as the combination DKUA.', 'ptt-kargo-for-woocommerce' ); ?>
 			</p>
 			<p class="description">
-				<?php esc_html_e( 'Kod, "Gönderi Varsayılanları → Ek Hizmet Kodu" alanındaki sabit kodla otomatik birleştirilir (örn. DK + OS = DKOS).', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'The code is merged automatically with the fixed code in Shipment Defaults → Additional Service Code, for example DK + OS = DKOS.', 'ptt-kargo-for-woocommerce' ); ?>
 			</p>
 		</td>
 	</tr>
 </table>
 
 <div class="wc-ptt-tip">
-	💡 <strong><?php esc_html_e( 'Hatırlatma:', 'ptt-kargo-for-woocommerce' ); ?></strong>
-	<?php esc_html_e( 'Kapıda ödemeli kargolar PTT tarafına \"Tahsilatlı\" olarak iletilir. Toplanan tutar PTT tarafından senin Posta Çeki hesabına aktarılır. Hesap doğrulaması için PTT şubene başvur.', 'ptt-kargo-for-woocommerce' ); ?>
+	💡 <strong><?php esc_html_e( 'Reminder:', 'ptt-kargo-for-woocommerce' ); ?></strong>
+	<?php esc_html_e( 'Cash-on-delivery shipments are sent to PTT as collect-on-delivery. PTT transfers the collected amount to your Postal Cheque account. Contact your PTT branch to verify the account.', 'ptt-kargo-for-woocommerce' ); ?>
 </div>
 
-<h2 style="margin-top:32px;"><?php esc_html_e( 'Sigorta (Değerli Kargo)', 'ptt-kargo-for-woocommerce' ); ?></h2>
+<h2 style="margin-top:32px;"><?php esc_html_e( 'Insurance (Valuable Goods)', 'ptt-kargo-for-woocommerce' ); ?></h2>
 <p class="description">
-	<?php esc_html_e( "Sigorta her sipariş için \"Kargoya İlet\" popup'ında manuel olarak açılır/kapatılır. Açıldığında PTT envelope'ında:", 'ptt-kargo-for-woocommerce' ); ?>
+	<?php esc_html_e( 'Insurance is toggled per order in the Ship popup. When enabled, the PTT envelope carries:', 'ptt-kargo-for-woocommerce' ); ?>
 </p>
 <ul style="list-style:disc; margin-left:24px; font-size:13px; color:#50575e;">
 	<li><code>deger_ucreti</code> = popup'ta girilen tutar</li>
@@ -99,11 +99,11 @@ $selected = (array) ( $opts['cod_payment_methods'] ?? [] );
 
 <table class="form-table" role="presentation">
 	<tr>
-		<th><label for="insurance_extra_service_code"><?php esc_html_e( 'Sigorta Ek Hizmet Kodu', 'ptt-kargo-for-woocommerce' ); ?></label></th>
+		<th><label for="insurance_extra_service_code"><?php esc_html_e( 'Insurance Additional Service Code', 'ptt-kargo-for-woocommerce' ); ?></label></th>
 		<td>
 			<input type="text" id="insurance_extra_service_code" name="<?php echo esc_attr( $opt_key ); ?>[insurance_extra_service_code]" value="<?php echo esc_attr( $opts['insurance_extra_service_code'] ?? 'DK' ); ?>" class="small-text" maxlength="10" pattern="[A-Za-z]+">
 			<p class="description">
-				<?php esc_html_e( 'PTT\'nin Değerli Kargo kodu — varsayılan: ', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'PTT\'s Valuable Goods code — default: ', 'ptt-kargo-for-woocommerce' ); ?>
 				<code>DK</code>.
 			</p>
 		</td>
@@ -111,5 +111,5 @@ $selected = (array) ( $opts['cod_payment_methods'] ?? [] );
 </table>
 
 <div class="wc-ptt-tip">
-	💡 <?php esc_html_e( 'Hem kapıda ödeme hem değerli kargo birlikte aktifse PTT envelope\'ında ek hizmet kodları birleştirilir (örn. DKUA + OS = DKUAOS).', 'ptt-kargo-for-woocommerce' ); ?>
+	💡 <?php esc_html_e( 'When both cash on delivery and valuable goods are active, the service codes are merged in the PTT envelope, for example DKUA + OS = DKUAOS.', 'ptt-kargo-for-woocommerce' ); ?>
 </div>

@@ -27,7 +27,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event(
 				'kabulEkle2',
 				$order_id,
@@ -177,13 +177,13 @@ final class PTT_Client {
 		if ( $musteri_id === '' || $sifre === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 		if ( $barkod === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'Silinecek barkod boş.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The barcode to delete is empty.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 
@@ -218,13 +218,13 @@ final class PTT_Client {
 		if ( $musteri_id === '' || $sifre === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 		if ( $referans === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'Silinecek referans no boş.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The reference number to delete is empty.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 
@@ -310,7 +310,8 @@ final class PTT_Client {
 		$parsed['request']   = $logged_request;
 		$parsed['http_code'] = $code;
 		if ( $code >= 400 && empty( $parsed['success'] ) && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
+			/* translators: %d: HTTP status code */
+			$parsed['mesaj'] = sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( $operation, $order_id, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -325,7 +326,7 @@ final class PTT_Client {
 		if ( $raw === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'Empty response from the PTT service.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $raw,
 			];
 		}
@@ -351,7 +352,7 @@ final class PTT_Client {
 
 		return [
 			'success'   => $success,
-			'mesaj'     => $aciklama !== '' ? $aciklama : ( $success ? __( 'İşlem başarılı.', 'ptt-kargo-for-woocommerce' ) : __( 'PTT açıklama dönmedi.', 'ptt-kargo-for-woocommerce' ) ),
+			'mesaj'     => $aciklama !== '' ? $aciklama : ( $success ? __( 'Operation successful.', 'ptt-kargo-for-woocommerce' ) : __( 'PTT returned no explanation.', 'ptt-kargo-for-woocommerce' ) ),
 			'hata_kodu' => $hata_int,
 			'raw'       => $raw,
 		];
@@ -379,7 +380,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
 			return [
 				'success' => false,
@@ -391,7 +392,7 @@ final class PTT_Client {
 
 		$gonderici = $this->settings->gonderici_ad_soyad();
 		if ( $gonderici['ad'] === '' || $gonderici['soyad'] === '' ) {
-			$msg = __( 'Gönderici ad veya soyad ayarlarda eksik. Sender sekmesinden ad/soyadı doldurun.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The sender first or last name is missing. Fill them in on the Sender tab.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event(
 				'siparisIstekEkle2',
 				null,
@@ -416,7 +417,7 @@ final class PTT_Client {
 		$gonderici_posta = (string) $this->settings->get( 'gonderici_posta', '' );
 
 		if ( $gonderici_il === '' || $gonderici_ilce === '' || $gonderici_adres === '' ) {
-			$msg = __( 'Gönderici il/ilçe/adres ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The sender province, district or address is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event(
 				'siparisIstekEkle2',
 				null,
@@ -435,7 +436,7 @@ final class PTT_Client {
 			];
 		}
 		if ( $gonderici_tel === '' && $gonderici_email === '' ) {
-			$msg = __( 'Gönderici telefon veya e-posta gereklidir (PTT Sms ya da Telefon zorunlu).', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'A sender phone number or email is required; PTT needs at least one of them.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'siparisIstekEkle2', null, false, $msg, [ 'reason' => 'missing_contact' ] );
 			return [
 				'success' => false,
@@ -504,7 +505,7 @@ final class PTT_Client {
 		$parsed['request']   = Logs::mask_sensitive( $body );
 		$parsed['http_code'] = $code;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
+			$parsed['mesaj'] = sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( 'siparisIstekEkle2', null, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -520,7 +521,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'getDropPointInfo', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
 			return [
 				'success' => false,
@@ -600,7 +601,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'gonderiSorgu_referansNo', null, false, $msg, [ 'reason' => 'missing_credentials' ] );
 			return [
 				'success' => false,
@@ -610,7 +611,7 @@ final class PTT_Client {
 		if ( $referans === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'Referans numarası boş.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The reference number is empty.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 
@@ -692,7 +693,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'PTT müşteri numarası veya şifre ayarlarda eksik.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'The PTT customer number or password is missing from the settings.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event( 'kabulEkleParcaliBarkod', $order_id, false, $msg, [ 'reason' => 'missing_credentials' ] );
 			return [
 				'success' => false,
@@ -703,7 +704,7 @@ final class PTT_Client {
 		if ( $adet < 1 ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'Parça sayısı geçersiz.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'The package count is invalid.', 'ptt-kargo-for-woocommerce' ),
 			];
 		}
 
@@ -777,7 +778,7 @@ final class PTT_Client {
 		$parsed['http_code'] = $code;
 		$parsed['dosya_adi'] = $dosya_adi;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
-			$parsed['mesaj'] = sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code );
+			$parsed['mesaj'] = sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
 		Logs::record_http( 'kabulEkleParcaliBarkod', $order_id, ! empty( $parsed['success'] ), (string) ( $parsed['mesaj'] ?? '' ), $req_log, $resp_log, $duration );
@@ -876,7 +877,7 @@ final class PTT_Client {
 		$sifre      = $this->settings->sifre_plain();
 
 		if ( $musteri_id === '' || $sifre === '' ) {
-			$msg = __( 'Müşteri numarası veya şifre girilmemiş.', 'ptt-kargo-for-woocommerce' );
+			$msg = __( 'No customer number or password has been entered.', 'ptt-kargo-for-woocommerce' );
 			Logs::record_event(
 				'test_connection',
 				null,
@@ -943,7 +944,8 @@ final class PTT_Client {
 			);
 			return [
 				'success' => false,
-				'mesaj'   => sprintf( __( 'Bağlantı kurulamadı: %s', 'ptt-kargo-for-woocommerce' ), $msg ),
+				/* translators: %s: network error message */
+				'mesaj'   => sprintf( __( 'Could not connect: %s', 'ptt-kargo-for-woocommerce' ), $msg ),
 			];
 		}
 
@@ -965,7 +967,8 @@ final class PTT_Client {
 			Logs::record_http( 'test_connection', null, false, $fault, $req_log, $resp_log, $duration );
 			return [
 				'success'   => false,
-				'mesaj'     => sprintf( __( 'PTT reddetti: %s', 'ptt-kargo-for-woocommerce' ), $fault ),
+				/* translators: %s: SOAP fault reason returned by PTT */
+				'mesaj'     => sprintf( __( 'PTT rejected the request: %s', 'ptt-kargo-for-woocommerce' ), $fault ),
 				'raw'       => $raw,
 				'http_code' => $code,
 			];
@@ -975,18 +978,19 @@ final class PTT_Client {
 			Logs::record_http( 'test_connection', null, false, 'HTTP ' . $code, $req_log, $resp_log, $duration );
 			return [
 				'success'   => false,
-				'mesaj'     => sprintf( __( 'PTT servisi HTTP %d kodu döndürdü.', 'ptt-kargo-for-woocommerce' ), $code ),
+				'mesaj'     => sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code ),
 				'raw'       => $raw,
 				'http_code' => $code,
 			];
 		}
 
 		// No fault: credentials are valid, the dummy barcode is simply unknown.
-		$env = $this->settings->get( 'environment' ) === 'prod' ? __( 'CANLI', 'ptt-kargo-for-woocommerce' ) : __( 'TEST', 'ptt-kargo-for-woocommerce' );
+		$env = $this->settings->get( 'environment' ) === 'prod' ? __( 'LIVE', 'ptt-kargo-for-woocommerce' ) : __( 'TEST', 'ptt-kargo-for-woocommerce' );
 		Logs::record_http( 'test_connection', null, true, 'OK', $req_log, $resp_log, $duration );
 		return [
 			'success'   => true,
-			'mesaj'     => sprintf( __( '✓ Bağlantı başarılı (%s ortamı). Müşteri numarası ve şifre doğru.', 'ptt-kargo-for-woocommerce' ), $env ),
+			/* translators: %s: environment name, TEST or LIVE */
+			'mesaj'     => sprintf( __( '✓ Connection successful (%s environment). The customer number and password are correct.', 'ptt-kargo-for-woocommerce' ), $env ),
 			'http_code' => $code,
 		];
 	}
@@ -1142,7 +1146,7 @@ final class PTT_Client {
 		if ( $raw === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'Empty response from the PTT service.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $raw,
 			];
 		}
@@ -1170,7 +1174,7 @@ final class PTT_Client {
 
 		// Empty reply: the barcode is unknown to PTT or has not been scanned yet.
 		if ( ! $success && $aciklama === '' ) {
-			$aciklama = __( 'Barkod PTT sisteminde bulunamadı veya henüz işlem görmedi.', 'ptt-kargo-for-woocommerce' );
+			$aciklama = __( 'The barcode is not in the PTT system yet, or has not been processed.', 'ptt-kargo-for-woocommerce' );
 		}
 
 		return [
@@ -1351,7 +1355,7 @@ final class PTT_Client {
 		if ( $raw === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'Empty response from the PTT service.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $raw,
 			];
 		}
@@ -1494,7 +1498,7 @@ final class PTT_Client {
 		if ( $raw === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'Empty response from the PTT service.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $raw,
 			];
 		}
@@ -1579,7 +1583,7 @@ final class PTT_Client {
 		if ( $raw === '' ) {
 			return [
 				'success' => false,
-				'mesaj'   => __( 'PTT servisinden boş cevap.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'   => __( 'Empty response from the PTT service.', 'ptt-kargo-for-woocommerce' ),
 				'raw'     => $raw,
 			];
 		}

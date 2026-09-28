@@ -58,8 +58,8 @@
 		}
 
 		mediaFrame = wp.media({
-			title: 'Logo seç',
-			button: { text: 'Bu görseli kullan' },
+			title: PttKargoWC.i18n.mediaTitle,
+			button: { text: PttKargoWC.i18n.mediaButton },
 			library: { type: 'image' },
 			multiple: false
 		});
@@ -110,12 +110,12 @@
 				if (res && res.success) {
 					$out.addClass('is-success').text(res.data.message);
 				} else {
-					$out.addClass('is-error').text((res && res.data && res.data.message) || 'Hata');
+					$out.addClass('is-error').text((res && res.data && res.data.message) || PttKargoWC.i18n.genericErr);
 				}
 			})
 			.fail(function (xhr) {
 				$out.removeClass('is-loading').addClass('is-error')
-					.text((xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || 'Sunucu hatası');
+					.text((xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || PttKargoWC.i18n.serverErr);
 			})
 			.always(function () {
 				$btn.prop('disabled', false);
