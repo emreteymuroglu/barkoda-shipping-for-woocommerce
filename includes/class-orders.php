@@ -10,23 +10,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * HPOS compatible: reads orders through wc_get_orders().
  */
 final class Orders {
-	public const META_BARKOD    = '_wc_ptt_kargo_barkod';
-	public const META_REF       = '_wc_ptt_kargo_ref';
-	public const META_STATUS    = '_wc_ptt_kargo_status';
-	public const META_SENT_AT   = '_wc_ptt_kargo_sent_at';
-	public const META_TAKIP_URL = '_wc_ptt_kargo_takip_url';
-	public const META_PTT_LOG   = '_wc_ptt_kargo_last_response';
-	public const META_PTT_RAW   = '_wc_ptt_kargo_last_raw';
-	public const META_PTT_REQ   = '_wc_ptt_kargo_last_request';
+	public const META_BARKOD    = '_ptt_kargo_wc_barkod';
+	public const META_REF       = '_ptt_kargo_wc_ref';
+	public const META_STATUS    = '_ptt_kargo_wc_status';
+	public const META_SENT_AT   = '_ptt_kargo_wc_sent_at';
+	public const META_TAKIP_URL = '_ptt_kargo_wc_takip_url';
+	public const META_PTT_LOG   = '_ptt_kargo_wc_last_response';
+	public const META_PTT_RAW   = '_ptt_kargo_wc_last_raw';
+	public const META_PTT_REQ   = '_ptt_kargo_wc_last_request';
 	// Passed to barkodVeriSil / referansVeriSil when a shipment is cancelled.
-	public const META_DOSYA_ADI = '_wc_ptt_kargo_dosya_adi';
+	public const META_DOSYA_ADI = '_ptt_kargo_wc_dosya_adi';
 	// Barcode already consumed by a failed attempt. While this meta exists a retry
 	// reuses it instead of burning a new number from the range.
-	public const META_PENDING_BARKOD = '_wc_ptt_kargo_pending_barkod';
+	public const META_PENDING_BARKOD = '_ptt_kargo_wc_pending_barkod';
 	// JSON array of every barcode of a multi-package (parcaliBarkod) shipment.
-	public const META_PARCA_BARKODLAR = '_wc_ptt_kargo_parca_barkodlar';
-	public const META_PARCA_ADET      = '_wc_ptt_kargo_parca_adet';
-	public const META_IRSALIYE_NO     = '_wc_ptt_kargo_irsaliye_no';
+	public const META_PARCA_BARKODLAR = '_ptt_kargo_wc_parca_barkodlar';
+	public const META_PARCA_ADET      = '_ptt_kargo_wc_parca_adet';
+	public const META_IRSALIYE_NO     = '_ptt_kargo_wc_irsaliye_no';
 
 	public const STATUS_PENDING  = 'pending';
 	public const STATUS_SENT     = 'sent';
@@ -46,7 +46,7 @@ final class Orders {
 	 * @return \WC_Order[]
 	 */
 	public function eligible_orders( int $limit = 100, string $show = 'pending' ): array {
-		$durumlar = (array) $this->settings->get( 'sipariş_durumlari', [ 'processing' ] );
+		$durumlar = (array) $this->settings->get( 'order_statuses', [ 'processing' ] );
 		if ( empty( $durumlar ) ) {
 			$durumlar = [ 'processing' ];
 		}

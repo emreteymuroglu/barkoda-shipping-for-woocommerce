@@ -35,6 +35,8 @@ final class Plugin {
 	}
 
 	public function boot() {
+		Upgrade::maybe_run();
+
 		load_plugin_textdomain( 'ptt-kargo-for-woocommerce', false, dirname( plugin_basename( PTT_KARGO_WC_FILE ) ) . '/languages' );
 
 		$this->settings->register();
@@ -44,6 +46,11 @@ final class Plugin {
 	}
 
 	public static function on_activation() {
+		// Migrate before seeding defaults. Reactivating an upgraded install would
+		// otherwise write fresh defaults first, which makes the migration treat the
+		// site as already converted and discard the store's real settings.
+		Upgrade::maybe_run();
+
 		if ( get_option( Settings::OPTION_KEY, false ) === false ) {
 			add_option( Settings::OPTION_KEY, Settings::defaults() );
 		}

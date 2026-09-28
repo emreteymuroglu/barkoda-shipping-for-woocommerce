@@ -6,9 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Settings {
-	public const OPTION_KEY = 'wc_ptt_kargo_settings';
+	public const OPTION_KEY = 'ptt_kargo_wc_settings';
 
-	private const ENC_SALT = 'wc-ptt-kargo|';
+	private const ENC_SALT = 'ptt-kargo-for-woocommerce|';
+
+	/**
+	 * Salt used before the plugin was renamed. The AES key is derived from the salt,
+	 * so passwords stored by an older version can only be read with this value.
+	 * Upgrade::run() decrypts with it once and re-encrypts under ENC_SALT.
+	 */
+	private const LEGACY_ENC_SALT = 'wc-ptt-kargo|';
 
 	public static function defaults(): array {
 		return [
@@ -62,7 +69,7 @@ final class Settings {
 			// Service code appended when insurance is toggled on in the popup (PTT default 'DK').
 			'insurance_extra_service_code' => 'DK',
 
-			'sipariş_durumlari'            => [ 'processing', 'on-hold' ],
+			'order_statuses'            => [ 'processing', 'on-hold' ],
 
 			// Label appearance
 			'label_logo_url'               => '',
@@ -162,7 +169,7 @@ final class Settings {
 				'label_show_barcode',
 				'label_show_sender',
 			],
-			'products'   => [ 'urun_idler', 'sipariş_durumlari' ],
+			'products'   => [ 'urun_idler', 'order_statuses' ],
 			'defaults'   => [ 'varsayilan_agirlik', 'varsayilan_desi', 'ekhizmet', 'weight_source', 'dimensions_source' ],
 			'payment'    => [ 'cod_payment_methods', 'cod_extra_service_code', 'insurance_extra_service_code' ],
 		];
@@ -319,9 +326,9 @@ final class Settings {
 		if ( $apply( 'urun_idler' ) ) {
 			$clean['urun_idler'] = $this->clean_id_list( $input['urun_idler'] ?? '' );
 		}
-		if ( $apply( 'sipariş_durumlari' ) ) {
-			$durumlar                   = $input['sipariş_durumlari'] ?? [];
-			$clean['sipariş_durumlari'] = array_values( array_filter( array_map( 'sanitize_key', (array) $durumlar ) ) );
+		if ( $apply( 'order_statuses' ) ) {
+			$durumlar                   = $input['order_statuses'] ?? [];
+			$clean['order_statuses'] = array_values( array_filter( array_map( 'sanitize_key', (array) $durumlar ) ) );
 		}
 
 		if ( $apply( 'varsayilan_agirlik' ) ) {
@@ -446,9 +453,16 @@ final class Settings {
 			: 'https://pttws.ptt.gov.tr/GonderiTakipV2Test/services/Sorgu';
 	}
 
-	private static function key(): string {
-		$k = defined( 'AUTH_KEY' ) ? AUTH_KEY : 'wc-ptt-kargo-fallback-key';
-		return hash( 'sha256', self::ENC_SALT . $k, true );
+	/**
+	 * Derives the AES key from the site's AUTH_KEY.
+	 *
+	 * @param bool $legacy Use the pre-rename salt, for reading old values during upgrade.
+	 */
+	private static function key( bool $legacy = false ): string {
+		$fallback = $legacy ? 'wc-ptt-kargo-fallback-key' : 'ptt-kargo-for-woocommerce-fallback-key';
+		$salt     = $legacy ? self::LEGACY_ENC_SALT : self::ENC_SALT;
+		$k        = defined( 'AUTH_KEY' ) ? AUTH_KEY : $fallback;
+		return hash( 'sha256', $salt . $k, true );
 	}
 
 	public static function encrypt( string $plain ): string {
@@ -460,14 +474,18 @@ final class Settings {
 		return base64_encode( $iv . $cipher );
 	}
 
-	public static function decrypt( string $enc ): string {
+	/**
+	 * @param string $enc    Base64 of IV + ciphertext.
+	 * @param bool   $legacy Decrypt with the pre-rename salt.
+	 */
+	public static function decrypt( string $enc, bool $legacy = false ): string {
 		$raw = base64_decode( $enc, true );
 		if ( $raw === false || strlen( $raw ) < 17 ) {
 			return '';
 		}
 		$iv     = substr( $raw, 0, 16 );
 		$cipher = substr( $raw, 16 );
-		$plain  = openssl_decrypt( $cipher, 'AES-256-CBC', self::key(), OPENSSL_RAW_DATA, $iv );
+		$plain  = openssl_decrypt( $cipher, 'AES-256-CBC', self::key( $legacy ), OPENSSL_RAW_DATA, $iv );
 		return $plain === false ? '' : $plain;
 	}
 }

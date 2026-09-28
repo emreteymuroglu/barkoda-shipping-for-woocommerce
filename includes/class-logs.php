@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *  - install_table() / drop_table(): activation and uninstall
  */
 final class Logs {
-	public const TABLE_NAME      = 'wc_ptt_kargo_logs';
+	public const TABLE_NAME      = 'ptt_kargo_wc_logs';
 	public const RETENTION_LIMIT = 500; // Rows above this count are pruned automatically.
 
 	/**

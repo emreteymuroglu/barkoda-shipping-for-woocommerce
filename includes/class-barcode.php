@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Barcode {
-	public const CURSOR_OPTION = 'wc_ptt_kargo_barcode_cursor';
+	public const CURSOR_OPTION = 'ptt_kargo_wc_barcode_cursor';
 
 	private Settings $settings;
 

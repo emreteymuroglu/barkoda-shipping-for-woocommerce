@@ -55,6 +55,7 @@ add_action(
 function ptt_kargo_wc_load_classes() {
 	$files = [
 		'class-logs.php',
+		'class-upgrade.php',
 		'class-settings.php',
 		'class-barcode.php',
 		'class-ptt-client.php',

@@ -67,12 +67,12 @@ if ( function_exists( 'wp_enqueue_script' ) ) {
 		<th><?php esc_html_e( 'Listelenecek Durumlar', 'ptt-kargo-for-woocommerce' ); ?></th>
 		<td>
 			<?php
-			$aktif = (array) $opts['sipariş_durumlari'];
+			$aktif = (array) $opts['order_statuses'];
 			foreach ( $all_statuses as $slug => $label ) :
 				$slug_clean = str_replace( 'wc-', '', $slug );
 				?>
 				<label style="display:inline-block; margin-right:12px; margin-bottom:6px;">
-					<input type="checkbox" name="<?php echo esc_attr( $opt_key ); ?>[sipariş_durumlari][]" value="<?php echo esc_attr( $slug_clean ); ?>" <?php checked( in_array( $slug_clean, $aktif, true ) ); ?>>
+					<input type="checkbox" name="<?php echo esc_attr( $opt_key ); ?>[order_statuses][]" value="<?php echo esc_attr( $slug_clean ); ?>" <?php checked( in_array( $slug_clean, $aktif, true ) ); ?>>
 					<?php echo esc_html( $label ); ?>
 				</label>
 			<?php endforeach; ?>
