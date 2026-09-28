@@ -3,7 +3,7 @@
 Thumbs.db
 desktop.ini
 
-# IDE / editör
+# IDE 
 .vscode/
 .idea/
 *.sublime-*
@@ -16,9 +16,8 @@ debug.log
 wp-content/
 node_modules/
 vendor/
-composer.lock
 
-# Plugin geliştirme
+# Plugin / Theme
 *.zip
 *.tar.gz
 .phpunit.result.cache
@@ -26,7 +25,7 @@ composer.lock
 build/
 dist/
 
-# Yerel ayarlar
+# Local environment
 *.local.json
 .env
 .env.*
