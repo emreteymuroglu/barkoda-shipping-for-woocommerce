@@ -17,10 +17,16 @@
 *.mo    binary
 
 # Keep development-only files out of the distributed archive.
-/.github        export-ignore
+# /assets holds the wordpress.org directory graphics, which live in SVN's own assets/
+# folder and must not ship inside the plugin. admin/assets is unaffected by the
+# leading slash and is still included.
+# Patterns need the /** form: a bare directory name matches only the directory
+# entry itself, leaving the files inside it in the archive.
+/assets/**      export-ignore
+/.github/**     export-ignore
 /.gitattributes export-ignore
 /.gitignore     export-ignore
 /composer.json  export-ignore
 /composer.lock  export-ignore
 /phpcs.xml.dist export-ignore
-/vendor         export-ignore
+/vendor/**      export-ignore
