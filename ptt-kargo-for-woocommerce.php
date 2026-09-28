@@ -3,7 +3,7 @@
  * Plugin Name:       PTT Kargo for WooCommerce
  * Plugin URI:        https://github.com/emreteymuroglu/ptt-kargo-for-woocommerce
  * Description:       Creates PTT Kargo shipments from WooCommerce orders over the PTT SOAP API, generates barcodes, prints 80mm thermal labels and tracks deliveries. Not affiliated with or endorsed by PTT.
- * Version:           2.0.1
+ * Version:           2.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Emre Teymuroglu
@@ -11,8 +11,9 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       ptt-kargo-for-woocommerce
  * Domain Path:       /languages
+ * Requires Plugins: woocommerce
  * WC requires at least: 8.0
- * WC tested up to:   10.4.3
+ * WC tested up to:   11.1
  *
  * @package PTT_Kargo_WC
  */
@@ -21,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PTT_KARGO_WC_VERSION', '2.0.1' );
+define( 'PTT_KARGO_WC_VERSION', '2.1.0' );
 define( 'PTT_KARGO_WC_FILE', __FILE__ );
 define( 'PTT_KARGO_WC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PTT_KARGO_WC_URL', plugin_dir_url( __FILE__ ) );

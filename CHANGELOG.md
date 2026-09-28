@@ -1,50 +1,83 @@
 # Changelog
 
-Bu projedeki tüm önemli değişiklikler bu dosyada belgelenir.
+All notable changes to this project are documented in this file.
 
-Format [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardına dayanır,
-sürüm numaralandırması [Semantic Versioning](https://semver.org/lang/tr/) kurallarına uyar.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the
+project adheres to [Semantic Versioning](https://semver.org/).
+
+## [2.1.0] - 2026-09-28
+
+### Changed
+- All user-facing strings are now English, with a Turkish translation bundled in
+  `languages/`. Sites running in Turkish see the same wording as before.
+- 36 strings that were hardcoded in JavaScript are now localized through the
+  `PttKargoWC.i18n` object, making them translatable for the first time.
+- Internal identifiers renamed to a consistent `ptt_kargo_wc` prefix: the PHP
+  namespace, constants, functions, hooks, AJAX actions and the text domain. Stored
+  data is migrated automatically; see below.
+- The order status setting key is now `order_statuses`. The previous key contained a
+  non-ASCII character, which `sanitize_key()` strips and which has to be URL-encoded
+  in form field names.
+- The codebase now follows the WordPress coding standards, enforced by PHPCS with
+  the `WordPress` and `PHPCompatibilityWP` rulesets.
+- Line endings normalised to LF, with `.gitattributes` to keep them that way.
+
+### Added
+- A version-stamped, idempotent upgrade routine that renames the plugin's options,
+  its log table and all thirteen order meta keys, across both HPOS and legacy post
+  meta storage. Interrupted runs are safe to repeat.
+- The stored PTT password is re-encrypted during the upgrade. The AES key is derived
+  from a salt that changed with the rename, so the password is read with the old salt
+  and written back under the new one. If it cannot be read, the field is cleared so
+  the store re-enters it rather than keeping a value nothing can decrypt.
+- Translator comments on every string containing a placeholder.
+- A `.pot` template and a `tr_TR` translation.
+
+### Fixed
+- Uninstall now removes order meta in addition to the options and the log table, and
+  cleans up both the old and the new identifiers so an upgrade that never ran leaves
+  nothing behind.
 
 ## [2.0.1] - 2026-05-04
 
-### Düzeltildi
-- `siparisIstekEkle2` (kurye çağırma) envelope'u WSDL ile birebir uyumlu hale getirildi:
-  - `ekhizmetler` → `ek_hizmetler` (snake_case)
-  - `gondericiBilgi` → `gondericibilgi` (lowercase wrapper)
-  - 10 child element camelCase → snake_case
-  - `randevuBaslangic` → `randevu_baslangic`
-  - Field sırası WSDL alfabetik sequence'a göre
-  - Cevap parse: `hataKodu/aciklama` → `sonucKodu/sonucAciklama`
-- `kabulEkle2` ve `kabulEkleParcaliBarkod` envelope'larında `gondericibilgi` elementi
-  XSD sequence pozisyonuna alındı (`en` ile `iadeAAdres` arasında). Axis2'nin sıkı
-  sequence kontrolünden geçmesi için zorunluydu.
-- `GondericiBilgi` tipine `gonderici_soyadi` ve `gonderici_sms` alanları eklendi
-  (WSDL'de var, kod hiç göndermiyordu).
-- Etiket bağlantısı "süresi dolmuş" hatası: `wp_nonce_url()` HTML-escape uyguladığı için
-  `&` karakteri JSON üzerinden JS'ye geçince `&amp;` oluyor, `_wpnonce` parametresi
-  kayboluyordu. `add_query_arg()` ile raw URL üretimine geçildi.
-- WC sipariş düzenleme sayfasındaki metabox'ta "PTT Kargoya Gönder" butonu çalışmıyordu.
-  Asset enqueue artık tüm admin sayfalarında JS yüklüyor (HPOS/legacy/farklı WC sürümleri
-  arasında hook string varyasyonundan etkilenmemek için).
+### Fixed
+- The `siparisIstekEkle2` courier envelope now matches the WSDL exactly:
+  - `ekhizmetler` renamed to `ek_hizmetler` (snake_case)
+  - `gondericiBilgi` renamed to `gondericibilgi` (lowercase wrapper)
+  - ten child elements converted from camelCase to snake_case
+  - `randevuBaslangic` renamed to `randevu_baslangic`
+  - fields emitted in the WSDL's alphabetical sequence
+  - response parsing switched from `hataKodu`/`aciklama` to `sonucKodu`/`sonucAciklama`
+- `gondericibilgi` moved to its correct position in the `kabulEkle2` and
+  `kabulEkleParcaliBarkod` sequences, between `en` and `iadeAAdres`. Axis2 enforces
+  `<xs:sequence>` order strictly and failed silently when it was violated.
+- Added the `gonderici_soyadi` and `gonderici_sms` fields to `GondericiBilgi`. Both
+  are defined in the WSDL but the plugin never sent them.
+- Fixed "expired link" errors on label URLs. `wp_nonce_url()` HTML-escapes the
+  separator, so `&` became `&amp;` once the URL passed through JSON into JavaScript
+  and `_wpnonce` was lost. Raw URLs are now built with `add_query_arg()`.
+- Fixed the "Send to PTT Kargo" button in the order edit metabox. The admin script is
+  now enqueued on every admin screen, since the hook string varies between HPOS,
+  legacy and different WooCommerce versions.
 
 ## [2.0.0] - 2026-04-29
 
-### Eklendi
-- WooCommerce HPOS uyumlu sipariş listesi + bulk action.
-- `kabulEkle2` ile barkodlu gönderi oluşturma.
-- `kabulEkleParcaliBarkod` ile çoklu paket gönderimi.
-- `barkodVeriSil` / `referansVeriSil` ile gönderi iptali.
-- `gonderiSorgu` / `gonderiSorgu_referansNo` ile takip.
-- `getDropPointInfo` ile şu an bulunduğu PTT şubesi bilgisi.
-- `siparisIstekEkle2` ile kurye çağırma.
-- 80mm termal etiket çıktısı (Code128 SVG).
-- Toplu etiket bastırma.
-- Atomic barkod cursor (FOR UPDATE ile race-condition güvenliği).
-- AES-256-CBC ile şifrelenmiş PTT şifre saklama (WordPress `AUTH_KEY` tabanlı).
-- Sipariş bazında sigorta (Değerli Kargo) toggle'ı.
-- Kapıda Ödeme (COD) WC payment method eşlemesi.
-- Farklı iade adresi desteği.
-- Eksik müşteri bilgisi yakalama + popup ile manuel doldurma.
-- Custom log tablosu + 500 kayıt rotasyonu.
-- Bağlantı testi (sentetik barkodla `gonderiSorgu`).
-- Hata sonrası otomatik barkod reuse (META_PENDING_BARKOD).
+### Added
+- HPOS-compatible order list with a bulk action.
+- Barcoded shipments via `kabulEkle2`.
+- Multi-package shipments via `kabulEkleParcaliBarkod`.
+- Shipment cancellation via `barkodVeriSil` and `referansVeriSil`.
+- Tracking via `gonderiSorgu` and `gonderiSorgu_referansNo`.
+- Current branch lookup via `getDropPointInfo`.
+- Courier pickup requests via `siparisIstekEkle2`.
+- 80mm thermal labels with a Code128 SVG barcode.
+- Bulk label printing.
+- Atomic barcode allocation using `SELECT ... FOR UPDATE`.
+- PTT password stored AES-256-CBC encrypted, keyed from the WordPress `AUTH_KEY`.
+- Per-order insurance (Valuable Goods) toggle.
+- Cash on delivery mapped from WooCommerce payment methods.
+- Optional separate return address.
+- Detection of missing recipient data, with a popup to fill it in.
+- Custom log table with rotation at 500 records.
+- Connection test using a synthetic barcode against `gonderiSorgu`.
+- Barcode reuse after a failed attempt, so a failure does not consume a number.
