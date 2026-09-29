@@ -2,6 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 /** @var array  $opts */
 /** @var string $opt_key */
 
@@ -9,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $gateways = [];
 if ( function_exists( 'WC' ) && WC()->payment_gateways ) {
 	$all = WC()->payment_gateways->payment_gateways();
-	foreach ( $all as $id => $gateway ) {
+	foreach ( $all as $ptt_gw_id => $gateway ) {
 		// Only include gateways that are valid objects and have an ID.
 		if ( ! is_object( $gateway ) || empty( $gateway->id ) ) {
 			continue;

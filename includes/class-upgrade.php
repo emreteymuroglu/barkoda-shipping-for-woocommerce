@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- schema migration on the plugin's own table; there is nothing to cache.
+
 /**
  * Brings stored data up to the current schema.
  *
@@ -134,11 +136,11 @@ final class Upgrade {
 		if ( $has_to ) {
 			// Both exist, which means a previous run was interrupted after creating the
 			// new table. The new one is authoritative; drop the orphan.
-			$wpdb->query( "DROP TABLE IF EXISTS `{$from_full}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name cannot be parameterised.
+			$wpdb->query( "DROP TABLE IF EXISTS `{$from_full}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name cannot be parameterised.
 			return;
 		}
 
-		$wpdb->query( "RENAME TABLE `{$from_full}` TO `{$to_full}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name cannot be parameterised.
+		$wpdb->query( "RENAME TABLE `{$from_full}` TO `{$to_full}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name cannot be parameterised.
 	}
 
 	/**
@@ -159,7 +161,7 @@ final class Upgrade {
 		}
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- table name is derived from $wpdb, values are prepared.
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is derived from $wpdb, values are prepared.
 				$wpdb->prepare(
 					"UPDATE `{$table}` SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name cannot be parameterised.
 					self::LEGACY_META_PREFIX,

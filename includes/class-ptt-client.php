@@ -505,6 +505,7 @@ final class PTT_Client {
 		$parsed['request']   = Logs::mask_sensitive( $body );
 		$parsed['http_code'] = $code;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
+			/* translators: %d: HTTP status code */
 			$parsed['mesaj'] = sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
@@ -778,6 +779,7 @@ final class PTT_Client {
 		$parsed['http_code'] = $code;
 		$parsed['dosya_adi'] = $dosya_adi;
 		if ( $code >= 400 && empty( $parsed['mesaj'] ) ) {
+			/* translators: %d: HTTP status code */
 			$parsed['mesaj'] = sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code );
 		}
 
@@ -978,6 +980,7 @@ final class PTT_Client {
 			Logs::record_http( 'test_connection', null, false, 'HTTP ' . $code, $req_log, $resp_log, $duration );
 			return [
 				'success'   => false,
+				/* translators: %d: HTTP status code */
 				'mesaj'     => sprintf( __( 'The PTT service returned HTTP status %d.', 'ptt-kargo-for-woocommerce' ), $code ),
 				'raw'       => $raw,
 				'http_code' => $code,

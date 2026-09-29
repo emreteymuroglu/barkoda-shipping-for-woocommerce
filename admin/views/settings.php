@@ -3,11 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
+
 $settings = \PTT_Kargo_WC\Plugin::instance()->settings();
 $opts     = $settings->all();
 $opt_key  = \PTT_Kargo_WC\Settings::OPTION_KEY;
 
-$tabs = [
+$ptt_tabs = [
 	'connection' => [
 		'label' => __( 'PTT Connection', 'ptt-kargo-for-woocommerce' ),
 		'icon'  => 'admin-network',
@@ -42,8 +44,10 @@ $tabs = [
 	],
 ];
 
-$current_tab = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'connection';
-$base_url    = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-settings' );
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the tab is a read-only view selector.
+$requested_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+$current_tab   = isset( $ptt_tabs[ $requested_tab ] ) ? $requested_tab : 'connection';
+$base_url      = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-settings' );
 
 // Preview is shown for these tabs; others are just form fields
 $preview_tabs = [ 'connection', 'barcode', 'sender', 'label', 'products', 'defaults', 'payment' ];
@@ -55,7 +59,7 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 
 	<nav class="nav-tab-wrapper wc-ptt-tab-nav">
 		<?php
-		foreach ( $tabs as $slug => $info ) :
+		foreach ( $ptt_tabs as $slug => $info ) :
 			$url = add_query_arg( 'tab', $slug, $base_url );
 			$cls = 'nav-tab' . ( $slug === $current_tab ? ' nav-tab-active' : '' );
 			?>

@@ -41,7 +41,11 @@ PTT allocates a finite block of barcode numbers, so the plugin treats them as a 
 
 Your PTT password is stored AES-256-CBC encrypted, keyed from your site's `AUTH_KEY`, and is masked out of every log entry before it is written.
 
-= External service =
+= Disclaimer =
+
+This plugin is not developed, endorsed or supported by PTT. It is an independent client for the SOAP services PTT provides to contracted customers. PTT and PTT Kargo are trademarks of their respective owner.
+
+== External services ==
 
 This plugin sends data to PTT (Posta ve Telgraf Teskilati A.S.), the Turkish postal service, which is required for it to function. No data is sent anywhere else, and nothing is transmitted until you enter PTT credentials and act on an order.
 
@@ -57,10 +61,6 @@ Data is sent when you ship an order, cancel a shipment, track a parcel, request 
 
 PTT's terms of service: https://www.ptt.gov.tr/Sayfalar/Kurumsal/KullanimKosullari.aspx
 PTT's privacy policy: https://www.ptt.gov.tr/Sayfalar/Kurumsal/KisiselVerilerinKorunmasi.aspx
-
-= Disclaimer =
-
-This plugin is not developed, endorsed or supported by PTT. It is an independent client for the SOAP services PTT provides to contracted customers. PTT and PTT Kargo are trademarks of their respective owner.
 
 == Installation ==
 

@@ -3,10 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$only_success = isset( $_GET['filter'] ) && $_GET['filter'] === 'success'
-	? true
-	: ( isset( $_GET['filter'] ) && $_GET['filter'] === 'error' ? false : null );
-$operation    = isset( $_GET['op'] ) ? sanitize_key( $_GET['op'] ) : '';
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
+
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only list filters, nothing is written.
+$current_filter = isset( $_GET['filter'] ) ? sanitize_key( wp_unslash( $_GET['filter'] ) ) : '';
+$operation      = isset( $_GET['op'] ) ? sanitize_key( wp_unslash( $_GET['op'] ) ) : '';
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+$only_success = 'success' === $current_filter ? true : ( 'error' === $current_filter ? false : null );
 
 $logs  = \PTT_Kargo_WC\Logs::get_recent( 200, $only_success, $operation );
 $total = \PTT_Kargo_WC\Logs::count();
@@ -42,7 +46,6 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 			'success' => __( 'Successful', 'ptt-kargo-for-woocommerce' ),
 			'error'   => __( 'Error', 'ptt-kargo-for-woocommerce' ),
 		];
-		$current_filter = isset( $_GET['filter'] ) ? $_GET['filter'] : '';
 		$last_key       = array_key_last( $filters );
 		foreach ( $filters as $val => $lbl ) :
 			$url = $val === '' ? $base : add_query_arg( 'filter', $val, $base );
@@ -125,19 +128,3 @@ endif;
 		</tbody>
 	</table>
 </div>
-
-<script>
-(function(){
-	var btn = document.getElementById('wc-ptt-clear-logs');
-	if (!btn) return;
-	btn.addEventListener('click', function(){
-		if (!confirm('<?php echo esc_js( __( 'All log records will be deleted. Are you sure?', 'ptt-kargo-for-woocommerce' ) ); ?>')) return;
-		var fd = new FormData();
-		fd.append('action', 'ptt_kargo_wc_clear_logs');
-		fd.append('nonce', btn.dataset.nonce);
-		fetch(ajaxurl, { method:'POST', body:fd, credentials:'same-origin' })
-			.then(function(r){ return r.json(); })
-			.then(function(){ location.reload(); });
-	});
-})();
-</script>

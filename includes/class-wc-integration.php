@@ -199,12 +199,14 @@ final class WC_Integration {
 	}
 
 	public function bulk_action_notice(): void {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- counters the plugin's own bulk-action redirect puts in the URL; nothing is written.
 		if ( ! isset( $_GET['wc_ptt_bulk_sent'] ) ) {
 			return;
 		}
-		$sent = (int) $_GET['wc_ptt_bulk_sent'];
-		$skip = (int) ( $_GET['wc_ptt_bulk_skip'] ?? 0 );
-		$err  = (int) ( $_GET['wc_ptt_bulk_err'] ?? 0 );
+		$sent = absint( wp_unslash( $_GET['wc_ptt_bulk_sent'] ) );
+		$skip = isset( $_GET['wc_ptt_bulk_skip'] ) ? absint( wp_unslash( $_GET['wc_ptt_bulk_skip'] ) ) : 0;
+		$err  = isset( $_GET['wc_ptt_bulk_err'] ) ? absint( wp_unslash( $_GET['wc_ptt_bulk_err'] ) ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$class = $err > 0 ? 'notice-warning' : 'notice-success';
 		echo '<div class="notice ' . esc_attr( $class ) . ' is-dismissible"><p>';
@@ -256,16 +258,9 @@ final class WC_Integration {
 		$takip  = (string) $order->get_meta( Orders::META_TAKIP_URL );
 		$mesaj  = (string) $order->get_meta( Orders::META_PTT_LOG );
 
-		$context = [
-			'order'  => $order,
-			'status' => $status,
-			'barkod' => $barkod,
-			'takip'  => $takip,
-			'mesaj'  => $mesaj,
-			'label'  => $this->label,
-			'orders' => $this->orders,
-		];
-		extract( $context, EXTR_SKIP );
+		// Named for the view partial included below, which documents them in its header.
+		$label  = $this->label;
+		$orders = $this->orders;
 
 		include PTT_KARGO_WC_DIR . 'admin/views/order-metabox.php';
 	}

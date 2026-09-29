@@ -1,0 +1,56 @@
+/*
+ * 80mm thermal label document.
+ *
+ * Used by the standalone pages the plugin prints through admin-post.php, in both
+ * the single-label and the bulk layout. The two differ only in page padding and in
+ * how the separator between labels behaves, so the mode is carried on <body>.
+ */
+
+@page { size: 80mm auto; margin: 0; }
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; font-family: 'Courier New', Consolas, monospace; color: #111; }
+body { width: 80mm; }
+
+.header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 2mm; margin-bottom: 3mm; }
+.header .logo { max-width: 60mm; max-height: 18mm; margin: 0 auto 1mm; display: block; }
+.header h1 { font-size: 11pt; margin: 0 0 1mm; letter-spacing: 1px; }
+.header .sub { font-size: 8pt; margin: 0; }
+
+.row-sep { border-top: 1px dashed #333; margin: 2mm 0; }
+.siparis-satir { display: flex; justify-content: space-between; align-items: baseline; font-size: 9pt; }
+.siparis-satir strong { font-size: 11pt; }
+.bolum-basligi { font-size: 7pt; letter-spacing: 1px; text-transform: uppercase; color: #555; margin: 0 0 1mm; }
+
+.alici-adi { font-size: 11pt; font-weight: bold; margin: 0 0 1mm; text-transform: uppercase; }
+.alici-adres { font-size: 8.5pt; line-height: 1.3; margin: 0 0 1mm; }
+.alici-il { font-size: 9.5pt; font-weight: bold; margin: 0 0 1mm; }
+.alici-tel { font-size: 9pt; margin: 0; }
+
+.urun-listesi { font-size: 8.5pt; margin: 0; padding: 0; list-style: none; }
+.urun-listesi li { padding: 0.5mm 0; }
+
+.barkod-bolum { text-align: center; padding: 2mm 0; }
+.barkod-svg svg { width: 100%; height: auto; max-height: 18mm; display: block; }
+.barkod-no { font-size: 13pt; font-weight: bold; letter-spacing: 2px; margin: 1mm 0 0; text-align: center; }
+
+.gonderici { font-size: 7.5pt; text-align: center; line-height: 1.35; }
+
+/* Single label. */
+body.ptt-label-single { padding: 4mm 3mm; }
+body.ptt-label-single .dotted { border-bottom: 1px dotted #999; margin: 2mm 0; height: 0; }
+
+/* Bulk document: one .ptt-label per order, with a visible gap on screen that
+   becomes a page break on paper. */
+body.ptt-label-bulk { padding: 0; background: #f5f5f5; }
+body.ptt-label-bulk .ptt-label { width: 80mm; padding: 4mm 3mm; background: #fff; }
+body.ptt-label-bulk .ptt-page-break { page-break-after: always; height: 6mm; background: #f5f5f5; }
+body.ptt-label-bulk .dotted { display: none; }
+
+@media print {
+	body.ptt-label-single { padding: 2mm; }
+	body.ptt-label-bulk { background: #fff; padding: 0; }
+	body.ptt-label-bulk .ptt-label { padding: 2mm; }
+	body.ptt-label-bulk .ptt-page-break { background: transparent; height: 0; }
+}

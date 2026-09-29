@@ -2,6 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 /** @var array  $opts */
 /** @var string $opt_key */
 
@@ -42,16 +44,6 @@ if ( function_exists( 'wp_enqueue_script' ) ) {
 				</select>
 				<input type="hidden" id="urun_idler" name="<?php echo esc_attr( $opt_key ); ?>[urun_idler]" value="<?php echo esc_attr( $opts['urun_idler'] ); ?>">
 				<p class="description"><?php esc_html_e( 'Search by product name or SKU. Orders containing the selected products are included.', 'ptt-kargo-for-woocommerce' ); ?></p>
-				<script>
-				(function($){
-					$(function(){
-						$('#urun_idler_picker').on('change', function(){
-							var values = $(this).val() || [];
-							$('#urun_idler').val(values.join(','));
-						});
-					});
-				})(jQuery);
-				</script>
 			<?php else : ?>
 				<input type="text" id="urun_idler" name="<?php echo esc_attr( $opt_key ); ?>[urun_idler]" value="<?php echo esc_attr( $opts['urun_idler'] ); ?>" class="regular-text" placeholder="17696, 17700, 17701">
 				<p class="description"><?php esc_html_e( 'Comma-separated list of product IDs. The WooCommerce admin script needed for the product search widget could not be loaded.', 'ptt-kargo-for-woocommerce' ); ?></p>

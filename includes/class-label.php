@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *  - render_preview(): sample label built from POSTed settings, without auto-print
  */
 final class Label {
+	private const STYLE_HANDLE  = 'ptt-kargo-for-woocommerce-label';
+	private const SCRIPT_HANDLE = 'ptt-kargo-for-woocommerce-label-print';
+
 	private Settings $settings;
 
 	public function __construct( Settings $settings ) {
@@ -22,6 +25,19 @@ final class Label {
 		add_action( 'admin_post_ptt_kargo_wc_label', [ $this, 'render' ] );
 		add_action( 'admin_post_ptt_kargo_wc_preview', [ $this, 'render_preview' ] );
 		add_action( 'admin_post_ptt_kargo_wc_bulk_label', [ $this, 'render_bulk' ] );
+	}
+
+	/**
+	 * Registers the label document's stylesheet and print script.
+	 *
+	 * Labels are served from admin-post.php as standalone documents, so
+	 * `admin_enqueue_scripts` never runs for them. Registering the handles here and
+	 * printing them in the document head keeps CSS and JS out of the markup while
+	 * still going through the enqueue API.
+	 */
+	private static function register_assets(): void {
+		wp_register_style( self::STYLE_HANDLE, PTT_KARGO_WC_URL . 'admin/assets/label.css', [], PTT_KARGO_WC_VERSION );
+		wp_register_script( self::SCRIPT_HANDLE, PTT_KARGO_WC_URL . 'admin/assets/label-print.js', [], PTT_KARGO_WC_VERSION, true );
 	}
 
 	/**
@@ -89,6 +105,8 @@ final class Label {
 	}
 
 	private function build_bulk_html( array $blocks, array $opts ): string {
+		self::register_assets();
+
 		// build_html() returns a whole document, so render one per label and keep only the
 		// body contents, separated by page breaks.
 		$count = count( $blocks );
@@ -99,9 +117,7 @@ final class Label {
 			// Pull <body>...</body> out of the full document build_html() returns.
 			$full = $this->build_html( $b['data'], $opts, $b['barkod'], false, $b['order'] );
 			if ( preg_match( '~<body[^>]*>(.*?)</body>~is', $full, $m ) ) {
-				$body = $m[1];
-				// Drop the per-label auto-print script; one print script is appended at the end.
-				$body           = preg_replace( '~<script>.*?</script>~is', '', $body );
+				$body           = $m[1];
 				$inner_blocks[] = '<section class="ptt-label">' . $body . '</section>'
 					. ( $is_last ? '' : '<div class="ptt-page-break"></div>' );
 			}
@@ -113,47 +129,11 @@ final class Label {
 <head>
 	<meta charset="UTF-8">
 	<title><?php /* translators: %d: number of labels in the document */ echo esc_html( sprintf( __( 'PTT Bulk Labels (%d)', 'ptt-kargo-for-woocommerce' ), $count ) ); ?></title>
-	<style>
-		@page { size: 80mm auto; margin: 0; }
-		* { box-sizing: border-box; }
-		html, body { margin: 0; padding: 0; font-family: 'Courier New', Consolas, monospace; color: #111; }
-		body { width: 80mm; padding: 0; background: #f5f5f5; }
-		.ptt-label { width: 80mm; padding: 4mm 3mm; background: #fff; }
-			/* Visible gap in the preview, a page break when printed. */
-		.ptt-page-break { page-break-after: always; height: 6mm; background: #f5f5f5; }
-		@media print {
-			body { background: #fff; padding: 0; }
-			.ptt-label { padding: 2mm; }
-			.ptt-page-break { background: transparent; height: 0; }
-		}
-		.header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 2mm; margin-bottom: 3mm; }
-		.header .logo { max-width: 60mm; max-height: 18mm; margin: 0 auto 1mm; display: block; }
-		.header h1 { font-size: 11pt; margin: 0 0 1mm; letter-spacing: 1px; }
-		.header .sub { font-size: 8pt; margin: 0; }
-		.row-sep { border-top: 1px dashed #333; margin: 2mm 0; }
-		.siparis-satir { display: flex; justify-content: space-between; align-items: baseline; font-size: 9pt; }
-		.siparis-satir strong { font-size: 11pt; }
-		.bolum-basligi { font-size: 7pt; letter-spacing: 1px; text-transform: uppercase; color: #555; margin: 0 0 1mm; }
-		.alici-adi { font-size: 11pt; font-weight: bold; margin: 0 0 1mm; text-transform: uppercase; }
-		.alici-adres { font-size: 8.5pt; line-height: 1.3; margin: 0 0 1mm; }
-		.alici-il { font-size: 9.5pt; font-weight: bold; margin: 0 0 1mm; }
-		.alici-tel { font-size: 9pt; margin: 0; }
-		.urun-listesi { font-size: 8.5pt; margin: 0; padding: 0; list-style: none; }
-		.urun-listesi li { padding: 0.5mm 0; }
-		.barkod-bolum { text-align: center; padding: 2mm 0; }
-		.barkod-svg svg { width: 100%; height: auto; max-height: 18mm; display: block; }
-		.barkod-no { font-size: 13pt; font-weight: bold; letter-spacing: 2px; margin: 1mm 0 0; text-align: center; }
-		.gonderici { font-size: 7.5pt; text-align: center; line-height: 1.35; }
-		.dotted { display: none; }
-	</style>
+	<?php wp_print_styles( self::STYLE_HANDLE ); ?>
 </head>
-<body>
+<body class="ptt-label-bulk">
 		<?php echo implode( "\n", $inner_blocks ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-	<script>
-		window.addEventListener('load', function () {
-			setTimeout(function () { window.print(); }, 300);
-		});
-	</script>
+	<?php wp_print_scripts( self::SCRIPT_HANDLE ); ?>
 </body>
 </html>
 		<?php
@@ -207,9 +187,11 @@ final class Label {
 
 		$base = $this->settings->all();
 
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- every field is sanitised by sanitize_preview_input() below.
 		$override = isset( $_POST['preview'] ) && is_array( $_POST['preview'] )
 			? $this->sanitize_preview_input( wp_unslash( $_POST['preview'] ) )
 			: [];
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$opts = array_merge( $base, $override );
 
@@ -324,6 +306,8 @@ final class Label {
 	 * @param \WC_Order|null $order      Passed to the filters; null in preview mode.
 	 */
 	private function build_html( array $data, array $opts, string $barkod, bool $auto_print, $order ): string {
+		self::register_assets();
+
 		$gonderici_ad    = (string) ( $opts['gonderici_ad'] ?? '' );
 		$gonderici_adres = (string) ( $opts['gonderici_adres'] ?? '' );
 		$gonderici_il    = (string) ( $opts['gonderici_il'] ?? '' );
@@ -366,36 +350,9 @@ final class Label {
 <head>
 	<meta charset="UTF-8">
 	<title>PTT Etiketi #<?php echo esc_html( $data['siparis_no'] ); ?></title>
-	<style>
-		@page { size: 80mm auto; margin: 0; }
-		* { box-sizing: border-box; }
-		html, body { margin: 0; padding: 0; font-family: 'Courier New', Consolas, monospace; color: #111; }
-		body { width: 80mm; padding: 4mm 3mm; }
-		.header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 2mm; margin-bottom: 3mm; }
-		.header .logo { max-width: 60mm; max-height: 18mm; margin: 0 auto 1mm; display: block; }
-		.header h1 { font-size: 11pt; margin: 0 0 1mm; letter-spacing: 1px; }
-		.header .sub { font-size: 8pt; margin: 0; }
-		.row-sep { border-top: 1px dashed #333; margin: 2mm 0; }
-		.siparis-satir { display: flex; justify-content: space-between; align-items: baseline; font-size: 9pt; }
-		.siparis-satir strong { font-size: 11pt; }
-		.bolum-basligi { font-size: 7pt; letter-spacing: 1px; text-transform: uppercase; color: #555; margin: 0 0 1mm; }
-		.alici-adi { font-size: 11pt; font-weight: bold; margin: 0 0 1mm; text-transform: uppercase; }
-		.alici-adres { font-size: 8.5pt; line-height: 1.3; margin: 0 0 1mm; }
-		.alici-il { font-size: 9.5pt; font-weight: bold; margin: 0 0 1mm; }
-		.alici-tel { font-size: 9pt; margin: 0; }
-		.urun-listesi { font-size: 8.5pt; margin: 0; padding: 0; list-style: none; }
-		.urun-listesi li { padding: 0.5mm 0; }
-		.barkod-bolum { text-align: center; padding: 2mm 0; }
-		.barkod-svg svg { width: 100%; height: auto; max-height: 18mm; display: block; }
-		.barkod-no { font-size: 13pt; font-weight: bold; letter-spacing: 2px; margin: 1mm 0 0; text-align: center; }
-		.gonderici { font-size: 7.5pt; text-align: center; line-height: 1.35; }
-		.dotted { border-bottom: 1px dotted #999; margin: 2mm 0; height: 0; }
-		@media print {
-			body { padding: 2mm; }
-		}
-	</style>
+	<?php wp_print_styles( self::STYLE_HANDLE ); ?>
 </head>
-<body>
+<body class="ptt-label-single">
 		<?php if ( ! empty( $header_data['logo_url'] ) || ! empty( $header_data['title'] ) || ! empty( $header_data['subtitle'] ) ) : ?>
 	<div class="header">
 			<?php if ( ! empty( $header_data['logo_url'] ) ) : ?>
@@ -463,11 +420,7 @@ final class Label {
 	<div class="dotted"></div>
 
 		<?php if ( $auto_print ) : ?>
-	<script>
-		window.addEventListener('load', function () {
-			setTimeout(function () { window.print(); }, 200);
-		});
-	</script>
+	<?php wp_print_scripts( self::SCRIPT_HANDLE ); ?>
 	<?php endif; ?>
 </body>
 </html>

@@ -479,3 +479,18 @@
 	});
 
 })(jQuery);
+
+/* Logs page: clear every stored request/response record. */
+(function () {
+	document.addEventListener('click', function (e) {
+		var btn = e.target.closest ? e.target.closest('#wc-ptt-clear-logs') : null;
+		if (!btn) return;
+		if (!window.confirm(PttKargoWC.i18n.clearLogsAsk)) return;
+		var fd = new FormData();
+		fd.append('action', PttKargoWC.actions.clearLogs);
+		fd.append('nonce', btn.dataset.nonce);
+		fetch(PttKargoWC.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+			.then(function (r) { return r.json(); })
+			.then(function () { location.reload(); });
+	});
+})();

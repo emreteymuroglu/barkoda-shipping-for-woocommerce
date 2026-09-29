@@ -489,6 +489,7 @@ final class Settings {
 		if ( $cipher === false ) {
 			return '';
 		}
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- encoding binary ciphertext for storage in an option, not obfuscating code.
 		return base64_encode( $iv . $cipher );
 	}
 
@@ -497,6 +498,7 @@ final class Settings {
 	 * @param bool   $legacy Decrypt with the pre-rename salt.
 	 */
 	public static function decrypt( string $enc, bool $legacy = false ): string {
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding the stored ciphertext written by encrypt() above.
 		$raw = base64_decode( $enc, true );
 		if ( $raw === false || strlen( $raw ) < 17 ) {
 			return '';

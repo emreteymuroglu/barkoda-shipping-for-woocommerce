@@ -32,3 +32,8 @@
 /vendor/**      export-ignore
 /assets         export-ignore
 /README.tr.md   export-ignore
+
+# Translations are served from translate.wordpress.org once the plugin is listed,
+# so the compiled catalogues stay in the repository but ship no longer.
+/languages/*.po export-ignore
+/languages/*.mo export-ignore

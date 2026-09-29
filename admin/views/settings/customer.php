@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
+
 // Account emails are customer-facing but never about an order, so they cannot
 // carry tracking details and are left out of the list.
 $ptt_not_orders = array(

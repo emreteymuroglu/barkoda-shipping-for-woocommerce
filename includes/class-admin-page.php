@@ -108,7 +108,8 @@ final class Admin_Page {
 
 		// Settings page only: live preview, media library, connection test, product search.
 		$is_plugin_page = strpos( $hook, self::MENU_SLUG ) !== false;
-		$is_settings    = isset( $_GET['page'] ) && $_GET['page'] === self::MENU_SLUG . '-settings';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only decides which admin screen assets to load.
+		$is_settings    = isset( $_GET['page'] ) && sanitize_key( wp_unslash( $_GET['page'] ) ) === self::MENU_SLUG . '-settings';
 		if ( $is_plugin_page && $is_settings ) {
 			wp_enqueue_media();
 			// WooCommerce enhanced select, used by the product search widget.
@@ -138,6 +139,7 @@ final class Admin_Page {
 					'cancelKargo' => self::AJAX_CANCEL,
 					'courier'     => self::AJAX_COURIER,
 					'dropPoint'   => self::AJAX_DROP_POINT,
+					'clearLogs'   => self::AJAX_LOGS,
 				],
 				'i18n'    => [
 					'sending'         => __( 'Sending...', 'ptt-kargo-for-woocommerce' ),
@@ -170,6 +172,7 @@ final class Admin_Page {
 					'courierSending'  => __( 'Requesting courier...', 'ptt-kargo-for-woocommerce' ),
 					'courierOk'       => __( 'Courier request accepted!', 'ptt-kargo-for-woocommerce' ),
 					'courierErr'      => __( 'Courier request failed: ', 'ptt-kargo-for-woocommerce' ),
+					'clearLogsAsk'    => __( 'All log records will be deleted. Are you sure?', 'ptt-kargo-for-woocommerce' ),
 
 					// Recipient fields shown in the shipment popup.
 					'fieldRecipient'  => __( 'Recipient Name', 'ptt-kargo-for-woocommerce' ),
@@ -229,7 +232,9 @@ final class Admin_Page {
 			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
 		}
 
-		$show   = isset( $_GET['show'] ) && in_array( $_GET['show'], [ 'pending', 'sent', 'all' ], true ) ? $_GET['show'] : 'pending';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list filter.
+		$requested_show = isset( $_GET['show'] ) ? sanitize_key( wp_unslash( $_GET['show'] ) ) : '';
+		$show           = in_array( $requested_show, [ 'pending', 'sent', 'all' ], true ) ? $requested_show : 'pending';
 		$orders = $this->orders->eligible_orders( 100, $show );
 
 		include PTT_KARGO_WC_DIR . 'admin/views/orders-list.php';
@@ -266,9 +271,11 @@ final class Admin_Page {
 		// Optional: test with credentials typed into the form but not yet saved. PTT_Client
 		// reads its own settings, so the override goes through a global filter rather than a
 		// throwaway Settings instance.
-		$override_env = isset( $_POST['environment'] ) && in_array( $_POST['environment'], [ 'test', 'prod' ], true ) ? sanitize_key( $_POST['environment'] ) : null;
-		$override_id  = isset( $_POST['musteri_id'] ) ? preg_replace( '/\D/', '', (string) $_POST['musteri_id'] ) : null;
-		$override_pwd = isset( $_POST['sifre'] ) ? (string) $_POST['sifre'] : null;
+		$posted_env   = isset( $_POST['environment'] ) ? sanitize_key( wp_unslash( $_POST['environment'] ) ) : '';
+		$override_env = in_array( $posted_env, [ 'test', 'prod' ], true ) ? $posted_env : null;
+		$override_id  = isset( $_POST['musteri_id'] ) ? preg_replace( '/\D/', '', sanitize_text_field( wp_unslash( $_POST['musteri_id'] ) ) ) : null;
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- a password is used verbatim; sanitising would corrupt valid characters.
+		$override_pwd = isset( $_POST['sifre'] ) ? (string) wp_unslash( $_POST['sifre'] ) : null;
 		$override_pwd = $override_pwd !== null ? wp_unslash( $override_pwd ) : null;
 
 		$has_override   = $override_env !== null || $override_id !== null || ( $override_pwd !== null && $override_pwd !== '' );
@@ -460,7 +467,7 @@ final class Admin_Page {
 		}
 
 		$parca_adet  = isset( $_POST['parca_adet'] ) ? max( 1, (int) $_POST['parca_adet'] ) : 1;
-		$irsaliye_no = isset( $_POST['irsaliye_no'] ) ? sanitize_text_field( (string) $_POST['irsaliye_no'] ) : '';
+		$irsaliye_no = isset( $_POST['irsaliye_no'] ) ? sanitize_text_field( wp_unslash( $_POST['irsaliye_no'] ) ) : '';
 
 		// Retry: reuse the barcode consumed by the previous failed attempt instead of a new one.
 		$pending   = $this->orders->get_pending_barkod( $order );
@@ -648,10 +655,10 @@ final class Admin_Page {
 			'en'                   => isset( $_POST['en'] ) ? max( 0, (int) $_POST['en'] ) : 0,
 			'boy'                  => isset( $_POST['boy'] ) ? max( 0, (int) $_POST['boy'] ) : 0,
 			'yukseklik'            => isset( $_POST['yukseklik'] ) ? max( 0, (int) $_POST['yukseklik'] ) : 0,
-			'ekhizmet'             => isset( $_POST['ekhizmet'] ) ? strtoupper( preg_replace( '/[^A-Za-z]/', '', (string) $_POST['ekhizmet'] ) ) : '',
+			'ekhizmet'             => isset( $_POST['ekhizmet'] ) ? strtoupper( preg_replace( '/[^A-Za-z]/', '', sanitize_text_field( wp_unslash( $_POST['ekhizmet'] ) ) ) ) : '',
 			'deger_konulmus_ucret' => isset( $_POST['deger_konulmus_ucret'] ) ? number_format( (float) $_POST['deger_konulmus_ucret'], 2, '.', '' ) : '',
-			'randevu_baslangic'    => isset( $_POST['randevu_baslangic'] ) ? sanitize_text_field( (string) $_POST['randevu_baslangic'] ) : '',
-			'randevu_bitis'        => isset( $_POST['randevu_bitis'] ) ? sanitize_text_field( (string) $_POST['randevu_bitis'] ) : '',
+			'randevu_baslangic'    => isset( $_POST['randevu_baslangic'] ) ? sanitize_text_field( wp_unslash( $_POST['randevu_baslangic'] ) ) : '',
+			'randevu_bitis'        => isset( $_POST['randevu_bitis'] ) ? sanitize_text_field( wp_unslash( $_POST['randevu_bitis'] ) ) : '',
 			'ucret'                => isset( $_POST['ucret'] ) ? (float) $_POST['ucret'] : 0,
 		];
 
@@ -693,7 +700,7 @@ final class Admin_Page {
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
-		$barkod   = isset( $_POST['barkod'] ) ? preg_replace( '/\D/', '', (string) $_POST['barkod'] ) : '';
+		$barkod   = isset( $_POST['barkod'] ) ? preg_replace( '/\D/', '', sanitize_text_field( wp_unslash( $_POST['barkod'] ) ) ) : '';
 
 		if ( $barkod === '' && $order_id > 0 ) {
 			$order = wc_get_order( $order_id );

@@ -40,8 +40,6 @@ final class Plugin {
 	public function boot() {
 		Upgrade::maybe_run();
 
-		load_plugin_textdomain( 'ptt-kargo-for-woocommerce', false, dirname( plugin_basename( PTT_KARGO_WC_FILE ) ) . '/languages' );
-
 		$this->settings->register();
 		$this->admin_page->register();
 		$this->label->register();

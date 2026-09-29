@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- this class owns the plugin's log table; every call here is deliberately uncached, since a stale log view would hide the request the user is looking for.
+
 /**
  * Integration log stored in a custom table: no autoload, fast queries, rotated by age.
  *
@@ -63,6 +65,7 @@ final class Logs {
 	public static function drop_table(): void {
 		global $wpdb;
 		$table = self::table();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- the table name derives from $wpdb->prefix and cannot be parameterised.
 		$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 	}
 
@@ -73,18 +76,6 @@ final class Logs {
 		// Swallow silently when the table is missing, e.g. installed without running migrations.
 		$exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
 		if ( $exists !== $table ) {
-			// Still fall back to the WP debug log so nothing is lost.
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && function_exists( 'error_log' ) ) {
-				error_log(
-					sprintf(
-						'[ptt-kargo-for-woocommerce] %s | order=%s | %s | %s',
-						$operation,
-						$order_id ?? '-',
-						$success ? 'OK' : 'FAIL',
-						$message
-					)
-				);
-			}
 			return;
 		}
 
@@ -101,19 +92,6 @@ final class Logs {
 			],
 			[ '%s', '%s', '%d', '%d', '%s', '%s', '%s' ]
 		);
-
-		// Mirror into the WP debug log for real-time tracing.
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && function_exists( 'error_log' ) ) {
-			error_log(
-				sprintf(
-					'[ptt-kargo-for-woocommerce] %s | order=%s | %s | %s',
-					$operation,
-					$order_id ?? '-',
-					$success ? 'OK' : 'FAIL',
-					$message
-				)
-			);
-		}
 
 		self::rotate();
 	}
@@ -218,18 +196,21 @@ final class Logs {
 	private static function rotate(): void {
 		global $wpdb;
 		$table = self::table();
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- the table name derives from $wpdb->prefix and cannot be parameterised.
 		$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 		if ( $count <= self::RETENTION_LIMIT ) {
 			return;
 		}
 
 		$delete_count = $count - self::RETENTION_LIMIT;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- the table name derives from $wpdb->prefix and cannot be parameterised; every value is bound through prepare().
 		$wpdb->query(
 			$wpdb->prepare(
 				"DELETE FROM {$table} ORDER BY id ASC LIMIT %d",
 				$delete_count
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -257,6 +238,7 @@ final class Logs {
 		$where_sql = ! empty( $where ) ? ( 'WHERE ' . implode( ' AND ', $where ) ) : '';
 
 		$params[] = $limit;
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- the table name derives from $wpdb->prefix and cannot be parameterised; every value is bound through prepare().
 		$rows     = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$table} {$where_sql} ORDER BY id DESC LIMIT %d",
@@ -264,6 +246,7 @@ final class Logs {
 			),
 			ARRAY_A
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return is_array( $rows ) ? $rows : [];
 	}
@@ -275,7 +258,8 @@ final class Logs {
 		if ( $exists !== $table ) {
 			return;
 		}
-		$wpdb->query( 'TRUNCATE TABLE ' . $table );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- the table name comes from $wpdb->prefix and cannot be parameterised.
+		$wpdb->query( 'TRUNCATE TABLE `' . esc_sql( $table ) . '`' );
 	}
 
 	public static function count(): int {
@@ -285,6 +269,10 @@ final class Logs {
 		if ( $exists !== $table ) {
 			return 0;
 		}
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- the table name derives from $wpdb->prefix and cannot be parameterised.
+		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+		return $total;
 	}
 }

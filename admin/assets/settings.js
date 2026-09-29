@@ -123,3 +123,13 @@
 	});
 
 })(jQuery);
+
+/* Product picker: mirror the enhanced-select values into the hidden field the form submits. */
+(function ($) {
+	$(function () {
+		$('#urun_idler_picker').on('change', function () {
+			var values = $(this).val() || [];
+			$('#urun_idler').val(values.join(','));
+		});
+	});
+})(jQuery);

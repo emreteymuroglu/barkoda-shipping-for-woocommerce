@@ -2,6 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 /**
  * @var \PTT_Kargo_WC\Settings $settings
  */
@@ -127,12 +129,3 @@ if ( class_exists( '\PTT_Kargo_WC\Plugin' ) ) {
 		</aside>
 	</div>
 </div>
-
-<style>
-.wc-ptt-courier-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; margin-top: 16px; }
-.wc-ptt-courier-form { background: #fff; border: 1px solid #c3c4c7; padding: 4px 24px 24px; border-radius: 4px; }
-@media (max-width: 1100px) { .wc-ptt-courier-grid { grid-template-columns: 1fr; } }
-#wc-ptt-courier-result { padding: 12px 16px; border-radius: 4px; margin-top: 16px; font-size: 13px; }
-#wc-ptt-courier-result.is-success { background: #d4edda; color: #155724; border-left: 4px solid #00a32a; }
-#wc-ptt-courier-result.is-error   { background: #f8d7da; color: #721c24; border-left: 4px solid #d63638; }
-</style>

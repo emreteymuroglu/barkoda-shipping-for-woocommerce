@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the barcode cursor lives in the plugin's own table and is handed out inside a SELECT ... FOR UPDATE transaction. The options API cannot lock a row, and caching would defeat the lock that keeps two concurrent orders from taking the same barcode.
+
 final class Barcode {
 	public const CURSOR_OPTION = 'ptt_kargo_wc_barcode_cursor';
 
