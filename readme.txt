@@ -1,4 +1,4 @@
-=== PTT Kargo for WooCommerce ===
+=== Barkoda Shipping for WooCommerce ===
 Contributors: emreteymuroglu
 Tags: woocommerce, shipping, kargo, barcode, turkey
 Requires at least: 6.0
@@ -12,7 +12,7 @@ Create PTT Kargo shipments from WooCommerce orders: barcodes, 80mm thermal label
 
 == Description ==
 
-PTT Kargo for WooCommerce connects your store to the PTT Kargo SOAP integration service. From the WooCommerce order screens you can create a barcoded shipment, print an 80mm thermal label, follow the parcel's movements and request a courier pickup, without retyping order data into a separate portal.
+Barkoda Shipping for WooCommerce connects your store to the PTT Kargo SOAP integration service. From the WooCommerce order screens you can create a barcoded shipment, print an 80mm thermal label, follow the parcel's movements and request a courier pickup, without retyping order data into a separate portal.
 
 **This plugin requires a PTT integration contract.** PTT issues you a customer number, a password and a block of barcode numbers. Without those the plugin has nothing to authenticate with. See the FAQ for how to apply.
 

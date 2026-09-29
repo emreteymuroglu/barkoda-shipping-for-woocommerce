@@ -2,175 +2,177 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: PTT Kargo for WooCommerce 2.1.0\n"
+"Project-Id-Version: Barkoda Shipping for WooCommerce 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordpress-ptt-kargo\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: Emre Teymuroglu\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-09-28T20:40:50+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: ptt-kargo-for-woocommerce\n"
+"X-Domain: barkoda-shipping-for-woocommerce\n"
 
 #. Plugin Name of the plugin
-#: ptt-kargo-for-woocommerce.php
+#: barkoda-shipping-for-woocommerce.php
 #: includes/class-admin-page.php:56
-msgid "PTT Kargo for WooCommerce"
-msgstr ""
+msgid "Barkoda Shipping for WooCommerce"
+msgstr "Barkoda Shipping for WooCommerce"
 
 #. Plugin URI of the plugin
-#: ptt-kargo-for-woocommerce.php
-msgid "https://github.com/emreteymuroglu/ptt-kargo-for-woocommerce"
-msgstr ""
+#: barkoda-shipping-for-woocommerce.php
+msgid "https://github.com/emreteymuroglu/barkoda-shipping-for-woocommerce"
+msgstr "https://github.com/emreteymuroglu/barkoda-shipping-for-woocommerce"
 
 #. Description of the plugin
-#: ptt-kargo-for-woocommerce.php
+#: barkoda-shipping-for-woocommerce.php
 msgid "Creates PTT Kargo shipments from WooCommerce orders over the PTT SOAP API, generates barcodes, prints 80mm thermal labels and tracks deliveries. Not affiliated with or endorsed by PTT."
-msgstr ""
+msgstr "WooCommerce siparişlerinden PTT Kargo gönderisi oluşturur, barkod üretir, 80mm termal etiket basar ve gönderi takibi yapar. PTT ile bağlantılı ya da PTT tarafından onaylanmış değildir."
 
 #. Author of the plugin
-#: ptt-kargo-for-woocommerce.php
+#: barkoda-shipping-for-woocommerce.php
 msgid "Emre Teymuroglu"
-msgstr ""
+msgstr "Emre Teymuroglu"
 
 #: admin/views/courier.php:23
 msgid "PTT Kargo — Request Courier"
-msgstr ""
+msgstr "PTT Kargo — Kurye Çağır"
 
 #: admin/views/courier.php:25
 msgid "Places a pickup order so PTT collects your shipments from your address (siparisIstekEkle2). Sender details are taken from the Sender tab."
-msgstr ""
+msgstr "PTT'nin gönderilerini şubenizden / adresinizden teslim alması için sipariş geçer (siparisIstekEkle2). Gönderici bilgisi \"Gönderici\" sekmesindeki ayarlardan alınır."
 
 #: admin/views/courier.php:30
 msgid "Pickup Details"
-msgstr ""
+msgstr "Toplama Bilgileri"
 
 #: admin/views/courier.php:35
 #: includes/class-admin-page.php:192
 msgid "Package Count"
-msgstr ""
+msgstr "Parça Adedi"
 
 #. translators: %d: number of orders sent to PTT but not yet collected
 #: admin/views/courier.php:42
 #, php-format
 msgid "%d order(s) sent to PTT and awaiting acceptance — shown as a reference for the pickup quantity."
-msgstr ""
+msgstr "%d sipariş PTT'ye gönderildi (kabul bekleniyor) — toplama miktarı için referans olarak gösteriliyor."
 
 #: admin/views/courier.php:49
 msgid "Total Weight (grams)"
-msgstr ""
+msgstr "Toplam Ağırlık (gram)"
 
 #: admin/views/courier.php:51
 #: admin/views/courier.php:57
 msgid "Optional"
-msgstr ""
+msgstr "Opsiyonel"
 
 #: admin/views/courier.php:55
 msgid "Total Volumetric Weight"
-msgstr ""
+msgstr "Toplam Desi"
 
 #: admin/views/courier.php:61
 msgid "Estimated Dimensions (cm)"
-msgstr ""
+msgstr "Tahmini Boyutlar (cm)"
 
 #: admin/views/courier.php:63
 msgid "Width"
-msgstr ""
+msgstr "En"
 
 #: admin/views/courier.php:65
 msgid "Length"
-msgstr ""
+msgstr "Boy"
 
 #: admin/views/courier.php:67
 msgid "Height"
-msgstr ""
+msgstr "Yükseklik"
 
 #: admin/views/courier.php:71
 msgid "Additional Services"
-msgstr ""
+msgstr "Ek Hizmetler"
 
 #: admin/views/courier.php:73
 msgid "e.g. DK (insured), DKUA (insured + charge recipient)"
-msgstr ""
+msgstr "Örn: DK (sigortalı), DKUA (sigortalı + alıcıdan)"
 
 #: admin/views/courier.php:75
 msgid "Ask your PTT regional office which additional service codes your contract includes. Multiple codes are merged alphabetically (e.g. DKUA)."
-msgstr ""
+msgstr "Sözleşmenizdeki ek hizmet kodlarını PTT Başmüdürlüğünden öğrenebilirsiniz. Çoklu kod alfabetik birleştirilir (örn. DKUA)."
 
 #: admin/views/courier.php:80
 #: includes/class-admin-page.php:167
 msgid "Insured Value (TRY)"
-msgstr ""
+msgstr "Sigorta Tutarı (TL)"
 
 #: admin/views/courier.php:82
 msgid "Leave empty if you do not want insurance"
-msgstr ""
+msgstr "Sigortalı göndermek istemiyorsan boş bırak"
 
 #: admin/views/courier.php:83
 msgid "If you fill this in, you must add DK to the additional services field."
-msgstr ""
+msgstr "Doldurursan ek hizmet alanına DK eklemen gerekir."
 
 #: admin/views/courier.php:87
 msgid "Appointment (optional)"
-msgstr ""
+msgstr "Randevu (opsiyonel)"
 
 #: admin/views/courier.php:89
 msgid "Start"
-msgstr ""
+msgstr "Başlangıç"
 
 #: admin/views/courier.php:91
 msgid "End"
-msgstr ""
+msgstr "Bitiş"
 
 #: admin/views/courier.php:92
 msgid "The appointment format PTT accepts depends on your contract; leaving this empty is usually fine."
-msgstr ""
+msgstr "PTT'nin desteklediği randevu formatı sözleşmenize göre değişir; boş bırakmak çoğu durumda yeterli."
 
 #: admin/views/courier.php:100
 #: includes/class-admin-page.php:76
 #: includes/class-admin-page.php:77
 msgid "Request Courier"
-msgstr ""
+msgstr "Kurye Çağır"
 
 #: admin/views/courier.php:110
 msgid "Pickup Address"
-msgstr ""
+msgstr "Toplama Adresi"
 
 #: admin/views/courier.php:123
 msgid "Edit sender settings →"
-msgstr ""
+msgstr "Gönderici ayarlarını düzenle →"
 
 #: admin/views/logs.php:16
 #: includes/class-admin-page.php:94
 msgid "PTT Logs"
-msgstr ""
+msgstr "PTT Loglar"
 
 #: admin/views/logs.php:18
 msgid "Clear All"
-msgstr ""
+msgstr "Tümünü Temizle"
 
 #. translators: %d: log count
 #: admin/views/logs.php:27
 #, php-format
 msgid "The last %d integration records, newest first. Automatically capped at 500 records."
-msgstr ""
+msgstr "Son %d adet PTT entegrasyon kaydı (en yeni üstte). Otomatik 500 kayıtta sınırlandırılır."
 
 #. translators: %d: total number of log records
 #: admin/views/logs.php:33
 #, php-format
 msgid "%d records in total"
-msgstr ""
+msgstr "Toplam %d kayıt"
 
 #: admin/views/logs.php:41
 #: admin/views/orders-list.php:15
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #: admin/views/logs.php:42
 msgid "Successful"
-msgstr ""
+msgstr "Başarılı"
 
 #: admin/views/logs.php:43
 #: admin/views/order-metabox.php:68
@@ -178,180 +180,180 @@ msgstr ""
 #: includes/class-admin-page.php:221
 #: includes/class-wc-integration.php:95
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #: admin/views/logs.php:58
 #: admin/views/orders-table.php:13
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #: admin/views/logs.php:59
 msgid "Operation"
-msgstr ""
+msgstr "Operasyon"
 
 #: admin/views/logs.php:60
 #: admin/views/orders-table.php:12
 msgid "Order"
-msgstr ""
+msgstr "Sipariş"
 
 #: admin/views/logs.php:61
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #: admin/views/logs.php:62
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #: admin/views/logs.php:67
 msgid "No log records yet."
-msgstr ""
+msgstr "Henüz log kaydı yok."
 
 #: admin/views/logs.php:108
 msgid "Raw data"
-msgstr ""
+msgstr "Ham veri"
 
 #: admin/views/logs.php:110
 msgid "Request:"
-msgstr ""
+msgstr "İstek:"
 
 #: admin/views/logs.php:114
 msgid "Response:"
-msgstr ""
+msgstr "Cevap:"
 
 #: admin/views/logs.php:134
 msgid "All log records will be deleted. Are you sure?"
-msgstr ""
+msgstr "Tüm log kayıtları silinecek. Emin misin?"
 
 #: admin/views/order-metabox.php:18
 #: admin/views/orders-list.php:14
 #: admin/views/orders-table.php:77
 #: includes/class-wc-integration.php:92
 msgid "Sent"
-msgstr ""
+msgstr "Gönderildi"
 
 #: admin/views/order-metabox.php:21
 #: includes/class-admin-page.php:157
 msgid "Barcode:"
-msgstr ""
+msgstr "Barkod:"
 
 #: admin/views/order-metabox.php:28
 #: admin/views/orders-table.php:105
 msgid "PTT tracking link"
-msgstr ""
+msgstr "PTT takip linki"
 
 #: admin/views/order-metabox.php:33
 #: admin/views/orders-table.php:162
 msgid "Print Label"
-msgstr ""
+msgstr "Etiket Yazdır"
 
 #: admin/views/order-metabox.php:36
 #: admin/views/orders-table.php:165
 msgid "Track"
-msgstr ""
+msgstr "Takip"
 
 #: admin/views/order-metabox.php:42
 #: includes/class-admin-page.php:165
 msgid "Cancel PTT Shipment"
-msgstr ""
+msgstr "PTT Gönderisini İptal Et"
 
 #: admin/views/order-metabox.php:45
 msgid "Only possible while PTT has not yet accepted the shipment."
-msgstr ""
+msgstr "Sadece PTT henüz gönderiyi kabul etmediyse mümkün."
 
 #: admin/views/order-metabox.php:50
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal edildi"
 
 #: admin/views/order-metabox.php:56
 msgid "This order was cancelled at PTT. Resending will consume a new barcode."
-msgstr ""
+msgstr "Bu sipariş PTT'den iptal edildi. Yeniden gönderim yeni bir barkod tüketir."
 
 #: admin/views/order-metabox.php:60
 #: admin/views/orders-table.php:155
 msgid "Resend"
-msgstr ""
+msgstr "Yeniden Gönder"
 
 #: admin/views/order-metabox.php:70
 #: includes/class-admin-page.php:153
 #: includes/class-admin-page.php:305
 #: includes/class-admin-page.php:506
 msgid "Unknown error"
-msgstr ""
+msgstr "Bilinmeyen hata"
 
 #. translators: %s: pending barcode
 #: admin/views/order-metabox.php:76
 #, php-format
 msgid "Consumed barcode: %s — it will be reused on the next attempt."
-msgstr ""
+msgstr "Tüketilmiş barkod: %s — yeniden denemede tekrar kullanılacak."
 
 #: admin/views/order-metabox.php:82
 msgid "Try Again"
-msgstr ""
+msgstr "Tekrar Dene"
 
 #: admin/views/order-metabox.php:87
 msgid "Not sent yet"
-msgstr ""
+msgstr "Henüz gönderilmedi"
 
 #: admin/views/order-metabox.php:92
 msgid "Send to PTT Kargo"
-msgstr ""
+msgstr "PTT Kargoya Gönder"
 
 #: admin/views/orders-list.php:9
 msgid "PTT Kargo Orders"
-msgstr ""
+msgstr "PTT Kargo Siparişleri"
 
 #: admin/views/orders-list.php:13
 msgid "Pending"
-msgstr ""
+msgstr "Bekleyenler"
 
 #: admin/views/orders-list.php:20
 msgid "Refresh"
-msgstr ""
+msgstr "Yenile"
 
 #. translators: %d: number of labels
 #: admin/views/orders-list.php:37
 #, php-format
 msgid "Print Labels in Bulk (%d)"
-msgstr ""
+msgstr "Toplu Etiket Bas (%d)"
 
 #: admin/views/orders-list.php:41
 #: includes/class-admin-page.php:151
 msgid "order"
-msgstr ""
+msgstr "sipariş"
 
 #: admin/views/orders-list.php:53
 #: includes/class-admin-page.php:146
 msgid "Shipment Summary"
-msgstr ""
+msgstr "Kargo Özeti"
 
 #: admin/views/orders-list.php:56
 msgid "Some fields are missing — those outlined in red. You can leave them empty or fill them in; confirming sends the shipment."
-msgstr ""
+msgstr "Bazı alanlar eksik — kırmızı kenarlıklı olanlar. Boş bırakabilir ya da doldurabilirsin; popup onayı gönderir."
 
 #: admin/views/orders-list.php:61
 msgid "Customer Details"
-msgstr ""
+msgstr "Müşteri Bilgileri"
 
 #: admin/views/orders-list.php:64
 msgid "Shipment Details"
-msgstr ""
+msgstr "Kargo Detayları"
 
 #: admin/views/orders-list.php:65
 msgid "(leave empty to use the auto-computed value)"
-msgstr ""
+msgstr "(boş bırakırsan auto-compute değer kullanılır)"
 
 #: admin/views/orders-list.php:71
 #: admin/views/settings/payment.php:91
 msgid "Insurance (Valuable Goods)"
-msgstr ""
+msgstr "Sigorta (Değerli Kargo)"
 
 #: admin/views/orders-list.php:74
 msgid "Multiple Packages"
-msgstr ""
+msgstr "Çoklu Paket"
 
 #: admin/views/orders-list.php:75
 msgid "(if the order ships as more than one package)"
-msgstr ""
+msgstr "(birden fazla parça halinde gönderilecekse)"
 
 #: admin/views/orders-list.php:80
 #: admin/views/orders-table.php:121
@@ -359,884 +361,884 @@ msgstr ""
 #: includes/class-admin-page.php:150
 #: includes/class-wc-integration.php:97
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #: admin/views/orders-list.php:81
 #: includes/class-admin-page.php:149
 msgid "Confirm and Send"
-msgstr ""
+msgstr "Onayla ve Gönder"
 
 #: admin/views/orders-table.php:14
 #: includes/class-admin-page.php:147
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #: admin/views/orders-table.php:15
 #: admin/views/settings/sender.php:29
 #: includes/class-admin-page.php:176
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #: admin/views/orders-table.php:16
 #: includes/class-label.php:433
 msgid "Products"
-msgstr ""
+msgstr "Ürünler"
 
 #: admin/views/orders-table.php:17
 msgid "PTT Status"
-msgstr ""
+msgstr "PTT Durumu"
 
 #: admin/views/orders-table.php:18
 #: includes/class-admin-page.php:207
 msgid "Action"
-msgstr ""
+msgstr "İşlem"
 
 #: admin/views/orders-table.php:23
 msgid "No orders to show."
-msgstr ""
+msgstr "Gösterilecek sipariş yok."
 
 #. translators: %d: number of packages in the shipment
 #: admin/views/orders-table.php:85
 #, php-format
 msgid "%d packages"
-msgstr ""
+msgstr "%d parça"
 
 #: admin/views/orders-table.php:109
 #: admin/views/orders-table.php:135
 msgid "Show raw data"
-msgstr ""
+msgstr "Ham verileri göster"
 
 #: admin/views/orders-table.php:111
 #: admin/views/orders-table.php:137
 msgid "Request (SOAP sent):"
-msgstr ""
+msgstr "İstek (gönderilen SOAP):"
 
 #: admin/views/orders-table.php:115
 #: admin/views/orders-table.php:141
 msgid "Response (from PTT):"
-msgstr ""
+msgstr "Cevap (PTT'den gelen):"
 
 #: admin/views/orders-table.php:147
 msgid "Waiting"
-msgstr ""
+msgstr "Bekliyor"
 
 #: admin/views/orders-table.php:156
 #: includes/class-admin-page.php:152
 msgid "Ship"
-msgstr ""
+msgstr "Kargoya İlet"
 
 #: admin/views/orders-table.php:167
 msgid "Cancel the PTT shipment (only while it has not been accepted)"
-msgstr ""
+msgstr "PTT gönderisini iptal et (sadece henüz kabul edilmemişse)"
 
 #: admin/views/settings.php:12
 msgid "PTT Connection"
-msgstr ""
+msgstr "PTT Bağlantı"
 
 #: admin/views/settings.php:16
 #: admin/views/settings/label.php:56
 msgid "Barcode"
-msgstr ""
+msgstr "Barkod"
 
 #: admin/views/settings.php:20
 msgid "Sender"
-msgstr ""
+msgstr "Gönderici"
 
 #: admin/views/settings.php:24
 msgid "Label"
-msgstr ""
+msgstr "Etiket"
 
 #: admin/views/settings.php:28
 msgid "Products & Filters"
-msgstr ""
+msgstr "Ürün & Filtreler"
 
 #: admin/views/settings.php:32
 #: admin/views/settings/defaults.php:8
 msgid "Shipment Defaults"
-msgstr ""
+msgstr "Gönderi Varsayılanları"
 
 #: admin/views/settings.php:36
 msgid "Payment"
-msgstr ""
+msgstr "Ödeme"
 
 #: admin/views/settings.php:40
 #: admin/views/settings/customer.php:43
 msgid "Customer Notices"
-msgstr ""
+msgstr "Müşteri Bildirimleri"
 
 #: admin/views/settings.php:53
-msgid "PTT Kargo for WooCommerce — Settings"
-msgstr ""
+msgid "Barkoda Shipping for WooCommerce — Settings"
+msgstr "WC PTT Kargo — Ayarlar"
 
 #: admin/views/settings.php:82
 msgid "Save Settings"
-msgstr ""
+msgstr "Ayarları Kaydet"
 
 #: admin/views/settings.php:87
 msgid "Label Preview"
-msgstr ""
+msgstr "Etiket Önizleme"
 
 #: admin/views/settings.php:91
 msgid "Live Label Preview"
-msgstr ""
+msgstr "Canlı Etiket Önizleme"
 
 #: admin/views/settings.php:93
 msgid "The preview refreshes automatically as you change the form."
-msgstr ""
+msgstr "Form alanları değiştikçe önizleme otomatik yenilenir."
 
 #: admin/views/settings.php:108
 msgid "Label preview"
-msgstr ""
+msgstr "Etiket önizleme"
 
 #: admin/views/settings.php:112
 msgid "⚠ Rendered with sample data — the order details are placeholders."
-msgstr ""
+msgstr "⚠ Örnek veriyle render — sipariş bilgileri yer tutucudur."
 
 #: admin/views/settings/barcode.php:10
 msgid "Barcode Range and Reference"
-msgstr ""
+msgstr "Barkod Aralığı ve Referans"
 
 #: admin/views/settings/barcode.php:11
 msgid "PTT allocates you a 13-digit barcode range. The first 8 digits are a fixed prefix, the next 4 are a sequential serial number, and the last digit is an automatically calculated check digit."
-msgstr ""
+msgstr "PTT size 13 haneli bir barkod aralığı tahsis eder. İlk 8 hane sabit prefix'tir, sonraki 4 hane sıralı seri numarası, son hane otomatik check digit'tir."
 
 #: admin/views/settings/barcode.php:15
 msgid "Barcode Prefix (8 digits)"
-msgstr ""
+msgstr "Barkod Prefix (8 hane)"
 
 #: admin/views/settings/barcode.php:18
 msgid "The fixed 8-digit prefix stated in your PTT integration letter."
-msgstr ""
+msgstr "PTT'nin entegrasyon yazısında belirtilen 8 haneli sabit prefix."
 
 #: admin/views/settings/barcode.php:22
 msgid "Serial Number Range"
-msgstr ""
+msgstr "Seri Numara Aralığı"
 
 #: admin/views/settings/barcode.php:28
 msgid "The start and end serial numbers PTT allocated to you. Prefix + serial = 12 digits."
-msgstr ""
+msgstr "PTT'nin tahsis ettiği başlangıç ve bitiş seri numaraları. Prefix + seri = 12 hane."
 
 #: admin/views/settings/barcode.php:30
 msgid "Next serial to be used:"
-msgstr ""
+msgstr "Sıradaki kullanılacak seri:"
 
 #. translators: %d: barcodes left in the allocated range
 #: admin/views/settings/barcode.php:35
 #, php-format
 msgid "%d remaining"
-msgstr ""
+msgstr "%d adet kaldı"
 
 #: admin/views/settings/barcode.php:42
 msgid "Customer Reference Prefix"
-msgstr ""
+msgstr "Müşteri Referans Öneki"
 
 #: admin/views/settings/barcode.php:45
 msgid "A prefix added before the order ID. For example SHOP- sends SHOP-12345 to PTT. Can be left empty."
-msgstr ""
+msgstr "Sipariş ID'sinin önüne eklenecek prefix. Örn: SHOP- → PTT'ye SHOP-12345 gider. Boş bırakılabilir."
 
 #: admin/views/settings/barcode.php:51
 msgid "Example:"
-msgstr ""
+msgstr "Örnek:"
 
 #: admin/views/settings/barcode.php:52
 msgid "Prefix \"27918802\" + serial \"0001\" → 12 digits \"279188020001\" + check digit (automatic) → 13 digits \"2791880200017\"."
-msgstr ""
+msgstr "Prefix \"27918802\" + seri \"0001\" → 12 hane \"279188020001\" + check digit (otomatik) → 13 hane \"2791880200017\"."
 
 #: admin/views/settings/connection.php:8
 msgid "PTT Connection Details"
-msgstr ""
+msgstr "PTT Bağlantı Bilgileri"
 
 #: admin/views/settings/connection.php:9
 msgid "Enter the customer number and password PTT issued for the integration service. Verify against the Test environment first."
-msgstr ""
+msgstr "PTT entegrasyon hizmeti için size verilen müşteri numarası ve şifresini girin. İlk başta Test ortamıyla doğrulayın."
 
 #: admin/views/settings/connection.php:13
 msgid "Environment"
-msgstr ""
+msgstr "Ortam"
 
 #: admin/views/settings/connection.php:16
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: admin/views/settings/connection.php:17
 msgid "Live (Production)"
-msgstr ""
+msgstr "Canlı (Production)"
 
 #: admin/views/settings/connection.php:19
 msgid "Switch to Live after PTT approves your integration."
-msgstr ""
+msgstr "PTT onayından sonra Canlı'ya geçin."
 
 #: admin/views/settings/connection.php:23
 msgid "Customer Number"
-msgstr ""
+msgstr "Müşteri Numarası"
 
 #: admin/views/settings/connection.php:26
 msgid "The numeric customer ID PTT issued when approving your integration."
-msgstr ""
+msgstr "PTT'nin entegrasyon onayında verdiği numerik müşteri ID'si."
 
 #: admin/views/settings/connection.php:30
 msgid "Password"
-msgstr ""
+msgstr "Şifre"
 
 #: admin/views/settings/connection.php:32
 msgid "Enter a new password to change it"
-msgstr ""
+msgstr "Değiştirmek için yeni şifre girin"
 
 #: admin/views/settings/connection.php:34
 msgid "A password is stored (AES-256 encrypted). Leave empty to keep it unchanged."
-msgstr ""
+msgstr "Şifre kayıtlı (AES-256 ile şifrelenmiş). Değiştirmek istemiyorsanız boş bırakın."
 
 #: admin/views/settings/connection.php:36
 msgid "Stored AES-256 encrypted, keyed from the WordPress AUTH_KEY."
-msgstr ""
+msgstr "WordPress AUTH_KEY tabanlı AES-256 ile şifrelenip saklanır."
 
 #: admin/views/settings/connection.php:41
 msgid "Connection Test"
-msgstr ""
+msgstr "Bağlantı Testi"
 
 #: admin/views/settings/connection.php:45
 msgid "Test Connection"
-msgstr ""
+msgstr "Bağlantıyı Test Et"
 
 #: admin/views/settings/connection.php:48
 msgid "Sends a sample query to the PTT services using the details above. Works before saving too."
-msgstr ""
+msgstr "Yukarıdaki bilgilerle PTT servislerine örnek bir sorgu atar. Kaydetmeden önce de çalışır."
 
 #: admin/views/settings/customer.php:45
 msgid "Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT."
-msgstr ""
+msgstr "Gönderi oluşturulduktan sonra müşteriye takip numarasını ve takip bağlantısını gösterir. PTT'ye gönderilmemiş siparişlerde hiçbir şey görünmez."
 
 #: admin/views/settings/customer.php:50
 msgid "Customer Tracking"
-msgstr ""
+msgstr "Müşteri Takibi"
 
 #: admin/views/settings/customer.php:54
 msgid "Show tracking details to customers"
-msgstr ""
+msgstr "Takip bilgilerini müşterilere göster"
 
 #: admin/views/settings/customer.php:57
 msgid "Turn this off to keep tracking visible only to store administrators."
-msgstr ""
+msgstr "Kapatırsan takip bilgisi yalnızca mağaza yöneticilerine görünür."
 
 #: admin/views/settings/customer.php:63
 msgid "Include in Emails"
-msgstr ""
+msgstr "E-postalara Ekle"
 
 #: admin/views/settings/customer.php:67
 msgid "No WooCommerce customer emails were found."
-msgstr ""
+msgstr "WooCommerce müşteri e-postası bulunamadı."
 
 #: admin/views/settings/customer.php:78
 msgid "Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email."
-msgstr ""
+msgstr "Takip bilgisi seçilen e-postalara eklenir. Mağazanın kargo sonrası gönderdiği e-postayı seç; bu genelde tamamlanan sipariş e-postasıdır."
 
 #: admin/views/settings/customer.php:85
 msgid "My Account Page"
-msgstr ""
+msgstr "Hesabım Sayfası"
 
 #: admin/views/settings/customer.php:89
 msgid "Show tracking on the customer's order detail page"
-msgstr ""
+msgstr "Müşterinin sipariş detay sayfasında takip bilgisini göster"
 
 #: admin/views/settings/customer.php:96
 msgid "Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed."
-msgstr ""
+msgstr "E-postalar WordPress üzerinden gönderilir; mağazanın kullandığı SMTP eklentisi bunları otomatik olarak iletir. Ek ayar gerekmez."
 
 #: admin/views/settings/defaults.php:9
 msgid "PTT requires a weight and volumetric weight on every shipment. The sources below control the auto-compute behaviour; you can override them per order in the Ship popup."
-msgstr ""
+msgstr "PTT'ye gönderilirken ağırlık/desi belirtilmek zorunda. Aşağıdaki kaynak ayarları auto-compute davranışını belirler; \"Kargoya İlet\" popup'ında her sipariş için manuel override yapabilirsin."
 
 #: admin/views/settings/defaults.php:11
 msgid "Weight / Volumetric Weight Source"
-msgstr ""
+msgstr "Ağırlık / Desi Kaynağı"
 
 #: admin/views/settings/defaults.php:14
 msgid "Weight Source"
-msgstr ""
+msgstr "Ağırlık Kaynağı"
 
 #: admin/views/settings/defaults.php:18
 msgid "Use a fixed default"
-msgstr ""
+msgstr "Sabit varsayılan kullan"
 
 #: admin/views/settings/defaults.php:19
 msgid "Calculate from WooCommerce product weight (Σ weight × quantity)"
-msgstr ""
+msgstr "WooCommerce ürün ağırlığından hesapla (Σ ağırlık × adet)"
 
 #: admin/views/settings/defaults.php:20
 msgid "Calculate from product weight, falling back to the fixed default"
-msgstr ""
+msgstr "Ürün ağırlığından hesapla (yoksa sabit varsayılana düş)"
 
 #: admin/views/settings/defaults.php:23
 msgid "The WooCommerce weight unit is converted to grams automatically (g/kg/lbs/oz supported). Current unit:"
-msgstr ""
+msgstr "WC ürün ağırlık birimi otomatik gram'a çevrilir (g/kg/lbs/oz desteklenir). Aktif birim:"
 
 #: admin/views/settings/defaults.php:29
 msgid "Fixed Weight (grams)"
-msgstr ""
+msgstr "Sabit Ağırlık (gram)"
 
 #: admin/views/settings/defaults.php:32
 msgid "grams"
-msgstr ""
+msgstr "gram"
 
 #: admin/views/settings/defaults.php:33
 msgid "When \"Use a fixed default\" is selected above, every shipment uses this value. It is also the fallback in fallback mode."
-msgstr ""
+msgstr "Yukarıda \"Sabit varsayılan\" seçiliyse her gönderi bu değerle gider. Fallback modunda da eşik altı için kullanılır."
 
 #: admin/views/settings/defaults.php:37
 msgid "Dimension Source"
-msgstr ""
+msgstr "Boyut Kaynağı"
 
 #: admin/views/settings/defaults.php:41
 msgid "Do not send dimensions (volumetric weight only)"
-msgstr ""
+msgstr "Boyut gönderme (sadece desi)"
 
 #: admin/views/settings/defaults.php:42
 msgid "Calculate from WooCommerce product dimensions (maximum per axis)"
-msgstr ""
+msgstr "WooCommerce ürün boyutlarından hesapla (max boyut)"
 
 #: admin/views/settings/defaults.php:45
 msgid "With product dimensions selected, the maximum width/length/height across all line items is used, assuming a single package. The volumetric weight formula is width × length × height / 3000."
-msgstr ""
+msgstr "\"WC ürün boyutlarından\" seçilirse: en/boy/yükseklik için tüm sipariş kalemlerinin max'ı alınır (tek paket varsayımı). Desi formülü en×boy×yükseklik/3000."
 
 #: admin/views/settings/defaults.php:47
 msgid "Current WooCommerce dimension unit:"
-msgstr ""
+msgstr "Aktif WC boyut birimi:"
 
 #: admin/views/settings/defaults.php:53
 msgid "Fixed Volumetric Weight"
-msgstr ""
+msgstr "Sabit Desi"
 
 #: admin/views/settings/defaults.php:56
 msgid "Used when the dimension source is set to not send dimensions. Start with 1 and adjust to your package volume."
-msgstr ""
+msgstr "Boyut kaynağı \"Boyut gönderme\" iken kullanılır. Genelde 1 ile başlayın, paket hacmine göre güncellersiniz."
 
 #: admin/views/settings/defaults.php:60
 msgid "Additional Service Code"
-msgstr ""
+msgstr "Ek Hizmet Kodu"
 
 #: admin/views/settings/defaults.php:62
 msgid "Can be left empty"
-msgstr ""
+msgstr "Boş bırakılabilir"
 
 #: admin/views/settings/defaults.php:64
 msgid "PTT service codes are uppercase and alphabetical (e.g. DK = Valuable Goods). Several codes can be combined, such as DKUA. When cash on delivery is active, OS is added automatically and does not need to be entered here."
-msgstr ""
+msgstr "PTT ek hizmet kodları büyük harflerle alfabetik (örn. DK = Değerli Kargo). Birden fazla kod birleştirilebilir (DKUA gibi). Kapıda ödeme aktifse OS otomatik eklenir; burada manuel yazmana gerek yok."
 
 #: admin/views/settings/defaults.php:71
 msgid "If a product has no weight, fill in Product → General → Weight. The weight unit can be changed under WooCommerce > Settings > Products > Measurements."
-msgstr ""
+msgstr "WC ürün ağırlığı tanımlı değilse \"Ürün → Genel → Ağırlık\" alanını doldurun. Ağırlık birimi WooCommerce > Ayarlar > Ürünler > Ölçümler'den değiştirilebilir."
 
 #: admin/views/settings/label.php:8
 msgid "Label Appearance"
-msgstr ""
+msgstr "Etiket Görünümü"
 
 #: admin/views/settings/label.php:9
 msgid "Controls the label text and which blocks appear. The live preview on the right updates as you make changes."
-msgstr ""
+msgstr "Etiketteki tüm metinler ve hangi blokların görüneceği buradan kontrol edilir. Sağdaki canlı önizleme ile değişiklikleri anında görebilirsin."
 
 #: admin/views/settings/label.php:11
 msgid "Branding Block (Top)"
-msgstr ""
+msgstr "Marka Bloğu (Üst Kısım)"
 
 #: admin/views/settings/label.php:14
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 #: admin/views/settings/label.php:18
 msgid "Select Image"
-msgstr ""
+msgstr "Görsel Seç"
 
 #: admin/views/settings/label.php:19
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 #: admin/views/settings/label.php:26
 msgid "Pick from the WordPress Media Library or enter a URL directly. It appears at roughly 60mm × 18mm on the label."
-msgstr ""
+msgstr "WordPress Medya Kütüphanesi'nden seç ya da doğrudan URL gir. Etikette maks. ~60mm × 18mm boyutta görünür."
 
 #: admin/views/settings/label.php:30
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #: admin/views/settings/label.php:33
 msgid "The heading printed at the top of the label, in uppercase. If empty, the sender name is used; if that is also empty, the site name."
-msgstr ""
+msgstr "Etiketin tepe başlığı (büyük harfle basılır). Boş bırakılırsa \"Gönderici Adı\" kullanılır; o da boşsa site adı."
 
 #: admin/views/settings/label.php:37
 msgid "Subtitle"
-msgstr ""
+msgstr "Alt başlık"
 
 #: admin/views/settings/label.php:40
 msgid "Small text printed under the title. Can be left empty."
-msgstr ""
+msgstr "Başlığın altına yazılacak küçük metin. Boş bırakılabilir."
 
 #: admin/views/settings/label.php:45
 msgid "Label Sections"
-msgstr ""
+msgstr "Etiket Bölümleri"
 
 #: admin/views/settings/label.php:46
 msgid "Tick the sections you want on the label. Section headings are hidden automatically when empty."
-msgstr ""
+msgstr "Etikette görünmesini istediğin bölümleri işaretle. Bölüm başlıkları otomatik gizlenir."
 
 #: admin/views/settings/label.php:49
 msgid "Visible Blocks"
-msgstr ""
+msgstr "Görünür Bloklar"
 
 #: admin/views/settings/label.php:53
 msgid "Order Number + Date"
-msgstr ""
+msgstr "Sipariş No + Tarih"
 
 #: admin/views/settings/label.php:54
 msgid "Recipient Details"
-msgstr ""
+msgstr "Alıcı Bilgileri"
 
 #: admin/views/settings/label.php:55
 msgid "Product List"
-msgstr ""
+msgstr "Ürün Listesi"
 
 #: admin/views/settings/label.php:57
 msgid "Sender Block (Bottom)"
-msgstr ""
+msgstr "Gönderici Bloğu (Alt Kısım)"
 
 #: admin/views/settings/payment.php:26
 msgid "Cash on Delivery (COD) Mapping"
-msgstr ""
+msgstr "Kapıda Ödeme (COD) Eşleşmesi"
 
 #: admin/views/settings/payment.php:28
 msgid "The WooCommerce payment methods you tick here count as cash on delivery. Orders paid with them are sent to PTT with:"
-msgstr ""
+msgstr "Burada işaretlediğin WooCommerce ödeme yöntemleri \"kapıda ödeme\" sayılır. Bu yöntemlerle tamamlanmış siparişler PTT'ye iletilirken:"
 
 #: admin/views/settings/payment.php:36
 msgid "⚠ When COD is active, Sender → Postal Cheque Account Number must be filled in, otherwise PTT rejects the shipment."
-msgstr ""
+msgstr "⚠ COD aktifse \"Gönderici → Posta Çeki Hesap No\" alanı doldurulmuş olmalıdır; aksi halde PTT gönderiyi reddeder."
 
 #: admin/views/settings/payment.php:41
 msgid "Cash on Delivery Methods"
-msgstr ""
+msgstr "Kapıda Ödeme Yöntemleri"
 
 #: admin/views/settings/payment.php:44
 msgid "No payment methods found. Enable at least one under WooCommerce > Settings > Payments."
-msgstr ""
+msgstr "Hiç ödeme yöntemi tespit edilemedi. WooCommerce > Ayarlar > Ödemeler'den en az bir yöntem etkinleştirin."
 
 #: admin/views/settings/payment.php:59
 msgid "currently inactive"
-msgstr ""
+msgstr "şu an pasif"
 
 #: admin/views/settings/payment.php:65
 msgid "The usual choice is WooCommerce Cash on Delivery (cod). Card and online payments count as normal shipments and should not be ticked."
-msgstr ""
+msgstr "Tipik seçim: WooCommerce Cash on Delivery (cod). Sanal POS / kart ödemeleri NORMAL gönderim sayılır, işaretlenmemelidir."
 
 #: admin/views/settings/payment.php:71
 msgid "COD Additional Service Code"
-msgstr ""
+msgstr "COD Ek Hizmet Kodu"
 
 #: admin/views/settings/payment.php:75
 msgid "PTT's payment-on-delivery service code — default: "
-msgstr ""
+msgstr "PTT'nin \"Ödeme Şartlı\" ek hizmet kodu — varsayılan: "
 
 #: admin/views/settings/payment.php:77
 msgid "Change this if the PTT integration team gave you a different code, such as the combination DKUA."
-msgstr ""
+msgstr "PTT entegrasyon ekibinden farklı bir kod aldıysan değiştirebilirsin (örn. kombinasyon: DKUA)."
 
 #: admin/views/settings/payment.php:80
 msgid "The code is merged automatically with the fixed code in Shipment Defaults → Additional Service Code, for example DK + OS = DKOS."
-msgstr ""
+msgstr "Kod, \"Gönderi Varsayılanları → Ek Hizmet Kodu\" alanındaki sabit kodla otomatik birleştirilir (örn. DK + OS = DKOS)."
 
 #: admin/views/settings/payment.php:87
 msgid "Reminder:"
-msgstr ""
+msgstr "Hatırlatma:"
 
 #: admin/views/settings/payment.php:88
 msgid "Cash-on-delivery shipments are sent to PTT as collect-on-delivery. PTT transfers the collected amount to your Postal Cheque account. Contact your PTT branch to verify the account."
-msgstr ""
+msgstr "Kapıda ödemeli kargolar PTT tarafına \\\"Tahsilatlı\\\" olarak iletilir. Toplanan tutar PTT tarafından senin Posta Çeki hesabına aktarılır. Hesap doğrulaması için PTT şubene başvur."
 
 #: admin/views/settings/payment.php:93
 msgid "Insurance is toggled per order in the Ship popup. When enabled, the PTT envelope carries:"
-msgstr ""
+msgstr "Sigorta her sipariş için \"Kargoya İlet\" popup'ında manuel olarak açılır/kapatılır. Açıldığında PTT envelope'ında:"
 
 #: admin/views/settings/payment.php:102
 msgid "Insurance Additional Service Code"
-msgstr ""
+msgstr "Sigorta Ek Hizmet Kodu"
 
 #: admin/views/settings/payment.php:106
 msgid "PTT's Valuable Goods code — default: "
-msgstr ""
+msgstr "PTT'nin Değerli Kargo kodu — varsayılan: "
 
 #: admin/views/settings/payment.php:114
 msgid "When both cash on delivery and valuable goods are active, the service codes are merged in the PTT envelope, for example DKUA + OS = DKUAOS."
-msgstr ""
+msgstr "Hem kapıda ödeme hem değerli kargo birlikte aktifse PTT envelope'ında ek hizmet kodları birleştirilir (örn. DKUA + OS = DKUAOS)."
 
 #: admin/views/settings/products.php:18
 msgid "Order Filter"
-msgstr ""
+msgstr "Sipariş Filtresi"
 
 #: admin/views/settings/products.php:19
 msgid "If you select products below, only orders containing them appear in the Orders list. Leave empty to list every order in an eligible status."
-msgstr ""
+msgstr "Aşağıda ürün seçersen sadece o ürünleri içeren siparişler \"Kargo Siparişleri\" listesinde görünür. Boş bırakırsan tüm uygun durumdaki siparişler listelenir."
 
 #: admin/views/settings/products.php:23
 msgid "Products to Include"
-msgstr ""
+msgstr "Kapsama Alınacak Ürünler"
 
 #: admin/views/settings/products.php:30
 msgid "Search by product name..."
-msgstr ""
+msgstr "Ürün adına göre ara..."
 
 #: admin/views/settings/products.php:44
 msgid "Search by product name or SKU. Orders containing the selected products are included."
-msgstr ""
+msgstr "Ürün adı veya SKU ile arayıp seçin. Seçili ürünleri içeren siparişler kapsama alınır."
 
 #: admin/views/settings/products.php:57
 msgid "Comma-separated list of product IDs. The WooCommerce admin script needed for the product search widget could not be loaded."
-msgstr ""
+msgstr "Virgülle ayrılmış ürün ID listesi. (Ürün arama widget'ı için WooCommerce admin script'i yüklenemedi.)"
 
 #: admin/views/settings/products.php:64
 msgid "Order Statuses"
-msgstr ""
+msgstr "Sipariş Durumları"
 
 #: admin/views/settings/products.php:67
 msgid "Statuses to List"
-msgstr ""
+msgstr "Listelenecek Durumlar"
 
 #: admin/views/settings/products.php:79
 msgid "Only orders in the selected statuses appear in the Orders list."
-msgstr ""
+msgstr "\"Kargo Siparişleri\" listesinde sadece seçili durumdaki siparişler gösterilir."
 
 #: admin/views/settings/sender.php:8
 msgid "Sender Details"
-msgstr ""
+msgstr "Gönderici Bilgileri"
 
 #: admin/views/settings/sender.php:9
 msgid "These details go into the shipment record sent to PTT and appear at the bottom of the label. Filling in every field avoids missing-data errors when sending."
-msgstr ""
+msgstr "PTT'ye gidecek gönderi kaydında ve etiketin alt bölümünde görünecek bilgiler. Tüm alanları doldurmak gönderi sırasında oluşabilecek \"eksik bilgi\" hatalarını engeller."
 
 #: admin/views/settings/sender.php:13
 msgid "Sender Name"
-msgstr ""
+msgstr "Gönderici Adı"
 
 #: admin/views/settings/sender.php:16
 msgid "Your shop or company name, sent with kabulEkle2. Also used as the label title when the title field is empty."
-msgstr ""
+msgstr "Mağazanızın / kurumun adı (kabulEkle2 için). Etiket başlığı boşsa burası başlık olarak da kullanılır."
 
 #: admin/views/settings/sender.php:20
 msgid "Sender Surname"
-msgstr ""
+msgstr "Gönderici Soyadı"
 
 #: admin/views/settings/sender.php:24
 msgid "Only the PTT courier service (siparisIstekEkle2) expects the first and last name separately. If empty, the last word of the sender name is used as the surname."
-msgstr ""
+msgstr "Yalnızca PTT Kurye Çağırma servisi (siparisIstekEkle2) için ad+soyad ayrı bekler. Boş bırakılırsa \"Gönderici Adı\"ndaki son kelime soyad olarak ayrılır."
 
 #: admin/views/settings/sender.php:32
 msgid "Neighbourhood, street, building and apartment."
-msgstr ""
+msgstr "Mahalle, sokak, bina/daire bilgisi."
 
 #: admin/views/settings/sender.php:36
 #: includes/class-admin-page.php:177
 msgid "Province"
-msgstr ""
+msgstr "İl"
 
 #: admin/views/settings/sender.php:40
 #: includes/class-admin-page.php:178
 msgid "District"
-msgstr ""
+msgstr "İlçe"
 
 #: admin/views/settings/sender.php:44
 msgid "Postcode"
-msgstr ""
+msgstr "Posta Kodu"
 
 #: admin/views/settings/sender.php:48
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: admin/views/settings/sender.php:51
 msgid "PTT expects 10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
-msgstr ""
+msgstr "PTT 10 hane bekler (5xxxxxxxxx). Başında 0 veya 90 olsa otomatik kırpılır."
 
 #: admin/views/settings/sender.php:55
 #: includes/class-admin-page.php:180
 msgid "Email"
-msgstr ""
+msgstr "E-posta"
 
 #: admin/views/settings/sender.php:59
 msgid "Postal Cheque Account Number"
-msgstr ""
+msgstr "Posta Çeki Hesap No"
 
 #: admin/views/settings/sender.php:63
 msgid "The 8-digit PTT Bank account number opened at a PTT branch. It is stated in your PTT integration email."
-msgstr ""
+msgstr "PTT işyerlerinden açtırdığınız PTT Bank hesap numarası (8 hane). PTT entegrasyon mailinde bildirilir."
 
 #: admin/views/settings/sender.php:65
 msgid "Required for cash-on-delivery shipments — sent in the PTT envelope as the <code>rezerve1</code> field."
-msgstr ""
+msgstr "Kapıda ödemeli (COD) gönderiler için zorunludur — PTT envelope'ında <code>rezerve1</code> alanı olarak iletilir."
 
 #: admin/views/settings/sender.php:71
 #: admin/views/settings/sender.php:94
 msgid "Return Address"
-msgstr ""
+msgstr "İade Adresi"
 
 #: admin/views/settings/sender.php:73
 msgid "By default, undeliverable parcels are returned to the sender address. Fill in the fields below if returns should go somewhere else, such as a warehouse."
-msgstr ""
+msgstr "Default'ta gönderici alıcıya ulaşmadığında kargo bu adrese (Gönderici) iade edilir. Farklı bir iade adresi (örn. depo) gerekiyorsa aşağıyı doldur."
 
 #: admin/views/settings/sender.php:78
 msgid "Different Return Address"
-msgstr ""
+msgstr "Farklı İade Adresi"
 
 #: admin/views/settings/sender.php:82
 msgid "The return address differs from the sender address"
-msgstr ""
+msgstr "İade adresi gönderici adresinden farklı"
 
 #: admin/views/settings/sender.php:85
 msgid "When unticked, the fields below are not sent to PTT and returns go to the sender address."
-msgstr ""
+msgstr "İşaretli değilse aşağıdaki alanlar PTT'ye gönderilmez (default davranış: gönderici adresine iade)."
 
 #: admin/views/settings/sender.php:90
 msgid "Return Recipient Name"
-msgstr ""
+msgstr "İade Alıcı Adı"
 
 #: admin/views/settings/sender.php:98
 msgid "Return Province"
-msgstr ""
+msgstr "İade İl"
 
 #: admin/views/settings/sender.php:102
 msgid "Return District"
-msgstr ""
+msgstr "İade İlçe"
 
 #: admin/views/settings/sender.php:106
 msgid "Return Phone"
-msgstr ""
+msgstr "İade Telefon"
 
 #: admin/views/settings/sender.php:109
 msgid "10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
-msgstr ""
+msgstr "PTT 10 hane (5xxxxxxxxx). Başında 0 veya 90 olsa otomatik kırpılır."
 
 #: admin/views/settings/sender.php:113
 msgid "Return Email"
-msgstr ""
+msgstr "İade E-posta"
 
 #: includes/class-admin-page.php:57
 #: includes/class-wc-integration.php:53
 #: includes/class-wc-integration.php:57
 #: includes/class-wc-integration.php:237
 msgid "PTT Kargo"
-msgstr ""
+msgstr "PTT Kargo"
 
 #: includes/class-admin-page.php:67
 #: includes/class-admin-page.php:68
 msgid "Orders"
-msgstr ""
+msgstr "Kargo Siparişleri"
 
 #: includes/class-admin-page.php:85
 #: includes/class-admin-page.php:86
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: includes/class-admin-page.php:95
 msgid "Logs"
-msgstr ""
+msgstr "Loglar"
 
 #: includes/class-admin-page.php:143
 msgid "Sending..."
-msgstr ""
+msgstr "Gönderiliyor..."
 
 #: includes/class-admin-page.php:144
 msgid "Success! Barcode: "
-msgstr ""
+msgstr "Başarılı! Barkod: "
 
 #: includes/class-admin-page.php:145
 msgid "Error: "
-msgstr ""
+msgstr "Hata: "
 
 #: includes/class-admin-page.php:148
 msgid "Some fields are missing. You can leave them empty or fill them in below."
-msgstr ""
+msgstr "Bazı alanlar eksik. Boş bırakabilirsin ya da aşağıdan doldur."
 
 #: includes/class-admin-page.php:154
 msgid "Server error."
-msgstr ""
+msgstr "Sunucu hatası."
 
 #: includes/class-admin-page.php:155
 msgid "Could not prepare the shipment."
-msgstr ""
+msgstr "Hazırlanamadı."
 
 #: includes/class-admin-page.php:156
 msgid "Could not query tracking."
-msgstr ""
+msgstr "Takip sorgulanamadı."
 
 #: includes/class-admin-page.php:158
 msgid "Status:"
-msgstr ""
+msgstr "Durum:"
 
 #: includes/class-admin-page.php:159
 msgid "Movements:"
-msgstr ""
+msgstr "Hareketler:"
 
 #: includes/class-admin-page.php:160
 msgid "Testing..."
-msgstr ""
+msgstr "Test ediliyor..."
 
 #: includes/class-admin-page.php:161
 msgid "The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?"
-msgstr ""
+msgstr "Bu sipariş için PTT'ye gönderilen kayıt silinecek. Eski barkod yeniden kullanılamaz; sipariş tekrar gönderilirse yeni bir barkod tüketilir. Devam edilsin mi?"
 
 #: includes/class-admin-page.php:162
 msgid "Cancelling..."
-msgstr ""
+msgstr "İptal ediliyor..."
 
 #: includes/class-admin-page.php:163
 #: includes/class-admin-page.php:626
 msgid "The PTT shipment was cancelled."
-msgstr ""
+msgstr "PTT gönderisi iptal edildi."
 
 #: includes/class-admin-page.php:164
 msgid "Cancellation failed: "
-msgstr ""
+msgstr "İptal başarısız: "
 
 #: includes/class-admin-page.php:166
 msgid "Send Insured (Valuable Goods)"
-msgstr ""
+msgstr "Sigortalı Gönder (Değerli Kargo)"
 
 #: includes/class-admin-page.php:168
 msgid "Cash on delivery active:"
-msgstr ""
+msgstr "Kapıda Ödeme aktif:"
 
 #: includes/class-admin-page.php:169
 msgid "Current PTT branch"
-msgstr ""
+msgstr "Şu an bulunduğu PTT şubesi"
 
 #: includes/class-admin-page.php:170
 msgid "Requesting courier..."
-msgstr ""
+msgstr "Kurye çağrılıyor..."
 
 #: includes/class-admin-page.php:171
 msgid "Courier request accepted!"
-msgstr ""
+msgstr "Kurye siparişi alındı!"
 
 #: includes/class-admin-page.php:172
 msgid "Courier request failed: "
-msgstr ""
+msgstr "Kurye çağırma başarısız: "
 
 #: includes/class-admin-page.php:175
 msgid "Recipient Name"
-msgstr ""
+msgstr "Alıcı Ad Soyad"
 
 #: includes/class-admin-page.php:179
 msgid "Phone (10 digits, no leading zero)"
-msgstr ""
+msgstr "Telefon (10 hane, başında 0 yok)"
 
 #: includes/class-admin-page.php:183
 msgid "Weight (g)"
-msgstr ""
+msgstr "Ağırlık (g)"
 
 #: includes/class-admin-page.php:184
 msgid "Volumetric Weight"
-msgstr ""
+msgstr "Desi"
 
 #: includes/class-admin-page.php:185
 msgid "Width (cm)"
-msgstr ""
+msgstr "En (cm)"
 
 #: includes/class-admin-page.php:186
 msgid "Length (cm)"
-msgstr ""
+msgstr "Boy (cm)"
 
 #: includes/class-admin-page.php:187
 msgid "Height (cm)"
-msgstr ""
+msgstr "Yükseklik (cm)"
 
 #: includes/class-admin-page.php:190
 msgid "Retry:"
-msgstr ""
+msgstr "Yeniden deneme:"
 
 #: includes/class-admin-page.php:191
 msgid "will be reused — no new barcode is consumed."
-msgstr ""
+msgstr "tekrar kullanılacak — yeni barkod yakılmayacak."
 
 #: includes/class-admin-page.php:193
 msgid "Waybill Number (optional)"
-msgstr ""
+msgstr "İrsaliye No (opsiyonel)"
 
 #: includes/class-admin-page.php:194
 msgid "A count above 1 switches to PTT's kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range."
-msgstr ""
+msgstr "Adet > 1 ise PTT'nin kabulEkleParcaliBarkod servisine geçilir. Her parça aynı barkod aralığından bir barkod tüketir."
 
 #: includes/class-admin-page.php:195
 msgid "more packages"
-msgstr ""
+msgstr "ek parça"
 
 #: includes/class-admin-page.php:196
 #: includes/class-admin-page.php:659
 msgid "Enter a valid package count."
-msgstr ""
+msgstr "Geçerli bir paket sayısı girin."
 
 #: includes/class-admin-page.php:197
 msgid "Order ID: "
-msgstr ""
+msgstr "Sipariş ID: "
 
 #: includes/class-admin-page.php:200
 #: includes/class-customer-tracking.php:134
 msgid "Shipment Tracking"
-msgstr ""
+msgstr "Gönderi Takibi"
 
 #: includes/class-admin-page.php:201
 msgid "The barcode query returned nothing; the shipment was found by reference number."
-msgstr ""
+msgstr "Barkod sorgusu sonuç vermedi; referans numarası ile bulundu."
 
 #: includes/class-admin-page.php:202
 msgid "Queried by reference number."
-msgstr ""
+msgstr "Referans numarası ile sorgulandı."
 
 #: includes/class-admin-page.php:203
 msgid "No movements yet."
-msgstr ""
+msgstr "Henüz hareket yok."
 
 #: includes/class-admin-page.php:204
 msgid "Recipient:"
-msgstr ""
+msgstr "Alıcı:"
 
 #: includes/class-admin-page.php:205
 msgid "Sender:"
-msgstr ""
+msgstr "Gönderen:"
 
 #: includes/class-admin-page.php:206
 msgid "Date / Time"
-msgstr ""
+msgstr "Tarih / Saat"
 
 #: includes/class-admin-page.php:208
 msgid "Branch"
-msgstr ""
+msgstr "Merkez"
 
 #: includes/class-admin-page.php:209
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #: includes/class-admin-page.php:212
 msgid "Collection deadline:"
-msgstr ""
+msgstr "Son teslim alınma:"
 
 #: includes/class-admin-page.php:213
 msgid "Show on map"
-msgstr ""
+msgstr "Haritada göster"
 
 #: includes/class-admin-page.php:214
 msgid "Could not retrieve drop point information: "
-msgstr ""
+msgstr "Drop point bilgisi alınamadı: "
 
 #: includes/class-admin-page.php:215
 msgid "Raw PTT response"
-msgstr ""
+msgstr "Ham PTT cevabı"
 
 #: includes/class-admin-page.php:216
 msgid "Raw drop point response"
-msgstr ""
+msgstr "Drop point ham cevabı"
 
 #: includes/class-admin-page.php:219
 msgid "Select Logo"
-msgstr ""
+msgstr "Logo seç"
 
 #: includes/class-admin-page.php:220
 msgid "Use this image"
-msgstr ""
+msgstr "Bu görseli kullan"
 
 #: includes/class-admin-page.php:229
 #: includes/class-admin-page.php:240
@@ -1252,11 +1254,11 @@ msgstr ""
 #: includes/class-admin-page.php:692
 #: includes/class-admin-page.php:726
 msgid "Unauthorised"
-msgstr ""
+msgstr "Yetkisiz"
 
 #: includes/class-admin-page.php:315
 msgid "Logs cleared."
-msgstr ""
+msgstr "Loglar temizlendi."
 
 #: includes/class-admin-page.php:348
 #: includes/class-admin-page.php:398
@@ -1264,142 +1266,142 @@ msgstr ""
 #: includes/class-admin-page.php:732
 #: includes/class-label.php:183
 msgid "Order not found."
-msgstr ""
+msgstr "Sipariş bulunamadı."
 
 #: includes/class-admin-page.php:353
 #: includes/class-admin-page.php:403
 msgid "A barcode already exists for this order: "
-msgstr ""
+msgstr "Bu sipariş için zaten barkod oluşturulmuş: "
 
 #: includes/class-admin-page.php:475
 msgid "The barcode range is exhausted. Please define a new range in the settings."
-msgstr ""
+msgstr "Barkod aralığı tükendi. Lütfen ayarlardan yeni aralık tanımlayın."
 
 #: includes/class-admin-page.php:487
 msgid "The barcode range is too small; there are not enough barcodes for every package."
-msgstr ""
+msgstr "Barkod aralığı yetersiz; tüm parçalar için yeterli barkod yok."
 
 #: includes/class-admin-page.php:519
 msgid "Sending to PTT failed."
-msgstr ""
+msgstr "PTT gönderimi başarısız."
 
 #: includes/class-admin-page.php:554
 msgid "Shipment created."
-msgstr ""
+msgstr "Gönderi oluşturuldu."
 
 #: includes/class-admin-page.php:586
 msgid "No cancellable PTT record was found for this order."
-msgstr ""
+msgstr "Bu sipariş için iptal edilebilir bir PTT kaydı bulunamadı."
 
 #: includes/class-admin-page.php:602
 msgid "The PTT cancellation request failed."
-msgstr ""
+msgstr "PTT iptal isteği başarısız."
 
 #: includes/class-admin-page.php:668
 msgid "Courier request accepted."
-msgstr ""
+msgstr "Kurye siparişi alındı."
 
 #: includes/class-admin-page.php:677
 msgid "Courier request failed."
-msgstr ""
+msgstr "Kurye siparişi başarısız."
 
 #: includes/class-admin-page.php:705
 msgid "A barcode is required."
-msgstr ""
+msgstr "Barkod gerekli."
 
 #: includes/class-admin-page.php:715
 msgid "Could not retrieve drop point information."
-msgstr ""
+msgstr "Drop point bilgisi alınamadı."
 
 #: includes/class-admin-page.php:739
 msgid "This order has no barcode or reference number to track."
-msgstr ""
+msgstr "Bu siparişte takip edilebilecek barkod ya da referans yok."
 
 #: includes/class-customer-tracking.php:135
 msgid "Tracking number:"
-msgstr ""
+msgstr "Takip numarası:"
 
 #. translators: %d: number of packages in the shipment
 #: includes/class-customer-tracking.php:173
 #, php-format
 msgid "This order ships as %d packages:"
-msgstr ""
+msgstr "Bu sipariş %d parça halinde gönderiliyor:"
 
 #: includes/class-customer-tracking.php:182
 msgid "Track your shipment"
-msgstr ""
+msgstr "Gönderini takip et"
 
 #: includes/class-label.php:33
 #: includes/class-label.php:176
 #: includes/class-label.php:204
 msgid "Unauthorised."
-msgstr ""
+msgstr "Yetkisiz."
 
 #: includes/class-label.php:40
 msgid "No orders were selected for label printing."
-msgstr ""
+msgstr "Etiket basılacak sipariş seçilmedi."
 
 #: includes/class-label.php:83
 msgid "None of the selected orders has a printable barcode."
-msgstr ""
+msgstr "Hiçbir siparişte basılabilir barkod bulunamadı."
 
 #. translators: %d: number of labels in the document
 #: includes/class-label.php:115
 #, php-format
 msgid "PTT Bulk Labels (%d)"
-msgstr ""
+msgstr "PTT Toplu Etiket (%d adet)"
 
 #: includes/class-label.php:188
 msgid "No PTT barcode has been created for this order yet."
-msgstr ""
+msgstr "Bu sipariş için PTT barkodu henüz oluşturulmamış."
 
 #: includes/class-label.php:297
 msgid "Sample Customer"
-msgstr ""
+msgstr "Örnek Müşteri"
 
 #: includes/class-label.php:298
 msgid "Sample Neighbourhood, Example Street No:1 Apt:2"
-msgstr ""
+msgstr "Örnek Mah. Numune Sok. No:1 D:2"
 
 #: includes/class-label.php:299
 msgid "Kadıköy"
-msgstr ""
+msgstr "Kadıköy"
 
 #: includes/class-label.php:300
 msgid "İstanbul"
-msgstr ""
+msgstr "İstanbul"
 
 #: includes/class-label.php:303
 msgid "Sample Product 1"
-msgstr ""
+msgstr "Örnek Ürün 1"
 
 #: includes/class-label.php:303
 msgid "Sample Product 2"
-msgstr ""
+msgstr "Örnek Ürün 2"
 
 #: includes/class-label.php:422
 msgid "Recipient"
-msgstr ""
+msgstr "Alıcı"
 
 #: includes/class-label.php:443
 msgid "Shipment Barcode"
-msgstr ""
+msgstr "Kargo Barkodu"
 
 #. translators: 1: barcode 2: reference number 3: PTT response message
 #: includes/class-orders.php:502
 #, php-format
 msgid "PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
-msgstr ""
+msgstr "PTT Kargo: Gönderi oluşturuldu. Barkod: %1$s, Referans: %2$s. PTT cevabı: %3$s"
 
 #: includes/class-orders.php:529
 msgid "PTT Kargo error: "
-msgstr ""
+msgstr "PTT Kargo hatası: "
 
 #. translators: 1: previous barcode 2: PTT response message
 #: includes/class-orders.php:589
 #, php-format
 msgid "PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
-msgstr ""
+msgstr "PTT Kargo: Gönderi iptal edildi (eski barkod: %1$s). PTT cevabı: %2$s"
 
 #: includes/class-ptt-client.php:30
 #: includes/class-ptt-client.php:180
@@ -1409,15 +1411,15 @@ msgstr ""
 #: includes/class-ptt-client.php:604
 #: includes/class-ptt-client.php:696
 msgid "The PTT customer number or password is missing from the settings."
-msgstr ""
+msgstr "PTT müşteri numarası veya şifre ayarlarda eksik."
 
 #: includes/class-ptt-client.php:186
 msgid "The barcode to delete is empty."
-msgstr ""
+msgstr "Silinecek barkod boş."
 
 #: includes/class-ptt-client.php:227
 msgid "The reference number to delete is empty."
-msgstr ""
+msgstr "Silinecek referans no boş."
 
 #. translators: %d: HTTP status code
 #: includes/class-ptt-client.php:314
@@ -1426,7 +1428,7 @@ msgstr ""
 #: includes/class-ptt-client.php:981
 #, php-format
 msgid "The PTT service returned HTTP status %d."
-msgstr ""
+msgstr "PTT servisi HTTP %d kodu döndürdü."
 
 #: includes/class-ptt-client.php:329
 #: includes/class-ptt-client.php:1149
@@ -1434,98 +1436,98 @@ msgstr ""
 #: includes/class-ptt-client.php:1501
 #: includes/class-ptt-client.php:1586
 msgid "Empty response from the PTT service."
-msgstr ""
+msgstr "PTT servisinden boş cevap."
 
 #: includes/class-ptt-client.php:355
 msgid "Operation successful."
-msgstr ""
+msgstr "İşlem başarılı."
 
 #: includes/class-ptt-client.php:355
 msgid "PTT returned no explanation."
-msgstr ""
+msgstr "PTT açıklama dönmedi."
 
 #: includes/class-ptt-client.php:395
 msgid "The sender first or last name is missing. Fill them in on the Sender tab."
-msgstr ""
+msgstr "Gönderici ad veya soyad ayarlarda eksik. Sender sekmesinden ad/soyadı doldurun."
 
 #: includes/class-ptt-client.php:420
 msgid "The sender province, district or address is missing from the settings."
-msgstr ""
+msgstr "Gönderici il/ilçe/adres ayarlarda eksik."
 
 #: includes/class-ptt-client.php:439
 msgid "A sender phone number or email is required; PTT needs at least one of them."
-msgstr ""
+msgstr "Gönderici telefon veya e-posta gereklidir (PTT Sms ya da Telefon zorunlu)."
 
 #: includes/class-ptt-client.php:614
 msgid "The reference number is empty."
-msgstr ""
+msgstr "Referans numarası boş."
 
 #: includes/class-ptt-client.php:707
 msgid "The package count is invalid."
-msgstr ""
+msgstr "Parça sayısı geçersiz."
 
 #: includes/class-ptt-client.php:880
 msgid "No customer number or password has been entered."
-msgstr ""
+msgstr "Müşteri numarası veya şifre girilmemiş."
 
 #. translators: %s: network error message
 #: includes/class-ptt-client.php:948
 #, php-format
 msgid "Could not connect: %s"
-msgstr ""
+msgstr "Bağlantı kurulamadı: %s"
 
 #. translators: %s: SOAP fault reason returned by PTT
 #: includes/class-ptt-client.php:971
 #, php-format
 msgid "PTT rejected the request: %s"
-msgstr ""
+msgstr "PTT reddetti: %s"
 
 #: includes/class-ptt-client.php:988
 msgid "LIVE"
-msgstr ""
+msgstr "CANLI"
 
 #: includes/class-ptt-client.php:988
 msgid "TEST"
-msgstr ""
+msgstr "TEST"
 
 #. translators: %s: environment name, TEST or LIVE
 #: includes/class-ptt-client.php:993
 #, php-format
 msgid "✓ Connection successful (%s environment). The customer number and password are correct."
-msgstr ""
+msgstr "✓ Bağlantı başarılı (%s ortamı). Müşteri numarası ve şifre doğru."
 
 #: includes/class-ptt-client.php:1177
 msgid "The barcode is not in the PTT system yet, or has not been processed."
-msgstr ""
+msgstr "Barkod PTT sisteminde bulunamadı veya henüz işlem görmedi."
 
 #. translators: 1: prefix length, 2: range end length, 3: combined length
 #: includes/class-settings.php:233
 #, php-format
 msgid "Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit."
-msgstr ""
+msgstr "Barkod aralığı geçersiz: prefix (%1$d hane) + bitiş (%2$d hane) toplamı 12 olmalı, şu an %3$d. PTT size 12-haneli aralık tahsis eder (13. hane otomatik check digit)."
 
 #: includes/class-settings.php:240
 msgid "The barcode range start and end must have the same number of digits."
-msgstr ""
+msgstr "Barkod aralığı başlangıç ve bitiş aynı hane sayısında olmalı."
 
 #: includes/class-settings.php:243
 msgid "The barcode range start cannot be greater than the end."
-msgstr ""
+msgstr "Barkod aralığı başlangıcı bitişten büyük olamaz."
 
 #: includes/class-wc-integration.php:105
 msgid "PTT Kargo: Send"
-msgstr ""
+msgstr "PTT Kargo: Gönder"
 
 #: includes/class-wc-integration.php:106
 msgid "PTT Kargo: Print Labels in Bulk"
-msgstr ""
+msgstr "PTT Kargo: Toplu Etiket Bas"
 
 #. translators: 1: sent count, 2: skipped count, 3: error count
 #: includes/class-wc-integration.php:214
 #, php-format
 msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
-msgstr ""
+msgstr "PTT Kargo bulk: %1$d gönderildi, %2$d atlandı (zaten barkodlu), %3$d hata."
 
-#: ptt-kargo-for-woocommerce.php:86
-msgid "PTT Kargo for WooCommerce requires WooCommerce to be installed and active."
-msgstr ""
+#: barkoda-shipping-for-woocommerce.php:86
+msgid "Barkoda Shipping for WooCommerce requires WooCommerce to be installed and active."
+msgstr "WC PTT Kargo eklentisi için WooCommerce gereklidir."

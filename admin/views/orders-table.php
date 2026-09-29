@@ -11,18 +11,18 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 <table class="wp-list-table widefat fixed striped wc-ptt-table">
 	<thead>
 		<tr>
-			<th class="col-order"><?php esc_html_e( 'Order', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-date"><?php esc_html_e( 'Date', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-customer"><?php esc_html_e( 'Customer', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-address"><?php esc_html_e( 'Address', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-items"><?php esc_html_e( 'Products', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-status"><?php esc_html_e( 'PTT Status', 'ptt-kargo-for-woocommerce' ); ?></th>
-			<th class="col-actions"><?php esc_html_e( 'Action', 'ptt-kargo-for-woocommerce' ); ?></th>
+			<th class="col-order"><?php esc_html_e( 'Order', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-date"><?php esc_html_e( 'Date', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-customer"><?php esc_html_e( 'Customer', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-address"><?php esc_html_e( 'Address', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-items"><?php esc_html_e( 'Products', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-status"><?php esc_html_e( 'PTT Status', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-actions"><?php esc_html_e( 'Action', 'barkoda-shipping-for-woocommerce' ); ?></th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php if ( empty( $orders ) ) : ?>
-			<tr><td colspan="7" style="text-align:center; padding:2em;"><?php esc_html_e( 'No orders to show.', 'ptt-kargo-for-woocommerce' ); ?></td></tr>
+			<tr><td colspan="7" style="text-align:center; padding:2em;"><?php esc_html_e( 'No orders to show.', 'barkoda-shipping-for-woocommerce' ); ?></td></tr>
 			<?php
 		else :
 			foreach ( $orders as $ptt_order ) :
@@ -76,7 +76,7 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 						$parca_barkodlar = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PARCA_BARKODLAR );
 						$irsaliye        = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_IRSALIYE_NO );
 						?>
-						<span class="status-badge status-sent"><?php esc_html_e( 'Sent', 'ptt-kargo-for-woocommerce' ); ?></span><br>
+						<span class="status-badge status-sent"><?php esc_html_e( 'Sent', 'barkoda-shipping-for-woocommerce' ); ?></span><br>
 						<small class="barkod-mini"><?php echo esc_html( $barkod ); ?></small>
 						<?php
 						if ( $parca_adet > 1 && $parca_barkodlar !== '' ) :
@@ -84,7 +84,7 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 							if ( is_array( $bks ) ) :
 								?>
 								<details class="raw-toggle" style="margin-top:4px;">
-									<summary><?php /* translators: %d: number of packages in the shipment */ echo esc_html( sprintf( __( '%d packages', 'ptt-kargo-for-woocommerce' ), $parca_adet ) ); ?>
+									<summary><?php /* translators: %d: number of packages in the shipment */ echo esc_html( sprintf( __( '%d packages', 'barkoda-shipping-for-woocommerce' ), $parca_adet ) ); ?>
 										<?php
 										if ( $irsaliye !== '' ) {
 											echo ' · İrs. ' . esc_html( $irsaliye );}
@@ -104,23 +104,23 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 							<br><small class="ptt-mesaj"><?php echo esc_html( $ptt_mesaj ); ?></small>
 						<?php endif; ?>
 						<?php if ( $takip ) : ?>
-							<br><a href="<?php echo esc_url( $takip ); ?>" target="_blank"><?php esc_html_e( 'PTT tracking link', 'ptt-kargo-for-woocommerce' ); ?></a>
+							<br><a href="<?php echo esc_url( $takip ); ?>" target="_blank"><?php esc_html_e( 'PTT tracking link', 'barkoda-shipping-for-woocommerce' ); ?></a>
 						<?php endif; ?>
 						<?php if ( $raw_resp !== '' || $raw_req !== '' ) : ?>
 							<details class="raw-toggle">
-								<summary><?php esc_html_e( 'Show raw data', 'ptt-kargo-for-woocommerce' ); ?></summary>
+								<summary><?php esc_html_e( 'Show raw data', 'barkoda-shipping-for-woocommerce' ); ?></summary>
 								<?php if ( $raw_req !== '' ) : ?>
-									<strong><?php esc_html_e( 'Request (SOAP sent):', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Request (SOAP sent):', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $raw_req ); ?></pre>
 								<?php endif; ?>
 								<?php if ( $raw_resp !== '' ) : ?>
-									<strong><?php esc_html_e( 'Response (from PTT):', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Response (from PTT):', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $raw_resp ); ?></pre>
 								<?php endif; ?>
 							</details>
 						<?php endif; ?>
 					<?php elseif ( $ptt_status === \PTT_Kargo_WC\Orders::STATUS_CANCELED ) : ?>
-						<span class="status-badge status-canceled"><?php esc_html_e( 'Cancel', 'ptt-kargo-for-woocommerce' ); ?></span>
+						<span class="status-badge status-canceled"><?php esc_html_e( 'Cancel', 'barkoda-shipping-for-woocommerce' ); ?></span>
 						<?php $cancel_msg = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_LOG ); ?>
 						<?php if ( $cancel_msg !== '' ) : ?>
 							<small class="ptt-mesaj" style="color:#646970;"><?php echo esc_html( $cancel_msg ); ?></small>
@@ -130,23 +130,23 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 									$raw_resp = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_RAW );
 									$raw_req  = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_REQ );
 									?>
-						<span class="status-badge status-error"><?php esc_html_e( 'Error', 'ptt-kargo-for-woocommerce' ); ?></span>
+						<span class="status-badge status-error"><?php esc_html_e( 'Error', 'barkoda-shipping-for-woocommerce' ); ?></span>
 						<small class="error-msg"><?php echo esc_html( $hata ); ?></small>
 									<?php if ( $raw_resp !== '' || $raw_req !== '' ) : ?>
 							<details class="raw-toggle">
-								<summary><?php esc_html_e( 'Show raw data', 'ptt-kargo-for-woocommerce' ); ?></summary>
+								<summary><?php esc_html_e( 'Show raw data', 'barkoda-shipping-for-woocommerce' ); ?></summary>
 										<?php if ( $raw_req !== '' ) : ?>
-									<strong><?php esc_html_e( 'Request (SOAP sent):', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Request (SOAP sent):', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $raw_req ); ?></pre>
 								<?php endif; ?>
 										<?php if ( $raw_resp !== '' ) : ?>
-									<strong><?php esc_html_e( 'Response (from PTT):', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Response (from PTT):', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $raw_resp ); ?></pre>
 								<?php endif; ?>
 							</details>
 						<?php endif; ?>
 								<?php else : ?>
-						<span class="status-badge status-pending"><?php esc_html_e( 'Waiting', 'ptt-kargo-for-woocommerce' ); ?></span>
+						<span class="status-badge status-pending"><?php esc_html_e( 'Waiting', 'barkoda-shipping-for-woocommerce' ); ?></span>
 					<?php endif; ?>
 				</td>
 				<td class="col-actions">
@@ -154,20 +154,20 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 						<button type="button" class="button button-primary js-ptt-send" data-order-id="<?php echo esc_attr( $ptt_order->get_id() ); ?>">
 									<?php
 									echo $ptt_status === \PTT_Kargo_WC\Orders::STATUS_CANCELED
-									? esc_html__( 'Resend', 'ptt-kargo-for-woocommerce' )
-									: esc_html__( 'Ship', 'ptt-kargo-for-woocommerce' );
+									? esc_html__( 'Resend', 'barkoda-shipping-for-woocommerce' )
+									: esc_html__( 'Ship', 'barkoda-shipping-for-woocommerce' );
 									?>
 						</button>
 					<?php endif; ?>
 								<?php if ( $barkod && $ptt_status === \PTT_Kargo_WC\Orders::STATUS_SENT ) : ?>
 						<a class="button" href="<?php echo esc_url( $label->label_url( $ptt_order->get_id() ) ); ?>" target="_blank">
-									<?php esc_html_e( 'Print Label', 'ptt-kargo-for-woocommerce' ); ?>
+									<?php esc_html_e( 'Print Label', 'barkoda-shipping-for-woocommerce' ); ?>
 						</a>
 						<button type="button" class="button js-ptt-takip" data-order-id="<?php echo esc_attr( $ptt_order->get_id() ); ?>">
-									<?php esc_html_e( 'Track', 'ptt-kargo-for-woocommerce' ); ?>
+									<?php esc_html_e( 'Track', 'barkoda-shipping-for-woocommerce' ); ?>
 						</button>
-						<button type="button" class="button button-link-delete js-ptt-cancel" data-order-id="<?php echo esc_attr( $ptt_order->get_id() ); ?>" title="<?php esc_attr_e( 'Cancel the PTT shipment (only while it has not been accepted)', 'ptt-kargo-for-woocommerce' ); ?>">
-									<?php esc_html_e( 'Cancel', 'ptt-kargo-for-woocommerce' ); ?>
+						<button type="button" class="button button-link-delete js-ptt-cancel" data-order-id="<?php echo esc_attr( $ptt_order->get_id() ); ?>" title="<?php esc_attr_e( 'Cancel the PTT shipment (only while it has not been accepted)', 'barkoda-shipping-for-woocommerce' ); ?>">
+									<?php esc_html_e( 'Cancel', 'barkoda-shipping-for-woocommerce' ); ?>
 						</button>
 					<?php endif; ?>
 				</td>

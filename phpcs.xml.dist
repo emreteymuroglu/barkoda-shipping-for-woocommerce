@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="PTT Kargo for WooCommerce">
-	<description>Coding standards for the PTT Kargo for WooCommerce plugin.</description>
+<ruleset name="Barkoda Shipping for WooCommerce">
+	<description>Coding standards for the Barkoda Shipping for WooCommerce plugin.</description>
 
 	<file>.</file>
 
@@ -41,7 +41,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="ptt-kargo-for-woocommerce"/>
+				<element value="barkoda-shipping-for-woocommerce"/>
 			</property>
 		</properties>
 	</rule>

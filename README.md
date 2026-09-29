@@ -1,4 +1,4 @@
-# PTT Kargo for WooCommerce
+# Barkoda Shipping for WooCommerce
 
 > Create PTT Kargo shipments from WooCommerce orders over PTT's SOAP API: barcodes, 80mm thermal labels, tracking and courier pickup.
 

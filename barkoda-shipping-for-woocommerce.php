@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       PTT Kargo for WooCommerce
- * Plugin URI:        https://github.com/emreteymuroglu/ptt-kargo-for-woocommerce
+ * Plugin Name:       Barkoda Shipping for WooCommerce
+ * Plugin URI:        https://github.com/emreteymuroglu/barkoda-shipping-for-woocommerce
  * Description:       Creates PTT Kargo shipments from WooCommerce orders over the PTT SOAP API, generates barcodes, prints 80mm thermal labels and tracks deliveries. Not affiliated with or endorsed by PTT.
  * Version:           2.1.0
  * Requires at least: 6.0
@@ -9,7 +9,7 @@
  * Author:            Emre Teymuroglu
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       ptt-kargo-for-woocommerce
+ * Text Domain:       barkoda-shipping-for-woocommerce
  * Domain Path:       /languages
  * Requires Plugins: woocommerce
  * WC requires at least: 8.0
@@ -26,7 +26,7 @@ define( 'PTT_KARGO_WC_VERSION', '2.1.0' );
 define( 'PTT_KARGO_WC_FILE', __FILE__ );
 define( 'PTT_KARGO_WC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PTT_KARGO_WC_URL', plugin_dir_url( __FILE__ ) );
-define( 'PTT_KARGO_WC_SLUG', 'ptt-kargo-for-woocommerce' );
+define( 'PTT_KARGO_WC_SLUG', 'barkoda-shipping-for-woocommerce' );
 
 if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
 	add_action(
@@ -83,7 +83,7 @@ add_action(
 				'admin_notices',
 				static function () {
 					echo '<div class="notice notice-error"><p>';
-					echo esc_html__( 'PTT Kargo for WooCommerce requires WooCommerce to be installed and active.', 'ptt-kargo-for-woocommerce' );
+					echo esc_html__( 'Barkoda Shipping for WooCommerce requires WooCommerce to be installed and active.', 'barkoda-shipping-for-woocommerce' );
 					echo '</p></div>';
 				}
 			);

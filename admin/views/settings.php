@@ -11,35 +11,35 @@ $opt_key  = \PTT_Kargo_WC\Settings::OPTION_KEY;
 
 $ptt_tabs = [
 	'connection' => [
-		'label' => __( 'PTT Connection', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'PTT Connection', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'admin-network',
 	],
 	'barcode'    => [
-		'label' => __( 'Barcode', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Barcode', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'tickets-alt',
 	],
 	'sender'     => [
-		'label' => __( 'Sender', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Sender', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'businessperson',
 	],
 	'label'      => [
-		'label' => __( 'Label', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Label', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'media-document',
 	],
 	'products'   => [
-		'label' => __( 'Products & Filters', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Products & Filters', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'filter',
 	],
 	'defaults'   => [
-		'label' => __( 'Shipment Defaults', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Shipment Defaults', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'archive',
 	],
 	'payment'    => [
-		'label' => __( 'Payment', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Payment', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'money-alt',
 	],
 	'customer'   => [
-		'label' => __( 'Customer Notices', 'ptt-kargo-for-woocommerce' ),
+		'label' => __( 'Customer Notices', 'barkoda-shipping-for-woocommerce' ),
 		'icon'  => 'email-alt',
 	],
 ];
@@ -54,7 +54,7 @@ $preview_tabs = [ 'connection', 'barcode', 'sender', 'label', 'products', 'defau
 $show_preview = in_array( $current_tab, $preview_tabs, true );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-settings-wrap">
-	<h1><?php esc_html_e( 'PTT Kargo for WooCommerce — Settings', 'ptt-kargo-for-woocommerce' ); ?></h1>
+	<h1><?php esc_html_e( 'Barkoda Shipping for WooCommerce — Settings', 'barkoda-shipping-for-woocommerce' ); ?></h1>
 	<?php settings_errors( \PTT_Kargo_WC\Settings::OPTION_KEY ); ?>
 
 	<nav class="nav-tab-wrapper wc-ptt-tab-nav">
@@ -83,18 +83,18 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 				}
 				?>
 
-				<?php submit_button( __( 'Save Settings', 'ptt-kargo-for-woocommerce' ) ); ?>
+				<?php submit_button( __( 'Save Settings', 'barkoda-shipping-for-woocommerce' ) ); ?>
 			</form>
 		</div>
 
 		<?php if ( $show_preview ) : ?>
-		<aside class="wc-ptt-settings-preview" aria-label="<?php esc_attr_e( 'Label Preview', 'ptt-kargo-for-woocommerce' ); ?>">
+		<aside class="wc-ptt-settings-preview" aria-label="<?php esc_attr_e( 'Label Preview', 'barkoda-shipping-for-woocommerce' ); ?>">
 			<div class="wc-ptt-preview-card">
 				<h3>
 					<span class="dashicons dashicons-visibility"></span>
-					<?php esc_html_e( 'Live Label Preview', 'ptt-kargo-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Live Label Preview', 'barkoda-shipping-for-woocommerce' ); ?>
 				</h3>
-				<p class="description"><?php esc_html_e( 'The preview refreshes automatically as you change the form.', 'ptt-kargo-for-woocommerce' ); ?></p>
+				<p class="description"><?php esc_html_e( 'The preview refreshes automatically as you change the form.', 'barkoda-shipping-for-woocommerce' ); ?></p>
 
 				<form id="wc-ptt-preview-form"
 					method="post"
@@ -109,11 +109,11 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 					<iframe id="wc-ptt-preview-iframe"
 						name="wc-ptt-preview-iframe"
 						src="about:blank"
-						title="<?php esc_attr_e( 'Label preview', 'ptt-kargo-for-woocommerce' ); ?>"></iframe>
+						title="<?php esc_attr_e( 'Label preview', 'barkoda-shipping-for-woocommerce' ); ?>"></iframe>
 				</div>
 
 				<p class="wc-ptt-preview-meta">
-					<small><?php esc_html_e( '⚠ Rendered with sample data — the order details are placeholders.', 'ptt-kargo-for-woocommerce' ); ?></small>
+					<small><?php esc_html_e( '⚠ Rendered with sample data — the order details are placeholders.', 'barkoda-shipping-for-woocommerce' ); ?></small>
 				</p>
 			</div>
 		</aside>

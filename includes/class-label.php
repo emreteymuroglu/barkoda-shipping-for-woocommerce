@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *  - render_preview(): sample label built from POSTed settings, without auto-print
  */
 final class Label {
-	private const STYLE_HANDLE  = 'ptt-kargo-for-woocommerce-label';
-	private const SCRIPT_HANDLE = 'ptt-kargo-for-woocommerce-label-print';
+	private const STYLE_HANDLE  = 'barkoda-shipping-for-woocommerce-label';
+	private const SCRIPT_HANDLE = 'barkoda-shipping-for-woocommerce-label-print';
 
 	private Settings $settings;
 
@@ -46,14 +46,14 @@ final class Label {
 	 */
 	public function render_bulk(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Unauthorised.', 'ptt-kargo-for-woocommerce' ), 403 );
+			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
 		check_admin_referer( 'ptt_kargo_wc_bulk_label' );
 
 		$orders_raw = isset( $_GET['orders'] ) ? sanitize_text_field( wp_unslash( $_GET['orders'] ) ) : '';
 		$ids        = array_filter( array_map( 'intval', explode( ',', $orders_raw ) ) );
 		if ( empty( $ids ) ) {
-			wp_die( esc_html__( 'No orders were selected for label printing.', 'ptt-kargo-for-woocommerce' ), 400 );
+			wp_die( esc_html__( 'No orders were selected for label printing.', 'barkoda-shipping-for-woocommerce' ), 400 );
 		}
 		$ids = array_slice( $ids, 0, 200 ); // Defensive cap: 200 labels per page is plenty.
 
@@ -96,7 +96,7 @@ final class Label {
 		}
 
 		if ( empty( $blocks ) ) {
-			wp_die( esc_html__( 'None of the selected orders has a printable barcode.', 'ptt-kargo-for-woocommerce' ), 400 );
+			wp_die( esc_html__( 'None of the selected orders has a printable barcode.', 'barkoda-shipping-for-woocommerce' ), 400 );
 		}
 
 		header( 'Content-Type: text/html; charset=UTF-8' );
@@ -128,7 +128,7 @@ final class Label {
 <html lang="<?php echo esc_attr( get_bloginfo( 'language' ) ); ?>">
 <head>
 	<meta charset="UTF-8">
-	<title><?php /* translators: %d: number of labels in the document */ echo esc_html( sprintf( __( 'PTT Bulk Labels (%d)', 'ptt-kargo-for-woocommerce' ), $count ) ); ?></title>
+	<title><?php /* translators: %d: number of labels in the document */ echo esc_html( sprintf( __( 'PTT Bulk Labels (%d)', 'barkoda-shipping-for-woocommerce' ), $count ) ); ?></title>
 	<?php wp_print_styles( self::STYLE_HANDLE ); ?>
 </head>
 <body class="ptt-label-bulk">
@@ -153,19 +153,19 @@ final class Label {
 
 	public function render(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Unauthorised.', 'ptt-kargo-for-woocommerce' ), 403 );
+			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
 		check_admin_referer( 'ptt_kargo_wc_label' );
 
 		$order_id = isset( $_GET['order'] ) ? (int) $_GET['order'] : 0;
 		$order    = $order_id > 0 ? wc_get_order( $order_id ) : null;
 		if ( ! $order ) {
-			wp_die( esc_html__( 'Order not found.', 'ptt-kargo-for-woocommerce' ), 404 );
+			wp_die( esc_html__( 'Order not found.', 'barkoda-shipping-for-woocommerce' ), 404 );
 		}
 
 		$barkod = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $barkod === '' ) {
-			wp_die( esc_html__( 'No PTT barcode has been created for this order yet.', 'ptt-kargo-for-woocommerce' ), 400 );
+			wp_die( esc_html__( 'No PTT barcode has been created for this order yet.', 'barkoda-shipping-for-woocommerce' ), 400 );
 		}
 
 		$data = $this->order_to_data( $order );
@@ -181,7 +181,7 @@ final class Label {
 	 */
 	public function render_preview(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html__( 'Unauthorised.', 'ptt-kargo-for-woocommerce' ), 403 );
+			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
 		check_admin_referer( 'ptt_kargo_wc_preview' );
 
@@ -276,13 +276,13 @@ final class Label {
 		return [
 			'siparis_no'    => '1234',
 			'siparis_tarih' => date_i18n( 'd.m.Y H:i' ),
-			'ad'            => __( 'Sample Customer', 'ptt-kargo-for-woocommerce' ),
-			'adres'         => __( 'Sample Neighbourhood, Example Street No:1 Apt:2', 'ptt-kargo-for-woocommerce' ),
-			'ilce'          => __( 'Kadıköy', 'ptt-kargo-for-woocommerce' ),
-			'il'            => __( 'İstanbul', 'ptt-kargo-for-woocommerce' ),
+			'ad'            => __( 'Sample Customer', 'barkoda-shipping-for-woocommerce' ),
+			'adres'         => __( 'Sample Neighbourhood, Example Street No:1 Apt:2', 'barkoda-shipping-for-woocommerce' ),
+			'ilce'          => __( 'Kadıköy', 'barkoda-shipping-for-woocommerce' ),
+			'il'            => __( 'İstanbul', 'barkoda-shipping-for-woocommerce' ),
 			'posta'         => '34710',
 			'tel'           => '0555 123 45 67',
-			'urunler'       => [ __( 'Sample Product 1', 'ptt-kargo-for-woocommerce' ), __( 'Sample Product 2', 'ptt-kargo-for-woocommerce' ) ],
+			'urunler'       => [ __( 'Sample Product 1', 'barkoda-shipping-for-woocommerce' ), __( 'Sample Product 2', 'barkoda-shipping-for-woocommerce' ) ],
 		];
 	}
 
@@ -376,7 +376,7 @@ final class Label {
 	<?php endif; ?>
 
 		<?php if ( $show['recipient'] ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Recipient', 'ptt-kargo-for-woocommerce' ); ?></p>
+	<p class="bolum-basligi"><?php esc_html_e( 'Recipient', 'barkoda-shipping-for-woocommerce' ); ?></p>
 	<p class="alici-adi"><?php echo esc_html( mb_strtoupper( (string) $data['ad'], 'UTF-8' ) ); ?></p>
 	<p class="alici-adres"><?php echo esc_html( $data['adres'] ); ?></p>
 	<p class="alici-il"><?php echo esc_html( $data['ilce'] ); ?> / <?php echo esc_html( $data['il'] ); ?> <?php echo esc_html( $data['posta'] ); ?></p>
@@ -387,7 +387,7 @@ final class Label {
 	<?php endif; ?>
 
 		<?php if ( $show['products'] && ! empty( $urunler ) ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Products', 'ptt-kargo-for-woocommerce' ); ?></p>
+	<p class="bolum-basligi"><?php esc_html_e( 'Products', 'barkoda-shipping-for-woocommerce' ); ?></p>
 	<ul class="urun-listesi">
 			<?php foreach ( $urunler as $u ) : ?>
 			<li>- <?php echo esc_html( $u ); ?></li>
@@ -397,7 +397,7 @@ final class Label {
 	<?php endif; ?>
 
 		<?php if ( $show['barcode'] ) : ?>
-	<p class="bolum-basligi"><?php esc_html_e( 'Shipment Barcode', 'ptt-kargo-for-woocommerce' ); ?></p>
+	<p class="bolum-basligi"><?php esc_html_e( 'Shipment Barcode', 'barkoda-shipping-for-woocommerce' ); ?></p>
 	<div class="barkod-bolum">
 		<div class="barkod-svg"><?php echo $barkod_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 		<p class="barkod-no"><?php echo esc_html( $barkod ); ?></p>

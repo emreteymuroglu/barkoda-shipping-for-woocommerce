@@ -1,4 +1,4 @@
-# PTT Kargo for WooCommerce
+# Barkoda Shipping for WooCommerce
 
 > WooCommerce siparişlerinden PTT'nin SOAP servisleri üzerinden kargo oluşturan, barkod üreten, 80mm termal etiket basan ve takip yapan ücretsiz WordPress eklentisi.
 

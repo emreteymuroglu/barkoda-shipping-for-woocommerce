@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Admin menu pages and the AJAX endpoints behind them.
  */
 final class Admin_Page {
-	public const MENU_SLUG       = 'ptt-kargo-for-woocommerce';
+	public const MENU_SLUG       = 'barkoda-shipping-for-woocommerce';
 	public const CAPABILITY      = 'manage_woocommerce';
 	public const AJAX_SEND       = 'ptt_kargo_wc_send';
 	public const AJAX_REFRESH    = 'ptt_kargo_wc_refresh';
@@ -53,8 +53,8 @@ final class Admin_Page {
 
 	public function menu(): void {
 		add_menu_page(
-			__( 'PTT Kargo for WooCommerce', 'ptt-kargo-for-woocommerce' ),
-			__( 'PTT Kargo', 'ptt-kargo-for-woocommerce' ),
+			__( 'Barkoda Shipping for WooCommerce', 'barkoda-shipping-for-woocommerce' ),
+			__( 'Barkoda', 'barkoda-shipping-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
 			[ $this, 'render_orders_page' ],
@@ -64,8 +64,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Orders', 'ptt-kargo-for-woocommerce' ),
-			__( 'Orders', 'ptt-kargo-for-woocommerce' ),
+			__( 'Orders', 'barkoda-shipping-for-woocommerce' ),
+			__( 'Orders', 'barkoda-shipping-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG,
 			[ $this, 'render_orders_page' ]
@@ -73,8 +73,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Request Courier', 'ptt-kargo-for-woocommerce' ),
-			__( 'Request Courier', 'ptt-kargo-for-woocommerce' ),
+			__( 'Request Courier', 'barkoda-shipping-for-woocommerce' ),
+			__( 'Request Courier', 'barkoda-shipping-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-kurye',
 			[ $this, 'render_courier_page' ]
@@ -82,8 +82,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'Settings', 'ptt-kargo-for-woocommerce' ),
-			__( 'Settings', 'ptt-kargo-for-woocommerce' ),
+			__( 'Settings', 'barkoda-shipping-for-woocommerce' ),
+			__( 'Settings', 'barkoda-shipping-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-settings',
 			[ $this, 'render_settings_page' ]
@@ -91,8 +91,8 @@ final class Admin_Page {
 
 		add_submenu_page(
 			self::MENU_SLUG,
-			__( 'PTT Logs', 'ptt-kargo-for-woocommerce' ),
-			__( 'Logs', 'ptt-kargo-for-woocommerce' ),
+			__( 'Integration Log', 'barkoda-shipping-for-woocommerce' ),
+			__( 'Logs', 'barkoda-shipping-for-woocommerce' ),
 			self::CAPABILITY,
 			self::MENU_SLUG . '-logs',
 			[ $this, 'render_logs_page' ]
@@ -103,8 +103,8 @@ final class Admin_Page {
 		// The admin hook string differs per WC/WP version and could not be pinned down on the
 		// HPOS edit screen. The JS handlers are delegated from `document` anyway, so enqueuing
 		// everywhere is the reliable option; ~50KB of CSS+JS, admin-only.
-		wp_enqueue_style( 'ptt-kargo-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.css', [], PTT_KARGO_WC_VERSION );
-		wp_enqueue_script( 'ptt-kargo-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.js', [ 'jquery' ], PTT_KARGO_WC_VERSION, true );
+		wp_enqueue_style( 'barkoda-shipping-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.css', [], PTT_KARGO_WC_VERSION );
+		wp_enqueue_script( 'barkoda-shipping-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.js', [ 'jquery' ], PTT_KARGO_WC_VERSION, true );
 
 		// Settings page only: live preview, media library, connection test, product search.
 		$is_plugin_page = strpos( $hook, self::MENU_SLUG ) !== false;
@@ -118,15 +118,15 @@ final class Admin_Page {
 				wp_enqueue_style( 'woocommerce_admin_styles' );
 			}
 			wp_enqueue_script(
-				'ptt-kargo-for-woocommerce-settings',
+				'barkoda-shipping-for-woocommerce-settings',
 				PTT_KARGO_WC_URL . 'admin/assets/settings.js',
-				[ 'jquery', 'ptt-kargo-for-woocommerce-admin' ],
+				[ 'jquery', 'barkoda-shipping-for-woocommerce-admin' ],
 				PTT_KARGO_WC_VERSION,
 				true
 			);
 		}
 		wp_localize_script(
-			'ptt-kargo-for-woocommerce-admin',
+			'barkoda-shipping-for-woocommerce-admin',
 			'PttKargoWC',
 			[
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
@@ -142,86 +142,86 @@ final class Admin_Page {
 					'clearLogs'   => self::AJAX_LOGS,
 				],
 				'i18n'    => [
-					'sending'         => __( 'Sending...', 'ptt-kargo-for-woocommerce' ),
-					'success'         => __( 'Success! Barcode: ', 'ptt-kargo-for-woocommerce' ),
-					'error'           => __( 'Error: ', 'ptt-kargo-for-woocommerce' ),
-					'summaryTitle'    => __( 'Shipment Summary', 'ptt-kargo-for-woocommerce' ),
-					'customer'        => __( 'Customer', 'ptt-kargo-for-woocommerce' ),
-					'missingWarn'     => __( 'Some fields are missing. You can leave them empty or fill them in below.', 'ptt-kargo-for-woocommerce' ),
-					'confirm'         => __( 'Confirm and Send', 'ptt-kargo-for-woocommerce' ),
-					'cancel'          => __( 'Cancel', 'ptt-kargo-for-woocommerce' ),
-					'orderWord'       => __( 'order', 'ptt-kargo-for-woocommerce' ),
-					'shipBtn'         => __( 'Ship', 'ptt-kargo-for-woocommerce' ),
-					'unknownErr'      => __( 'Unknown error', 'ptt-kargo-for-woocommerce' ),
-					'serverErr'       => __( 'Server error.', 'ptt-kargo-for-woocommerce' ),
-					'prepareErr'      => __( 'Could not prepare the shipment.', 'ptt-kargo-for-woocommerce' ),
-					'trackErr'        => __( 'Could not query tracking.', 'ptt-kargo-for-woocommerce' ),
-					'trackBarkod'     => __( 'Barcode:', 'ptt-kargo-for-woocommerce' ),
-					'trackStatus'     => __( 'Status:', 'ptt-kargo-for-woocommerce' ),
-					'trackEvents'     => __( 'Movements:', 'ptt-kargo-for-woocommerce' ),
-					'testing'         => __( 'Testing...', 'ptt-kargo-for-woocommerce' ),
-					'cancelConfirm'   => __( 'The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?', 'ptt-kargo-for-woocommerce' ),
-					'canceling'       => __( 'Cancelling...', 'ptt-kargo-for-woocommerce' ),
-					'cancelOk'        => __( 'The PTT shipment was cancelled.', 'ptt-kargo-for-woocommerce' ),
-					'cancelErr'       => __( 'Cancellation failed: ', 'ptt-kargo-for-woocommerce' ),
-					'cancelBtn'       => __( 'Cancel PTT Shipment', 'ptt-kargo-for-woocommerce' ),
-					'insuranceLabel'  => __( 'Send Insured (Valuable Goods)', 'ptt-kargo-for-woocommerce' ),
-					'insuranceAmount' => __( 'Insured Value (TRY)', 'ptt-kargo-for-woocommerce' ),
-					'codInfo'         => __( 'Cash on delivery active:', 'ptt-kargo-for-woocommerce' ),
-					'dropPointTitle'  => __( 'Current PTT branch', 'ptt-kargo-for-woocommerce' ),
-					'courierSending'  => __( 'Requesting courier...', 'ptt-kargo-for-woocommerce' ),
-					'courierOk'       => __( 'Courier request accepted!', 'ptt-kargo-for-woocommerce' ),
-					'courierErr'      => __( 'Courier request failed: ', 'ptt-kargo-for-woocommerce' ),
-					'clearLogsAsk'    => __( 'All log records will be deleted. Are you sure?', 'ptt-kargo-for-woocommerce' ),
+					'sending'         => __( 'Sending...', 'barkoda-shipping-for-woocommerce' ),
+					'success'         => __( 'Success! Barcode: ', 'barkoda-shipping-for-woocommerce' ),
+					'error'           => __( 'Error: ', 'barkoda-shipping-for-woocommerce' ),
+					'summaryTitle'    => __( 'Shipment Summary', 'barkoda-shipping-for-woocommerce' ),
+					'customer'        => __( 'Customer', 'barkoda-shipping-for-woocommerce' ),
+					'missingWarn'     => __( 'Some fields are missing. You can leave them empty or fill them in below.', 'barkoda-shipping-for-woocommerce' ),
+					'confirm'         => __( 'Confirm and Send', 'barkoda-shipping-for-woocommerce' ),
+					'cancel'          => __( 'Cancel', 'barkoda-shipping-for-woocommerce' ),
+					'orderWord'       => __( 'order', 'barkoda-shipping-for-woocommerce' ),
+					'shipBtn'         => __( 'Ship', 'barkoda-shipping-for-woocommerce' ),
+					'unknownErr'      => __( 'Unknown error', 'barkoda-shipping-for-woocommerce' ),
+					'serverErr'       => __( 'Server error.', 'barkoda-shipping-for-woocommerce' ),
+					'prepareErr'      => __( 'Could not prepare the shipment.', 'barkoda-shipping-for-woocommerce' ),
+					'trackErr'        => __( 'Could not query tracking.', 'barkoda-shipping-for-woocommerce' ),
+					'trackBarkod'     => __( 'Barcode:', 'barkoda-shipping-for-woocommerce' ),
+					'trackStatus'     => __( 'Status:', 'barkoda-shipping-for-woocommerce' ),
+					'trackEvents'     => __( 'Movements:', 'barkoda-shipping-for-woocommerce' ),
+					'testing'         => __( 'Testing...', 'barkoda-shipping-for-woocommerce' ),
+					'cancelConfirm'   => __( 'The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?', 'barkoda-shipping-for-woocommerce' ),
+					'canceling'       => __( 'Cancelling...', 'barkoda-shipping-for-woocommerce' ),
+					'cancelOk'        => __( 'The PTT shipment was cancelled.', 'barkoda-shipping-for-woocommerce' ),
+					'cancelErr'       => __( 'Cancellation failed: ', 'barkoda-shipping-for-woocommerce' ),
+					'cancelBtn'       => __( 'Cancel PTT Shipment', 'barkoda-shipping-for-woocommerce' ),
+					'insuranceLabel'  => __( 'Send Insured (Valuable Goods)', 'barkoda-shipping-for-woocommerce' ),
+					'insuranceAmount' => __( 'Insured Value (TRY)', 'barkoda-shipping-for-woocommerce' ),
+					'codInfo'         => __( 'Cash on delivery active:', 'barkoda-shipping-for-woocommerce' ),
+					'dropPointTitle'  => __( 'Current PTT branch', 'barkoda-shipping-for-woocommerce' ),
+					'courierSending'  => __( 'Requesting courier...', 'barkoda-shipping-for-woocommerce' ),
+					'courierOk'       => __( 'Courier request accepted!', 'barkoda-shipping-for-woocommerce' ),
+					'courierErr'      => __( 'Courier request failed: ', 'barkoda-shipping-for-woocommerce' ),
+					'clearLogsAsk'    => __( 'All log records will be deleted. Are you sure?', 'barkoda-shipping-for-woocommerce' ),
 
 					// Recipient fields shown in the shipment popup.
-					'fieldRecipient'  => __( 'Recipient Name', 'ptt-kargo-for-woocommerce' ),
-					'fieldAddress'    => __( 'Address', 'ptt-kargo-for-woocommerce' ),
-					'fieldProvince'   => __( 'Province', 'ptt-kargo-for-woocommerce' ),
-					'fieldDistrict'   => __( 'District', 'ptt-kargo-for-woocommerce' ),
-					'fieldPhone'      => __( 'Phone (10 digits, no leading zero)', 'ptt-kargo-for-woocommerce' ),
-					'fieldEmail'      => __( 'Email', 'ptt-kargo-for-woocommerce' ),
+					'fieldRecipient'  => __( 'Recipient Name', 'barkoda-shipping-for-woocommerce' ),
+					'fieldAddress'    => __( 'Address', 'barkoda-shipping-for-woocommerce' ),
+					'fieldProvince'   => __( 'Province', 'barkoda-shipping-for-woocommerce' ),
+					'fieldDistrict'   => __( 'District', 'barkoda-shipping-for-woocommerce' ),
+					'fieldPhone'      => __( 'Phone (10 digits, no leading zero)', 'barkoda-shipping-for-woocommerce' ),
+					'fieldEmail'      => __( 'Email', 'barkoda-shipping-for-woocommerce' ),
 
 					// Per-order shipping overrides.
-					'fieldWeight'     => __( 'Weight (g)', 'ptt-kargo-for-woocommerce' ),
-					'fieldDesi'       => __( 'Volumetric Weight', 'ptt-kargo-for-woocommerce' ),
-					'fieldWidth'      => __( 'Width (cm)', 'ptt-kargo-for-woocommerce' ),
-					'fieldLength'     => __( 'Length (cm)', 'ptt-kargo-for-woocommerce' ),
-					'fieldHeight'     => __( 'Height (cm)', 'ptt-kargo-for-woocommerce' ),
+					'fieldWeight'     => __( 'Weight (g)', 'barkoda-shipping-for-woocommerce' ),
+					'fieldDesi'       => __( 'Volumetric Weight', 'barkoda-shipping-for-woocommerce' ),
+					'fieldWidth'      => __( 'Width (cm)', 'barkoda-shipping-for-woocommerce' ),
+					'fieldLength'     => __( 'Length (cm)', 'barkoda-shipping-for-woocommerce' ),
+					'fieldHeight'     => __( 'Height (cm)', 'barkoda-shipping-for-woocommerce' ),
 
 					// Retry and multi-package controls.
-					'retryLabel'      => __( 'Retry:', 'ptt-kargo-for-woocommerce' ),
-					'retryNotice'     => __( 'will be reused — no new barcode is consumed.', 'ptt-kargo-for-woocommerce' ),
-					'packageCount'    => __( 'Package Count', 'ptt-kargo-for-woocommerce' ),
-					'waybillNo'       => __( 'Waybill Number (optional)', 'ptt-kargo-for-woocommerce' ),
-					'multiHint'       => __( 'A count above 1 switches to PTT\'s kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range.', 'ptt-kargo-for-woocommerce' ),
-					'extraPackages'   => __( 'more packages', 'ptt-kargo-for-woocommerce' ),
-					'badPackageCount' => __( 'Enter a valid package count.', 'ptt-kargo-for-woocommerce' ),
-					'courierOrderId'  => __( 'Order ID: ', 'ptt-kargo-for-woocommerce' ),
+					'retryLabel'      => __( 'Retry:', 'barkoda-shipping-for-woocommerce' ),
+					'retryNotice'     => __( 'will be reused — no new barcode is consumed.', 'barkoda-shipping-for-woocommerce' ),
+					'packageCount'    => __( 'Package Count', 'barkoda-shipping-for-woocommerce' ),
+					'waybillNo'       => __( 'Waybill Number (optional)', 'barkoda-shipping-for-woocommerce' ),
+					'multiHint'       => __( 'A count above 1 switches to PTT\'s kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range.', 'barkoda-shipping-for-woocommerce' ),
+					'extraPackages'   => __( 'more packages', 'barkoda-shipping-for-woocommerce' ),
+					'badPackageCount' => __( 'Enter a valid package count.', 'barkoda-shipping-for-woocommerce' ),
+					'courierOrderId'  => __( 'Order ID: ', 'barkoda-shipping-for-woocommerce' ),
 
 					// Tracking modal.
-					'trackTitle'      => __( 'Shipment Tracking', 'ptt-kargo-for-woocommerce' ),
-					'trackRefFound'   => __( 'The barcode query returned nothing; the shipment was found by reference number.', 'ptt-kargo-for-woocommerce' ),
-					'trackByRef'      => __( 'Queried by reference number.', 'ptt-kargo-for-woocommerce' ),
-					'trackNoEvents'   => __( 'No movements yet.', 'ptt-kargo-for-woocommerce' ),
-					'trackRecipient'  => __( 'Recipient:', 'ptt-kargo-for-woocommerce' ),
-					'trackSender'     => __( 'Sender:', 'ptt-kargo-for-woocommerce' ),
-					'trackColDate'    => __( 'Date / Time', 'ptt-kargo-for-woocommerce' ),
-					'trackColAction'  => __( 'Action', 'ptt-kargo-for-woocommerce' ),
-					'trackColCenter'  => __( 'Branch', 'ptt-kargo-for-woocommerce' ),
-					'close'           => __( 'Close', 'ptt-kargo-for-woocommerce' ),
+					'trackTitle'      => __( 'Shipment Tracking', 'barkoda-shipping-for-woocommerce' ),
+					'trackRefFound'   => __( 'The barcode query returned nothing; the shipment was found by reference number.', 'barkoda-shipping-for-woocommerce' ),
+					'trackByRef'      => __( 'Queried by reference number.', 'barkoda-shipping-for-woocommerce' ),
+					'trackNoEvents'   => __( 'No movements yet.', 'barkoda-shipping-for-woocommerce' ),
+					'trackRecipient'  => __( 'Recipient:', 'barkoda-shipping-for-woocommerce' ),
+					'trackSender'     => __( 'Sender:', 'barkoda-shipping-for-woocommerce' ),
+					'trackColDate'    => __( 'Date / Time', 'barkoda-shipping-for-woocommerce' ),
+					'trackColAction'  => __( 'Action', 'barkoda-shipping-for-woocommerce' ),
+					'trackColCenter'  => __( 'Branch', 'barkoda-shipping-for-woocommerce' ),
+					'close'           => __( 'Close', 'barkoda-shipping-for-woocommerce' ),
 
 					// Drop point block.
-					'dropDeadline'    => __( 'Collection deadline:', 'ptt-kargo-for-woocommerce' ),
-					'showOnMap'       => __( 'Show on map', 'ptt-kargo-for-woocommerce' ),
-					'dropPointErr'    => __( 'Could not retrieve drop point information: ', 'ptt-kargo-for-woocommerce' ),
-					'rawResponse'     => __( 'Raw PTT response', 'ptt-kargo-for-woocommerce' ),
-					'rawDropPoint'    => __( 'Raw drop point response', 'ptt-kargo-for-woocommerce' ),
+					'dropDeadline'    => __( 'Collection deadline:', 'barkoda-shipping-for-woocommerce' ),
+					'showOnMap'       => __( 'Show on map', 'barkoda-shipping-for-woocommerce' ),
+					'dropPointErr'    => __( 'Could not retrieve drop point information: ', 'barkoda-shipping-for-woocommerce' ),
+					'rawResponse'     => __( 'Raw PTT response', 'barkoda-shipping-for-woocommerce' ),
+					'rawDropPoint'    => __( 'Raw drop point response', 'barkoda-shipping-for-woocommerce' ),
 
 					// Settings screen.
-					'mediaTitle'      => __( 'Select Logo', 'ptt-kargo-for-woocommerce' ),
-					'mediaButton'     => __( 'Use this image', 'ptt-kargo-for-woocommerce' ),
-					'genericErr'      => __( 'Error', 'ptt-kargo-for-woocommerce' ),
+					'mediaTitle'      => __( 'Select Logo', 'barkoda-shipping-for-woocommerce' ),
+					'mediaButton'     => __( 'Use this image', 'barkoda-shipping-for-woocommerce' ),
+					'genericErr'      => __( 'Error', 'barkoda-shipping-for-woocommerce' ),
 				],
 			]
 		);
@@ -229,7 +229,7 @@ final class Admin_Page {
 
 	public function render_orders_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only list filter.
@@ -242,21 +242,21 @@ final class Admin_Page {
 
 	public function render_settings_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
 		include PTT_KARGO_WC_DIR . 'admin/views/settings.php';
 	}
 
 	public function render_logs_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
 		include PTT_KARGO_WC_DIR . 'admin/views/logs.php';
 	}
 
 	public function render_courier_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) );
+			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
 		$settings = $this->settings;
 		include PTT_KARGO_WC_DIR . 'admin/views/courier.php';
@@ -265,7 +265,7 @@ final class Admin_Page {
 	public function ajax_test_connection(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		// Optional: test with credentials typed into the form but not yet saved. PTT_Client
@@ -309,23 +309,23 @@ final class Admin_Page {
 		if ( ! empty( $result['success'] ) ) {
 			wp_send_json_success( [ 'message' => $result['mesaj'] ] );
 		}
-		wp_send_json_error( [ 'message' => $result['mesaj'] ?? __( 'Unknown error', 'ptt-kargo-for-woocommerce' ) ] );
+		wp_send_json_error( [ 'message' => $result['mesaj'] ?? __( 'Unknown error', 'barkoda-shipping-for-woocommerce' ) ] );
 	}
 
 	public function ajax_clear_logs(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		Logs::clear();
-		wp_send_json_success( [ 'message' => __( 'Logs cleared.', 'ptt-kargo-for-woocommerce' ) ] );
+		wp_send_json_success( [ 'message' => __( 'Logs cleared.', 'barkoda-shipping-for-woocommerce' ) ] );
 	}
 
 	public function ajax_refresh(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$show   = isset( $_POST['show'] ) ? sanitize_key( $_POST['show'] ) : 'pending';
@@ -346,18 +346,18 @@ final class Admin_Page {
 	public function ajax_prepare(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'barkoda-shipping-for-woocommerce' ) ], 404 );
 		}
 
 		$existing = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $existing !== '' ) {
-			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
+			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'barkoda-shipping-for-woocommerce' ) . $existing ], 409 );
 		}
 
 		$payload = $this->orders->to_ptt_payload( $order );
@@ -394,7 +394,7 @@ final class Admin_Page {
 	public function ajax_send(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
@@ -402,12 +402,12 @@ final class Admin_Page {
 
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'barkoda-shipping-for-woocommerce' ) ], 404 );
 		}
 
 		$existing = (string) $order->get_meta( Orders::META_BARKOD );
 		if ( $existing !== '' ) {
-			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'ptt-kargo-for-woocommerce' ) . $existing ], 409 );
+			wp_send_json_error( [ 'message' => __( 'A barcode already exists for this order: ', 'barkoda-shipping-for-woocommerce' ) . $existing ], 409 );
 		}
 
 		$payload = $this->orders->to_ptt_payload( $order );
@@ -479,7 +479,7 @@ final class Admin_Page {
 			} else {
 				$next = $this->barcode->next();
 				if ( $next === null ) {
-					wp_send_json_error( [ 'message' => __( 'The barcode range is exhausted. Please define a new range in the settings.', 'ptt-kargo-for-woocommerce' ) ], 500 );
+					wp_send_json_error( [ 'message' => __( 'The barcode range is exhausted. Please define a new range in the settings.', 'barkoda-shipping-for-woocommerce' ) ], 500 );
 				}
 				$barkodlar[] = $next;
 			}
@@ -491,7 +491,7 @@ final class Admin_Page {
 			while ( count( $barkodlar ) < $parca_adet ) {
 				$next = $this->barcode->next();
 				if ( $next === null ) {
-					wp_send_json_error( [ 'message' => __( 'The barcode range is too small; there are not enough barcodes for every package.', 'ptt-kargo-for-woocommerce' ) ], 500 );
+					wp_send_json_error( [ 'message' => __( 'The barcode range is too small; there are not enough barcodes for every package.', 'barkoda-shipping-for-woocommerce' ) ], 500 );
 				}
 				$barkodlar[] = $next;
 			}
@@ -510,7 +510,7 @@ final class Admin_Page {
 		}
 
 		if ( empty( $result['success'] ) ) {
-			$err_msg = (string) ( $result['mesaj'] ?? __( 'Unknown error', 'ptt-kargo-for-woocommerce' ) );
+			$err_msg = (string) ( $result['mesaj'] ?? __( 'Unknown error', 'barkoda-shipping-for-woocommerce' ) );
 			// Keep the first consumed barcode as pending; a retry tops the rest up via next().
 			$pending_to_store = $barkodlar[0] ?? '';
 			$this->orders->mark_error(
@@ -523,7 +523,7 @@ final class Admin_Page {
 			do_action( 'ptt_kargo_wc_after_error', $order, $err_msg, $result );
 			wp_send_json_error(
 				[
-					'message'       => $result['mesaj'] ?? __( 'Sending to PTT failed.', 'ptt-kargo-for-woocommerce' ),
+					'message'       => $result['mesaj'] ?? __( 'Sending to PTT failed.', 'barkoda-shipping-for-woocommerce' ),
 					'raw'           => $result['raw'] ?? '',
 					'request'       => $result['request'] ?? '',
 					'parca_results' => $result['parca_results'] ?? null,
@@ -558,7 +558,7 @@ final class Admin_Page {
 				'barkodlar'     => $barkodlar,
 				'takip_url'     => $takip_url,
 				'label_url'     => $this->label->label_url( $order_id ),
-				'mesaj'         => $result['mesaj'] ?? __( 'Shipment created.', 'ptt-kargo-for-woocommerce' ),
+				'mesaj'         => $result['mesaj'] ?? __( 'Shipment created.', 'barkoda-shipping-for-woocommerce' ),
 				'parca_results' => $result['parca_results'] ?? null,
 			]
 		);
@@ -574,13 +574,13 @@ final class Admin_Page {
 	public function ajax_cancel(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'barkoda-shipping-for-woocommerce' ) ], 404 );
 		}
 
 		$status = (string) $order->get_meta( Orders::META_STATUS );
@@ -590,7 +590,7 @@ final class Admin_Page {
 
 		if ( $status !== Orders::STATUS_SENT || $barkod === '' ) {
 			wp_send_json_error(
-				[ 'message' => __( 'No cancellable PTT record was found for this order.', 'ptt-kargo-for-woocommerce' ) ],
+				[ 'message' => __( 'No cancellable PTT record was found for this order.', 'barkoda-shipping-for-woocommerce' ) ],
 				400
 			);
 		}
@@ -606,7 +606,7 @@ final class Admin_Page {
 		}
 
 		if ( empty( $result['success'] ) ) {
-			$err = (string) ( $result['mesaj'] ?? __( 'The PTT cancellation request failed.', 'ptt-kargo-for-woocommerce' ) );
+			$err = (string) ( $result['mesaj'] ?? __( 'The PTT cancellation request failed.', 'barkoda-shipping-for-woocommerce' ) );
 			do_action( 'ptt_kargo_wc_after_cancel_error', $order, $barkod, $err, $result );
 			wp_send_json_error(
 				[
@@ -630,7 +630,7 @@ final class Admin_Page {
 
 		wp_send_json_success(
 			[
-				'message'     => $result['mesaj'] ?? __( 'The PTT shipment was cancelled.', 'ptt-kargo-for-woocommerce' ),
+				'message'     => $result['mesaj'] ?? __( 'The PTT shipment was cancelled.', 'barkoda-shipping-for-woocommerce' ),
 				'old_barkod'  => $barkod,
 				'used_method' => $result['fallback'] ?? 'barkodVeriSil',
 			]
@@ -645,7 +645,7 @@ final class Admin_Page {
 	public function ajax_courier(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$params = [
@@ -663,7 +663,7 @@ final class Admin_Page {
 		];
 
 		if ( $params['adet'] <= 0 ) {
-			wp_send_json_error( [ 'message' => __( 'Enter a valid package count.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'Enter a valid package count.', 'barkoda-shipping-for-woocommerce' ) ], 400 );
 		}
 
 		$result = $this->client->siparis_istek_ekle2( $params );
@@ -672,7 +672,7 @@ final class Admin_Page {
 			do_action( 'ptt_kargo_wc_after_courier', $params, $result );
 			wp_send_json_success(
 				[
-					'message'    => $result['mesaj'] ?? __( 'Courier request accepted.', 'ptt-kargo-for-woocommerce' ),
+					'message'    => $result['mesaj'] ?? __( 'Courier request accepted.', 'barkoda-shipping-for-woocommerce' ),
 					'siparis_id' => $result['siparis_id'] ?? '',
 					'http_code'  => $result['http_code'] ?? null,
 				]
@@ -681,7 +681,7 @@ final class Admin_Page {
 
 		wp_send_json_error(
 			[
-				'message' => $result['mesaj'] ?? __( 'Courier request failed.', 'ptt-kargo-for-woocommerce' ),
+				'message' => $result['mesaj'] ?? __( 'Courier request failed.', 'barkoda-shipping-for-woocommerce' ),
 				'raw'     => $result['raw'] ?? '',
 				'request' => $result['request'] ?? '',
 			],
@@ -696,7 +696,7 @@ final class Admin_Page {
 	public function ajax_drop_point(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
@@ -709,7 +709,7 @@ final class Admin_Page {
 			}
 		}
 		if ( $barkod === '' ) {
-			wp_send_json_error( [ 'message' => __( 'A barcode is required.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'A barcode is required.', 'barkoda-shipping-for-woocommerce' ) ], 400 );
 		}
 
 		$result = $this->client->get_drop_point_info( $barkod );
@@ -719,7 +719,7 @@ final class Admin_Page {
 		}
 		wp_send_json_error(
 			[
-				'message'   => $result['mesaj'] ?? __( 'Could not retrieve drop point information.', 'ptt-kargo-for-woocommerce' ),
+				'message'   => $result['mesaj'] ?? __( 'Could not retrieve drop point information.', 'barkoda-shipping-for-woocommerce' ),
 				'raw'       => $result['raw'] ?? '',
 				'http_code' => $result['http_code'] ?? null,
 			],
@@ -730,20 +730,20 @@ final class Admin_Page {
 	public function ajax_takip(): void {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'ptt-kargo-for-woocommerce' ) ], 403 );
+			wp_send_json_error( [ 'message' => __( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) ], 403 );
 		}
 
 		$order_id = isset( $_POST['order_id'] ) ? (int) $_POST['order_id'] : 0;
 		$order    = wc_get_order( $order_id );
 		if ( ! $order ) {
-			wp_send_json_error( [ 'message' => __( 'Order not found.', 'ptt-kargo-for-woocommerce' ) ], 404 );
+			wp_send_json_error( [ 'message' => __( 'Order not found.', 'barkoda-shipping-for-woocommerce' ) ], 404 );
 		}
 
 		$barkod = (string) $order->get_meta( Orders::META_BARKOD );
 		$ref    = (string) $order->get_meta( Orders::META_REF );
 
 		if ( $barkod === '' && $ref === '' ) {
-			wp_send_json_error( [ 'message' => __( 'This order has no barcode or reference number to track.', 'ptt-kargo-for-woocommerce' ) ], 400 );
+			wp_send_json_error( [ 'message' => __( 'This order has no barcode or reference number to track.', 'barkoda-shipping-for-woocommerce' ) ], 400 );
 		}
 
 		$result       = [];

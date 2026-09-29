@@ -42,31 +42,31 @@ if ( function_exists( 'WC' ) && WC()->mailer() ) {
 $ptt_selected = (array) ( $opts['customer_tracking_emails'] ?? array() );
 ?>
 
-<h2><?php esc_html_e( 'Customer Notices', 'ptt-kargo-for-woocommerce' ); ?></h2>
+<h2><?php esc_html_e( 'Customer Notices', 'barkoda-shipping-for-woocommerce' ); ?></h2>
 <p class="description">
-	<?php esc_html_e( 'Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT.', 'ptt-kargo-for-woocommerce' ); ?>
+	<?php esc_html_e( 'Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT.', 'barkoda-shipping-for-woocommerce' ); ?>
 </p>
 
 <table class="form-table" role="presentation">
 	<tr>
-		<th scope="row"><?php esc_html_e( 'Customer Tracking', 'ptt-kargo-for-woocommerce' ); ?></th>
+		<th scope="row"><?php esc_html_e( 'Customer Tracking', 'barkoda-shipping-for-woocommerce' ); ?></th>
 		<td>
 			<label>
 				<input type="checkbox" name="<?php echo esc_attr( $opt_key ); ?>[customer_tracking]" value="1" <?php checked( ! empty( $opts['customer_tracking'] ) ); ?>>
-				<?php esc_html_e( 'Show tracking details to customers', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'Show tracking details to customers', 'barkoda-shipping-for-woocommerce' ); ?>
 			</label>
 			<p class="description">
-				<?php esc_html_e( 'Turn this off to keep tracking visible only to store administrators.', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'Turn this off to keep tracking visible only to store administrators.', 'barkoda-shipping-for-woocommerce' ); ?>
 			</p>
 		</td>
 	</tr>
 
 	<tr>
-		<th scope="row"><?php esc_html_e( 'Include in Emails', 'ptt-kargo-for-woocommerce' ); ?></th>
+		<th scope="row"><?php esc_html_e( 'Include in Emails', 'barkoda-shipping-for-woocommerce' ); ?></th>
 		<td>
 			<?php if ( empty( $ptt_emails ) ) : ?>
 				<p class="description">
-					<?php esc_html_e( 'No WooCommerce customer emails were found.', 'ptt-kargo-for-woocommerce' ); ?>
+					<?php esc_html_e( 'No WooCommerce customer emails were found.', 'barkoda-shipping-for-woocommerce' ); ?>
 				</p>
 			<?php else : ?>
 				<?php foreach ( $ptt_emails as $ptt_id => $ptt_title ) : ?>
@@ -77,23 +77,23 @@ $ptt_selected = (array) ( $opts['customer_tracking_emails'] ?? array() );
 					</label>
 				<?php endforeach; ?>
 				<p class="description">
-					<?php esc_html_e( 'Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email.', 'ptt-kargo-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email.', 'barkoda-shipping-for-woocommerce' ); ?>
 				</p>
 			<?php endif; ?>
 		</td>
 	</tr>
 
 	<tr>
-		<th scope="row"><?php esc_html_e( 'My Account Page', 'ptt-kargo-for-woocommerce' ); ?></th>
+		<th scope="row"><?php esc_html_e( 'My Account Page', 'barkoda-shipping-for-woocommerce' ); ?></th>
 		<td>
 			<label>
 				<input type="checkbox" name="<?php echo esc_attr( $opt_key ); ?>[customer_tracking_account]" value="1" <?php checked( ! empty( $opts['customer_tracking_account'] ) ); ?>>
-				<?php esc_html_e( 'Show tracking on the customer\'s order detail page', 'ptt-kargo-for-woocommerce' ); ?>
+				<?php esc_html_e( 'Show tracking on the customer\'s order detail page', 'barkoda-shipping-for-woocommerce' ); ?>
 			</label>
 		</td>
 	</tr>
 </table>
 
 <p class="description">
-	<?php esc_html_e( 'Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed.', 'ptt-kargo-for-woocommerce' ); ?>
+	<?php esc_html_e( 'Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed.', 'barkoda-shipping-for-woocommerce' ); ?>
 </p>

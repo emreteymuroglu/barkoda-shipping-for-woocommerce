@@ -1,5 +1,5 @@
 {
-	"name": "emreteymuroglu/ptt-kargo-for-woocommerce",
+	"name": "emreteymuroglu/barkoda-shipping-for-woocommerce",
 	"description": "PTT Kargo shipping integration for WooCommerce: barcoded shipments, thermal labels, tracking and courier pickup over the PTT SOAP API.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",

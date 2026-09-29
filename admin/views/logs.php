@@ -17,9 +17,9 @@ $total = \PTT_Kargo_WC\Logs::count();
 $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-logs-wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Logs', 'ptt-kargo-for-woocommerce' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Logs', 'barkoda-shipping-for-woocommerce' ); ?></h1>
 	<button type="button" class="page-title-action" id="wc-ptt-clear-logs" data-nonce="<?php echo esc_attr( $nonce ); ?>">
-		<?php esc_html_e( 'Clear All', 'ptt-kargo-for-woocommerce' ); ?>
+		<?php esc_html_e( 'Clear All', 'barkoda-shipping-for-woocommerce' ); ?>
 	</button>
 	<hr class="wp-header-end">
 
@@ -28,13 +28,13 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 		echo esc_html(
 			sprintf(
 			/* translators: %d: log count */
-				__( 'The last %d integration records, newest first. Automatically capped at 500 records.', 'ptt-kargo-for-woocommerce' ),
+				__( 'The last %d integration records, newest first. Automatically capped at 500 records.', 'barkoda-shipping-for-woocommerce' ),
 				count( $logs )
 			)
 		);
 		?>
 		<?php if ( $total > count( $logs ) ) : ?>
-			<em>(<?php /* translators: %d: total number of log records */ echo esc_html( sprintf( __( '%d records in total', 'ptt-kargo-for-woocommerce' ), $total ) ); ?>)</em>
+			<em>(<?php /* translators: %d: total number of log records */ echo esc_html( sprintf( __( '%d records in total', 'barkoda-shipping-for-woocommerce' ), $total ) ); ?>)</em>
 		<?php endif; ?>
 	</p>
 
@@ -42,9 +42,9 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 		<?php
 		$base           = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-logs' );
 		$filters        = [
-			''        => __( 'All', 'ptt-kargo-for-woocommerce' ),
-			'success' => __( 'Successful', 'ptt-kargo-for-woocommerce' ),
-			'error'   => __( 'Error', 'ptt-kargo-for-woocommerce' ),
+			''        => __( 'All', 'barkoda-shipping-for-woocommerce' ),
+			'success' => __( 'Successful', 'barkoda-shipping-for-woocommerce' ),
+			'error'   => __( 'Error', 'barkoda-shipping-for-woocommerce' ),
 		];
 		$last_key       = array_key_last( $filters );
 		foreach ( $filters as $val => $lbl ) :
@@ -58,16 +58,16 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 	<table class="wp-list-table widefat fixed striped wc-ptt-logs-table">
 		<thead>
 			<tr>
-				<th style="width:140px;"><?php esc_html_e( 'Date', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:120px;"><?php esc_html_e( 'Operation', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:80px;"><?php esc_html_e( 'Order', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th style="width:80px;"><?php esc_html_e( 'Status', 'ptt-kargo-for-woocommerce' ); ?></th>
-				<th><?php esc_html_e( 'Message', 'ptt-kargo-for-woocommerce' ); ?></th>
+				<th style="width:140px;"><?php esc_html_e( 'Date', 'barkoda-shipping-for-woocommerce' ); ?></th>
+				<th style="width:120px;"><?php esc_html_e( 'Operation', 'barkoda-shipping-for-woocommerce' ); ?></th>
+				<th style="width:80px;"><?php esc_html_e( 'Order', 'barkoda-shipping-for-woocommerce' ); ?></th>
+				<th style="width:80px;"><?php esc_html_e( 'Status', 'barkoda-shipping-for-woocommerce' ); ?></th>
+				<th><?php esc_html_e( 'Message', 'barkoda-shipping-for-woocommerce' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if ( empty( $logs ) ) : ?>
-				<tr><td colspan="5" style="text-align:center; padding:2em;"><?php esc_html_e( 'No log records yet.', 'ptt-kargo-for-woocommerce' ); ?></td></tr>
+				<tr><td colspan="5" style="text-align:center; padding:2em;"><?php esc_html_e( 'No log records yet.', 'barkoda-shipping-for-woocommerce' ); ?></td></tr>
 				<?php
 			else :
 				foreach ( $logs as $log ) :
@@ -108,13 +108,13 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 						<div class="wc-ptt-log-msg"><?php echo esc_html( $log['message'] ?: '—' ); ?></div>
 						<?php if ( ! empty( $log['request'] ) || ! empty( $log['response'] ) ) : ?>
 							<details class="raw-toggle">
-								<summary><?php esc_html_e( 'Raw data', 'ptt-kargo-for-woocommerce' ); ?></summary>
+								<summary><?php esc_html_e( 'Raw data', 'barkoda-shipping-for-woocommerce' ); ?></summary>
 								<?php if ( ! empty( $log['request'] ) ) : ?>
-									<strong><?php esc_html_e( 'Request:', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Request:', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $log['request'] ); ?></pre>
 								<?php endif; ?>
 								<?php if ( ! empty( $log['response'] ) ) : ?>
-									<strong><?php esc_html_e( 'Response:', 'ptt-kargo-for-woocommerce' ); ?></strong>
+									<strong><?php esc_html_e( 'Response:', 'barkoda-shipping-for-woocommerce' ); ?></strong>
 									<pre class="raw-dump"><?php echo esc_html( $log['response'] ); ?></pre>
 								<?php endif; ?>
 							</details>

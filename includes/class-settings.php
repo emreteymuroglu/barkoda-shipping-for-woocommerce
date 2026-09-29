@@ -230,17 +230,17 @@ final class Settings {
 			if ( strlen( $bp . $be ) !== 12 ) {
 				$errors[] = sprintf(
 				/* translators: 1: prefix length, 2: range end length, 3: combined length */
-					__( 'Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit.', 'ptt-kargo-for-woocommerce' ),
+					__( 'Invalid barcode range: prefix (%1$d digits) + end (%2$d digits) must total 12, but is currently %3$d. PTT allocates a 12-digit range; the 13th digit is an automatic check digit.', 'barkoda-shipping-for-woocommerce' ),
 					strlen( $bp ),
 					strlen( $be ),
 					strlen( $bp . $be )
 				);
 			}
 			if ( strlen( $bs ) !== strlen( $be ) ) {
-				$errors[] = __( 'The barcode range start and end must have the same number of digits.', 'ptt-kargo-for-woocommerce' );
+				$errors[] = __( 'The barcode range start and end must have the same number of digits.', 'barkoda-shipping-for-woocommerce' );
 			}
 			if ( strlen( $bs ) === strlen( $be ) && $bs !== '' && (int) $bs > (int) $be ) {
-				$errors[] = __( 'The barcode range start cannot be greater than the end.', 'ptt-kargo-for-woocommerce' );
+				$errors[] = __( 'The barcode range start cannot be greater than the end.', 'barkoda-shipping-for-woocommerce' );
 			}
 
 			if ( ! empty( $errors ) ) {

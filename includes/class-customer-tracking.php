@@ -131,8 +131,8 @@ final class Customer_Tracking {
 		}
 
 		$data = array(
-			'heading'       => __( 'Shipment Tracking', 'ptt-kargo-for-woocommerce' ),
-			'barcode_label' => __( 'Tracking number:', 'ptt-kargo-for-woocommerce' ),
+			'heading'       => __( 'Shipment Tracking', 'barkoda-shipping-for-woocommerce' ),
+			'barcode_label' => __( 'Tracking number:', 'barkoda-shipping-for-woocommerce' ),
 			'barcode'       => $barcode,
 			'url'           => $url,
 			'packages'      => $packages,
@@ -170,7 +170,7 @@ final class Customer_Tracking {
 				. esc_html(
 					sprintf(
 						/* translators: %d: number of packages in the shipment */
-						__( 'This order ships as %d packages:', 'ptt-kargo-for-woocommerce' ),
+						__( 'This order ships as %d packages:', 'barkoda-shipping-for-woocommerce' ),
 						count( $data['packages'] )
 					)
 				)
@@ -179,7 +179,7 @@ final class Customer_Tracking {
 
 		if ( '' !== $data['url'] ) {
 			echo '<p style="margin:0;"><a href="' . esc_url( $data['url'] ) . '" target="_blank" rel="noopener">'
-				. esc_html__( 'Track your shipment', 'ptt-kargo-for-woocommerce' ) . '</a></p>';
+				. esc_html__( 'Track your shipment', 'barkoda-shipping-for-woocommerce' ) . '</a></p>';
 		}
 
 		echo '</div>';
