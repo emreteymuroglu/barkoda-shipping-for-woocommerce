@@ -4,7 +4,7 @@ Tags: woocommerce, shipping, kargo, barcode, turkey
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,7 +86,7 @@ No. The label is plain HTML and CSS sized for 80mm, printed through your browser
 
 = Where is my PTT password stored? =
 
-Encrypted with AES-256-CBC in the `ptt_kargo_wc_settings` option. The key is derived from your site's `AUTH_KEY`, so the stored value is useless without your `wp-config.php`. The password is also masked in the plugin's log table and in order meta, so it never appears in a saved request.
+Encrypted with AES-256-CBC in the `barkoda_settings` option. The key is derived from your site's `AUTH_KEY`, so the stored value is useless without your `wp-config.php`. The password is also masked in the plugin's log table and in order meta, so it never appears in a saved request.
 
 = What happens when the barcode range runs out? =
 
@@ -119,6 +119,12 @@ Yes. A Turkish translation ships with the plugin and is used automatically when 
 
 == Changelog ==
 
+= 2.2.0 =
+* Renamed to Barkoda Shipping for WooCommerce. The plugin is no longer named after a single carrier, which leaves room for other carriers later.
+* Every option, order meta key, hook, constant and the log table moved onto a `barkoda` prefix. Stored data is migrated automatically on upgrade; the stored PTT password carries over unchanged.
+* Fixed activation on sites upgrading from an earlier version, where the log table was created before the migration ran and the migration then discarded the existing log rows.
+* The PHP version notice is now translatable instead of hardcoded Turkish.
+
 = 2.1.0 =
 * The plugin is now in English, with a Turkish translation bundled. Turkish sites see no change in wording.
 * Renamed internal identifiers to a consistent prefix. Stored settings, order meta and the log table are migrated automatically on upgrade.
@@ -138,6 +144,9 @@ Yes. A Turkish translation ships with the plugin and is used automatically when 
 * First public release: HPOS-compatible order list and bulk actions, barcoded shipments, multi-package support, cancellation, tracking, drop point lookup, courier pickup, 80mm thermal labels, bulk label printing, atomic barcode allocation, encrypted credentials, per-order insurance, cash on delivery mapping, separate return address, missing-data detection and a full integration log.
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+Options, order meta and the log table are renamed automatically on upgrade. The stored PTT password is unaffected and does not need re-entering. Back up your database first, as you should before any upgrade.
 
 = 2.1.0 =
 Settings, order meta and the log table are renamed automatically on upgrade, and the stored PTT password is re-encrypted. Back up your database first, as you should before any upgrade.

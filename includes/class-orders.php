@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,23 +10,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  * HPOS compatible: reads orders through wc_get_orders().
  */
 final class Orders {
-	public const META_BARKOD    = '_ptt_kargo_wc_barkod';
-	public const META_REF       = '_ptt_kargo_wc_ref';
-	public const META_STATUS    = '_ptt_kargo_wc_status';
-	public const META_SENT_AT   = '_ptt_kargo_wc_sent_at';
-	public const META_TAKIP_URL = '_ptt_kargo_wc_takip_url';
-	public const META_PTT_LOG   = '_ptt_kargo_wc_last_response';
-	public const META_PTT_RAW   = '_ptt_kargo_wc_last_raw';
-	public const META_PTT_REQ   = '_ptt_kargo_wc_last_request';
+	public const META_BARKOD    = '_barkoda_barkod';
+	public const META_REF       = '_barkoda_ref';
+	public const META_STATUS    = '_barkoda_status';
+	public const META_SENT_AT   = '_barkoda_sent_at';
+	public const META_TAKIP_URL = '_barkoda_takip_url';
+	public const META_PTT_LOG   = '_barkoda_last_response';
+	public const META_PTT_RAW   = '_barkoda_last_raw';
+	public const META_PTT_REQ   = '_barkoda_last_request';
 	// Passed to barkodVeriSil / referansVeriSil when a shipment is cancelled.
-	public const META_DOSYA_ADI = '_ptt_kargo_wc_dosya_adi';
+	public const META_DOSYA_ADI = '_barkoda_dosya_adi';
 	// Barcode already consumed by a failed attempt. While this meta exists a retry
 	// reuses it instead of burning a new number from the range.
-	public const META_PENDING_BARKOD = '_ptt_kargo_wc_pending_barkod';
+	public const META_PENDING_BARKOD = '_barkoda_pending_barkod';
 	// JSON array of every barcode of a multi-package (parcaliBarkod) shipment.
-	public const META_PARCA_BARKODLAR = '_ptt_kargo_wc_parca_barkodlar';
-	public const META_PARCA_ADET      = '_ptt_kargo_wc_parca_adet';
-	public const META_IRSALIYE_NO     = '_ptt_kargo_wc_irsaliye_no';
+	public const META_PARCA_BARKODLAR = '_barkoda_parca_barkodlar';
+	public const META_PARCA_ADET      = '_barkoda_parca_adet';
+	public const META_IRSALIYE_NO     = '_barkoda_irsaliye_no';
 
 	public const STATUS_PENDING  = 'pending';
 	public const STATUS_SENT     = 'sent';
@@ -81,7 +81,7 @@ final class Orders {
 			];
 		}
 
-		$args = apply_filters( 'ptt_kargo_wc_eligible_orders_args', $args, $show, $limit );
+		$args = apply_filters( 'barkoda_eligible_orders_args', $args, $show, $limit );
 
 		$orders = wc_get_orders( $args );
 		if ( empty( $orders ) ) {
@@ -89,7 +89,7 @@ final class Orders {
 		}
 
 		$filtered = array_values( array_filter( $orders, fn( $order ) => $this->is_eligible( $order ) ) );
-		return apply_filters( 'ptt_kargo_wc_eligible_orders', $filtered, $show, $args );
+		return apply_filters( 'barkoda_eligible_orders', $filtered, $show, $args );
 	}
 
 	/**
@@ -99,7 +99,7 @@ final class Orders {
 	public function is_eligible( \WC_Order $order ): bool {
 		$product_ids = $this->settings->product_ids();
 		$result      = empty( $product_ids ) ? true : $this->order_contains_products( $order, $product_ids );
-		return (bool) apply_filters( 'ptt_kargo_wc_is_eligible', $result, $order, $product_ids );
+		return (bool) apply_filters( 'barkoda_is_eligible', $result, $order, $product_ids );
 	}
 
 	public function order_contains_products( \WC_Order $order, array $product_ids ): bool {
@@ -209,7 +209,7 @@ final class Orders {
 			'order_no' => $order->get_order_number(),
 			'posta'    => $posta,
 		];
-		return (array) apply_filters( 'ptt_kargo_wc_ptt_payload', $payload, $order );
+		return (array) apply_filters( 'barkoda_ptt_payload', $payload, $order );
 	}
 
 	/**
@@ -223,7 +223,7 @@ final class Orders {
 		$static = max( 1, (int) $this->settings->get( 'varsayilan_agirlik', 500 ) );
 
 		if ( $source === 'static' ) {
-			return (int) apply_filters( 'ptt_kargo_wc_resolved_weight', $static, $order, $source );
+			return (int) apply_filters( 'barkoda_resolved_weight', $static, $order, $source );
 		}
 
 		$total_g = 0;
@@ -254,7 +254,7 @@ final class Orders {
 			$result = $static;
 		}
 
-		return (int) apply_filters( 'ptt_kargo_wc_resolved_weight', $result, $order, $source );
+		return (int) apply_filters( 'barkoda_resolved_weight', $result, $order, $source );
 	}
 
 	/**
@@ -268,7 +268,7 @@ final class Orders {
 
 		if ( $source !== 'wc_product' ) {
 			return apply_filters(
-				'ptt_kargo_wc_resolved_dimensions',
+				'barkoda_resolved_dimensions',
 				[
 					'en'        => 0,
 					'boy'       => 0,
@@ -311,7 +311,7 @@ final class Orders {
 			'boy'       => (int) round( $max_l ),
 			'yukseklik' => (int) round( $max_h ),
 		];
-		return (array) apply_filters( 'ptt_kargo_wc_resolved_dimensions', $dims, $order, $source );
+		return (array) apply_filters( 'barkoda_resolved_dimensions', $dims, $order, $source );
 	}
 
 	/**
@@ -329,7 +329,7 @@ final class Orders {
 			$calc = ( $dimensions['en'] * $dimensions['boy'] * $dimensions['yukseklik'] ) / 3000;
 			$desi = max( 1, (int) ceil( $calc ) );
 		}
-		return (int) apply_filters( 'ptt_kargo_wc_resolved_desi', $desi, $order, $dimensions, $source );
+		return (int) apply_filters( 'barkoda_resolved_desi', $desi, $order, $dimensions, $source );
 	}
 
 	/**
@@ -338,12 +338,12 @@ final class Orders {
 	 *  - odeme_sart_ucreti = order total, 12,2 decimal
 	 *  - cod_extra_service_code (default 'OS') merged into ekhizmet
 	 *
-	 * The `ptt_kargo_wc_is_cod_order` filter can override the detection.
+	 * The `barkoda_is_cod_order` filter can override the detection.
 	 */
 	private function apply_cod_logic( \WC_Order $order, array &$fields ): void {
 		$cod_methods = $this->settings->cod_payment_methods();
 		$is_cod      = ! empty( $cod_methods ) && in_array( (string) $order->get_payment_method(), $cod_methods, true );
-		$is_cod      = (bool) apply_filters( 'ptt_kargo_wc_is_cod_order', $is_cod, $order, $cod_methods );
+		$is_cod      = (bool) apply_filters( 'barkoda_is_cod_order', $is_cod, $order, $cod_methods );
 
 		if ( ! $is_cod ) {
 			return;

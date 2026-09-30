@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array  $opts */
 /** @var string $opt_key */
 
-$cursor_row = get_option( \PTT_Kargo_WC\Barcode::CURSOR_OPTION );
+$cursor_row = get_option( \Barkoda_Shipping\Barcode::CURSOR_OPTION );
 ?>
 <h2><?php esc_html_e( 'Barcode Range and Reference', 'barkoda-shipping-for-woocommerce' ); ?></h2>
 <p class="description"><?php esc_html_e( 'PTT allocates you a 13-digit barcode range. The first 8 digits are a fixed prefix, the next 4 are a sequential serial number, and the last digit is an automatically calculated check digit.', 'barkoda-shipping-for-woocommerce' ); ?></p>

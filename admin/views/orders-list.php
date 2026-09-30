@@ -12,9 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<hr class="wp-header-end">
 
 	<ul class="subsubsub">
-		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '&show=pending' ) ); ?>" class="<?php echo $show === 'pending' ? 'current' : ''; ?>"><?php esc_html_e( 'Pending', 'barkoda-shipping-for-woocommerce' ); ?></a> |</li>
-		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '&show=sent' ) ); ?>" class="<?php echo $show === 'sent' ? 'current' : ''; ?>"><?php esc_html_e( 'Sent', 'barkoda-shipping-for-woocommerce' ); ?></a> |</li>
-		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '&show=all' ) ); ?>" class="<?php echo $show === 'all' ? 'current' : ''; ?>"><?php esc_html_e( 'All', 'barkoda-shipping-for-woocommerce' ); ?></a></li>
+		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '&show=pending' ) ); ?>" class="<?php echo $show === 'pending' ? 'current' : ''; ?>"><?php esc_html_e( 'Pending', 'barkoda-shipping-for-woocommerce' ); ?></a> |</li>
+		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '&show=sent' ) ); ?>" class="<?php echo $show === 'sent' ? 'current' : ''; ?>"><?php esc_html_e( 'Sent', 'barkoda-shipping-for-woocommerce' ); ?></a> |</li>
+		<li><a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '&show=all' ) ); ?>" class="<?php echo $show === 'all' ? 'current' : ''; ?>"><?php esc_html_e( 'All', 'barkoda-shipping-for-woocommerce' ); ?></a></li>
 	</ul>
 
 	<p class="wc-ptt-toolbar">
@@ -25,12 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		// Show bulk print button if there are printable orders
 		$printable_ids = [];
 		foreach ( $orders as $o ) {
-			if ( (string) $o->get_meta( \PTT_Kargo_WC\Orders::META_BARKOD ) !== '' ) {
+			if ( (string) $o->get_meta( \Barkoda_Shipping\Orders::META_BARKOD ) !== '' ) {
 				$printable_ids[] = $o->get_id();
 			}
 		}
 		if ( ! empty( $printable_ids ) ) :
-			$bulk_url = \PTT_Kargo_WC\Plugin::instance()->label()->bulk_url( $printable_ids );
+			$bulk_url = \Barkoda_Shipping\Plugin::instance()->label()->bulk_url( $printable_ids );
 			?>
 			<a class="button button-secondary" href="<?php echo esc_url( $bulk_url ); ?>" target="_blank">
 				<span class="dashicons dashicons-printer"></span>
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</p>
 
 	<div id="wc-ptt-orders-container">
-		<?php require PTT_KARGO_WC_DIR . 'admin/views/orders-table.php'; ?>
+		<?php require BARKODA_DIR . 'admin/views/orders-table.php'; ?>
 	</div>
 </div>
 

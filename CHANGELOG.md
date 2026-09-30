@@ -5,14 +5,33 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the
 project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.2.0] - 2026-09-30
+
+### Changed
+- Renamed to **Barkoda Shipping for WooCommerce**. The name no longer leads with a
+  carrier, so support for carriers other than PTT can be added without renaming again.
+- Every option, order meta key, hook, constant, AJAX action and the log table moved
+  onto a `barkoda` prefix, which satisfies the plugin directory's four-character
+  minimum. A schema migration (version 3) renames stored data on upgrade. The AES
+  salt is deliberately unchanged, so the stored PTT password carries over as it is
+  and does not need re-entering.
+
+### Fixed
+- Activation on a site upgrading from an earlier version created the current log
+  table before the migration ran. The migration then saw both the old and the new
+  table, treated the old one as an orphan and dropped it, losing every existing log
+  row. Migrations now run first.
+- The PHP version requirement notice was hardcoded Turkish text naming the old
+  plugin; it is now translatable.
+
 ## [2.1.0] - 2026-09-28
 
 ### Changed
 - All user-facing strings are now English, with a Turkish translation bundled in
   `languages/`. Sites running in Turkish see the same wording as before.
 - 36 strings that were hardcoded in JavaScript are now localized through the
-  `PttKargoWC.i18n` object, making them translatable for the first time.
-- Internal identifiers renamed to a consistent `ptt_kargo_wc` prefix: the PHP
+  `Barkoda.i18n` object, making them translatable for the first time.
+- Internal identifiers renamed to a consistent `barkoda` prefix: the PHP
   namespace, constants, functions, hooks, AJAX actions and the text domain. Stored
   data is migrated automatically; see below.
 - The order status setting key is now `order_statuses`. The previous key contained a

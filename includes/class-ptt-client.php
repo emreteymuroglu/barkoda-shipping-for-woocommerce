@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,10 +49,10 @@ final class PTT_Client {
 		$dosya_pre  = $ref_prefix !== '' ? rtrim( $ref_prefix, '-_' ) : 'WCPTT';
 		$dosya_adi  = $dosya_pre . '-' . gmdate( 'YmdHis' ) . '-' . wp_generate_password( 4, false, false );
 
-		$gonderi = (array) apply_filters( 'ptt_kargo_wc_kabul_fields', $gonderi );
+		$gonderi = (array) apply_filters( 'barkoda_kabul_fields', $gonderi );
 
 		$body = $this->build_kabul_envelope( $musteri_id, $sifre, $dosya_adi, $gonderi );
-		$body = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'kabulEkle2', $gonderi );
+		$body = (string) apply_filters( 'barkoda_soap_request_body', $body, 'kabulEkle2', $gonderi );
 
 		$this->last_request = $body;
 
@@ -71,8 +71,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'kabulEkle2' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'kabulEkle2' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, 'kabulEkle2' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'kabulEkle2' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -268,8 +268,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, $operation ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, $operation ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, $operation ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, $operation ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -445,7 +445,7 @@ final class PTT_Client {
 		}
 
 		$body               = $this->build_siparis_istek_envelope( $musteri_id, $sifre, $adet, $params );
-		$body               = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'siparisIstekEkle2', $params );
+		$body               = (string) apply_filters( 'barkoda_soap_request_body', $body, 'siparisIstekEkle2', $params );
 		$this->last_request = $body;
 
 		$endpoint = $this->settings->endpoint_kabul();
@@ -463,8 +463,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'siparisIstekEkle2' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'siparisIstekEkle2' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, 'siparisIstekEkle2' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'siparisIstekEkle2' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -551,8 +551,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 20, 'getDropPointInfo' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'getDropPointInfo' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 20, 'getDropPointInfo' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'getDropPointInfo' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -637,8 +637,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'gonderiSorgu_referansNo' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'gonderiSorgu_referansNo' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, 'gonderiSorgu_referansNo' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'gonderiSorgu_referansNo' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -713,10 +713,10 @@ final class PTT_Client {
 		$dosya_pre  = $ref_prefix !== '' ? rtrim( $ref_prefix, '-_' ) : 'WCPTT';
 		$dosya_adi  = $dosya_pre . '-' . gmdate( 'YmdHis' ) . '-' . wp_generate_password( 4, false, false );
 
-		$base_fields = (array) apply_filters( 'ptt_kargo_wc_kabul_fields', $base_fields );
+		$base_fields = (array) apply_filters( 'barkoda_kabul_fields', $base_fields );
 
 		$body = $this->build_kabul_parcali_envelope( $musteri_id, $sifre, $dosya_adi, $base_fields, $barkodlar, $irsaliye_no );
-		$body = (string) apply_filters( 'ptt_kargo_wc_soap_request_body', $body, 'kabulEkleParcaliBarkod', $base_fields );
+		$body = (string) apply_filters( 'barkoda_soap_request_body', $body, 'kabulEkleParcaliBarkod', $base_fields );
 
 		$this->last_request = $body;
 
@@ -735,8 +735,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'kabulEkleParcaliBarkod' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'kabulEkleParcaliBarkod' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, 'kabulEkleParcaliBarkod' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'kabulEkleParcaliBarkod' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -812,8 +812,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 30, 'gonderiSorgu' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'gonderiSorgu' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 30, 'gonderiSorgu' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'gonderiSorgu' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]
@@ -922,8 +922,8 @@ final class PTT_Client {
 		$response = wp_remote_post(
 			$endpoint,
 			[
-				'timeout'   => (int) apply_filters( 'ptt_kargo_wc_http_timeout', 15, 'test_connection' ),
-				'sslverify' => (bool) apply_filters( 'ptt_kargo_wc_sslverify', true, 'test_connection' ),
+				'timeout'   => (int) apply_filters( 'barkoda_http_timeout', 15, 'test_connection' ),
+				'sslverify' => (bool) apply_filters( 'barkoda_sslverify', true, 'test_connection' ),
 				'headers'   => $headers,
 				'body'      => $body,
 			]

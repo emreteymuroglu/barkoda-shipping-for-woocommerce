@@ -66,32 +66,32 @@ Ayarlar yedi sekmeye bölünmüştür; yalnızca ilk üçü zorunludur.
 
 ```php
 // PTT'ye gitmeden önce envelope alanları
-apply_filters( 'ptt_kargo_wc_kabul_fields', $fields );
-apply_filters( 'ptt_kargo_wc_soap_request_body', $body, $operation, $context );
+apply_filters( 'barkoda_kabul_fields', $fields );
+apply_filters( 'barkoda_soap_request_body', $body, $operation, $context );
 
 // Transport
-apply_filters( 'ptt_kargo_wc_http_timeout', 30, $operation );
-apply_filters( 'ptt_kargo_wc_sslverify', true, $operation );
+apply_filters( 'barkoda_http_timeout', 30, $operation );
+apply_filters( 'barkoda_sslverify', true, $operation );
 
 // Barkod ve sipariş sınıflandırması
-apply_filters( 'ptt_kargo_wc_barkod', $barkod, $cursor, $prefix );
-apply_filters( 'ptt_kargo_wc_is_cod_order', $is_cod, $order, $cod_methods );
+apply_filters( 'barkoda_barkod', $barkod, $cursor, $prefix );
+apply_filters( 'barkoda_is_cod_order', $is_cod, $order, $cod_methods );
 
 // Otomatik hesaplanan gönderi verisi
-apply_filters( 'ptt_kargo_wc_resolved_weight', $grams, $order, $source );
-apply_filters( 'ptt_kargo_wc_resolved_dimensions', $dims, $order, $source );
-apply_filters( 'ptt_kargo_wc_resolved_desi', $desi, $order, $dims, $source );
+apply_filters( 'barkoda_resolved_weight', $grams, $order, $source );
+apply_filters( 'barkoda_resolved_dimensions', $dims, $order, $source );
+apply_filters( 'barkoda_resolved_desi', $desi, $order, $dims, $source );
 
 // Etiket render'ı
-apply_filters( 'ptt_kargo_wc_label_html', $html, $order, $barkod );
-apply_filters( 'ptt_kargo_wc_label_header', $header_data, $order );
-apply_filters( 'ptt_kargo_wc_label_products', $items, $order );
+apply_filters( 'barkoda_label_html', $html, $order, $barkod );
+apply_filters( 'barkoda_label_header', $header_data, $order );
+apply_filters( 'barkoda_label_products', $items, $order );
 
 // Yaşam döngüsü
-do_action( 'ptt_kargo_wc_after_send', $order, $barkod, $result );
-do_action( 'ptt_kargo_wc_after_error', $order, $message, $result );
-do_action( 'ptt_kargo_wc_after_cancel', $order, $old_barkod, $result );
-do_action( 'ptt_kargo_wc_after_courier', $params, $result );
+do_action( 'barkoda_after_send', $order, $barkod, $result );
+do_action( 'barkoda_after_error', $order, $message, $result );
+do_action( 'barkoda_after_cancel', $order, $old_barkod, $result );
+do_action( 'barkoda_after_courier', $params, $result );
 ```
 </details>
 
@@ -100,13 +100,13 @@ do_action( 'ptt_kargo_wc_after_courier', $params, $result );
 
 | Meta key | Açıklama |
 |---|---|
-| `_ptt_kargo_wc_barkod` | 13 haneli PTT barkodu |
-| `_ptt_kargo_wc_ref` | Müşteri referans numarası |
-| `_ptt_kargo_wc_status` | `pending` / `sent` / `error` / `canceled` |
-| `_ptt_kargo_wc_takip_url` | PTT'nin döndürdüğü takip linki |
-| `_ptt_kargo_wc_dosya_adi` | İptal için kullanılan dosya adı |
-| `_ptt_kargo_wc_pending_barkod` | Hata sonrası retry için saklanan barkod |
-| `_ptt_kargo_wc_parca_barkodlar` | Çoklu pakette parça barkodları (JSON) |
+| `_barkoda_barkod` | 13 haneli PTT barkodu |
+| `_barkoda_ref` | Müşteri referans numarası |
+| `_barkoda_status` | `pending` / `sent` / `error` / `canceled` |
+| `_barkoda_takip_url` | PTT'nin döndürdüğü takip linki |
+| `_barkoda_dosya_adi` | İptal için kullanılan dosya adı |
+| `_barkoda_pending_barkod` | Hata sonrası retry için saklanan barkod |
+| `_barkoda_parca_barkodlar` | Çoklu pakette parça barkodları (JSON) |
 </details>
 
 ## Bilinen sınırlamalar

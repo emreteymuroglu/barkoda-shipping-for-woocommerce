@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,9 +22,9 @@ final class Label {
 	}
 
 	public function register(): void {
-		add_action( 'admin_post_ptt_kargo_wc_label', [ $this, 'render' ] );
-		add_action( 'admin_post_ptt_kargo_wc_preview', [ $this, 'render_preview' ] );
-		add_action( 'admin_post_ptt_kargo_wc_bulk_label', [ $this, 'render_bulk' ] );
+		add_action( 'admin_post_barkoda_label', [ $this, 'render' ] );
+		add_action( 'admin_post_barkoda_preview', [ $this, 'render_preview' ] );
+		add_action( 'admin_post_barkoda_bulk_label', [ $this, 'render_bulk' ] );
 	}
 
 	/**
@@ -36,19 +36,19 @@ final class Label {
 	 * still going through the enqueue API.
 	 */
 	private static function register_assets(): void {
-		wp_register_style( self::STYLE_HANDLE, PTT_KARGO_WC_URL . 'admin/assets/label.css', [], PTT_KARGO_WC_VERSION );
-		wp_register_script( self::SCRIPT_HANDLE, PTT_KARGO_WC_URL . 'admin/assets/label-print.js', [], PTT_KARGO_WC_VERSION, true );
+		wp_register_style( self::STYLE_HANDLE, BARKODA_URL . 'admin/assets/label.css', [], BARKODA_VERSION );
+		wp_register_script( self::SCRIPT_HANDLE, BARKODA_URL . 'admin/assets/label-print.js', [], BARKODA_VERSION, true );
 	}
 
 	/**
 	 * Bulk labels: one HTML document for several orders with a page break between each.
-	 * URL: admin-post.php?action=ptt_kargo_wc_bulk_label&orders=123,456,789&_wpnonce=...
+	 * URL: admin-post.php?action=barkoda_bulk_label&orders=123,456,789&_wpnonce=...
 	 */
 	public function render_bulk(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'ptt_kargo_wc_bulk_label' );
+		check_admin_referer( 'barkoda_bulk_label' );
 
 		$orders_raw = isset( $_GET['orders'] ) ? sanitize_text_field( wp_unslash( $_GET['orders'] ) ) : '';
 		$ids        = array_filter( array_map( 'intval', explode( ',', $orders_raw ) ) );
@@ -143,9 +143,9 @@ final class Label {
 	public function bulk_url( array $order_ids ): string {
 		return add_query_arg(
 			[
-				'action'   => 'ptt_kargo_wc_bulk_label',
+				'action'   => 'barkoda_bulk_label',
 				'orders'   => implode( ',', array_map( 'intval', $order_ids ) ),
-				'_wpnonce' => wp_create_nonce( 'ptt_kargo_wc_bulk_label' ),
+				'_wpnonce' => wp_create_nonce( 'barkoda_bulk_label' ),
 			],
 			admin_url( 'admin-post.php' )
 		);
@@ -155,7 +155,7 @@ final class Label {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'ptt_kargo_wc_label' );
+		check_admin_referer( 'barkoda_label' );
 
 		$order_id = isset( $_GET['order'] ) ? (int) $_GET['order'] : 0;
 		$order    = $order_id > 0 ? wc_get_order( $order_id ) : null;
@@ -183,7 +183,7 @@ final class Label {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'Unauthorised.', 'barkoda-shipping-for-woocommerce' ), 403 );
 		}
-		check_admin_referer( 'ptt_kargo_wc_preview' );
+		check_admin_referer( 'barkoda_preview' );
 
 		$base = $this->settings->all();
 
@@ -322,7 +322,7 @@ final class Label {
 		$header_sub = (string) ( $opts['label_header_subtitle'] ?? '' );
 
 		$header_data = (array) apply_filters(
-			'ptt_kargo_wc_label_header',
+			'barkoda_label_header',
 			[
 				'logo_url' => $logo_url,
 				'title'    => $header_title,
@@ -331,7 +331,7 @@ final class Label {
 			$order
 		);
 
-		$urunler = (array) apply_filters( 'ptt_kargo_wc_label_products', $data['urunler'], $order );
+		$urunler = (array) apply_filters( 'barkoda_label_products', $data['urunler'], $order );
 
 		$show = [
 			'order'     => ! empty( $opts['label_show_order'] ),
@@ -426,7 +426,7 @@ final class Label {
 </html>
 		<?php
 		$html = (string) ob_get_clean();
-		return (string) apply_filters( 'ptt_kargo_wc_label_html', $html, $order, $barkod );
+		return (string) apply_filters( 'barkoda_label_html', $html, $order, $barkod );
 	}
 
 	public function label_url( int $order_id ): string {
@@ -434,15 +434,15 @@ final class Label {
 		// once the URL travels through JSON into window.open(). add_query_arg keeps it raw.
 		return add_query_arg(
 			[
-				'action'   => 'ptt_kargo_wc_label',
+				'action'   => 'barkoda_label',
 				'order'    => $order_id,
-				'_wpnonce' => wp_create_nonce( 'ptt_kargo_wc_label' ),
+				'_wpnonce' => wp_create_nonce( 'barkoda_label' ),
 			],
 			admin_url( 'admin-post.php' )
 		);
 	}
 
 	public function preview_url(): string {
-		return admin_url( 'admin-post.php?action=ptt_kargo_wc_preview' );
+		return admin_url( 'admin-post.php?action=barkoda_preview' );
 	}
 }

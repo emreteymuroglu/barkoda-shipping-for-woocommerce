@@ -2,10 +2,10 @@
 /**
  * Customer-facing shipment tracking.
  *
- * @package PTT_Kargo_WC
+ * @package Barkoda_Shipping
  */
 
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -144,7 +144,7 @@ final class Customer_Tracking {
 		 * @param array|null $data  Tracking details.
 		 * @param \WC_Order  $order The order.
 		 */
-		$filtered = apply_filters( 'ptt_kargo_wc_customer_tracking', $data, $order );
+		$filtered = apply_filters( 'barkoda_customer_tracking', $data, $order );
 
 		return is_array( $filtered ) ? $filtered : null;
 	}

@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var string                 $barkod
  * @var string                 $takip
  * @var string                 $mesaj
- * @var \PTT_Kargo_WC\Label    $label
- * @var \PTT_Kargo_WC\Orders   $orders
+ * @var \Barkoda_Shipping\Label    $label
+ * @var \Barkoda_Shipping\Orders   $orders
  */
 ?>
 <div class="wc-ptt-metabox" data-order-id="<?php echo esc_attr( $order->get_id() ); ?>">
-	<?php if ( $status === \PTT_Kargo_WC\Orders::STATUS_SENT ) : ?>
+	<?php if ( $status === \Barkoda_Shipping\Orders::STATUS_SENT ) : ?>
 		<p class="wc-ptt-mb-status">
 			<span class="status-badge status-sent">✓ <?php esc_html_e( 'Sent', 'barkoda-shipping-for-woocommerce' ); ?></span>
 		</p>
@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php esc_html_e( 'Only possible while PTT has not yet accepted the shipment.', 'barkoda-shipping-for-woocommerce' ); ?>
 			</small>
 		</p>
-	<?php elseif ( $status === \PTT_Kargo_WC\Orders::STATUS_CANCELED ) : ?>
+	<?php elseif ( $status === \Barkoda_Shipping\Orders::STATUS_CANCELED ) : ?>
 		<p class="wc-ptt-mb-status">
 			<span class="status-badge status-canceled">⊘ <?php esc_html_e( 'Cancelled', 'barkoda-shipping-for-woocommerce' ); ?></span>
 		</p>
@@ -63,8 +63,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</button>
 		</p>
 		<?php
-	elseif ( $status === \PTT_Kargo_WC\Orders::STATUS_ERROR ) :
-		$pending = (string) $order->get_meta( \PTT_Kargo_WC\Orders::META_PENDING_BARKOD );
+	elseif ( $status === \Barkoda_Shipping\Orders::STATUS_ERROR ) :
+		$pending = (string) $order->get_meta( \Barkoda_Shipping\Orders::META_PENDING_BARKOD );
 		?>
 		<p class="wc-ptt-mb-status">
 			<span class="status-badge status-error">! <?php esc_html_e( 'Error', 'barkoda-shipping-for-woocommerce' ); ?></span>

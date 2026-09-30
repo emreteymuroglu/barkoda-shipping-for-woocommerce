@@ -2,10 +2,10 @@
 /**
  * Schema and stored-data migrations.
  *
- * @package PTT_Kargo_WC
+ * @package Barkoda_Shipping
  */
 
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,17 +23,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Upgrade {
 
 	/** Current schema version. Bump when a new migration step is added. */
-	public const DB_VERSION = 2;
+	public const DB_VERSION = 3;
 
 	/** Option holding the schema version installed on this site. */
-	public const VERSION_OPTION = 'ptt_kargo_wc_db_version';
+	public const VERSION_OPTION = 'barkoda_db_version';
 
-	/** Identifiers used before the plugin was renamed to ptt-kargo-for-woocommerce. */
-	private const LEGACY_SETTINGS_OPTION = 'wc_ptt_kargo_settings';
-	private const LEGACY_CURSOR_OPTION   = 'wc_ptt_kargo_barcode_cursor';
-	private const LEGACY_TABLE           = 'wc_ptt_kargo_logs';
-	private const LEGACY_META_PREFIX     = '_wc_ptt_kargo_';
-	private const META_PREFIX            = '_ptt_kargo_wc_';
+	/** Identifiers the 1.x releases stored, under the wc-ptt-kargo slug. */
+	private const V1_SETTINGS_OPTION = 'wc_ptt_kargo_settings';
+	private const V1_CURSOR_OPTION   = 'wc_ptt_kargo_barcode_cursor';
+	private const V1_TABLE           = 'wc_ptt_kargo_logs';
+	private const V1_META_PREFIX     = '_wc_ptt_kargo_';
+
+	/** Identifiers the 2.x releases stored, under the ptt-kargo-for-woocommerce slug. */
+	private const V2_VERSION_OPTION  = 'ptt_kargo_wc_db_version';
+	private const V2_SETTINGS_OPTION = 'ptt_kargo_wc_settings';
+	private const V2_CURSOR_OPTION   = 'ptt_kargo_wc_barcode_cursor';
+	private const V2_TABLE           = 'ptt_kargo_wc_logs';
+	private const V2_META_PREFIX     = '_ptt_kargo_wc_';
+
+	/** Order meta prefix in use now. */
+	private const META_PREFIX = '_barkoda_';
 
 	/**
 	 * Runs any pending migration. Cheap enough for every request: one autoloaded
@@ -42,19 +51,32 @@ final class Upgrade {
 	public static function maybe_run(): void {
 		$installed = (int) get_option( self::VERSION_OPTION, 0 );
 
+		// The version option was itself renamed in version 3, so a site still on 2
+		// records its schema version under the older name.
+		if ( 0 === $installed ) {
+			$installed = (int) get_option( self::V2_VERSION_OPTION, 0 );
+		}
+
 		if ( $installed >= self::DB_VERSION ) {
 			return;
 		}
 
-		// A site that has neither the new nor the legacy option is a fresh install and
-		// needs no migration, only the version stamp.
+		// A site holding none of the settings options, current or historical, is a
+		// fresh install and needs no migration, only the version stamp.
 		$is_fresh = false === get_option( Settings::OPTION_KEY, false )
-			&& false === get_option( self::LEGACY_SETTINGS_OPTION, false );
+			&& false === get_option( self::V2_SETTINGS_OPTION, false )
+			&& false === get_option( self::V1_SETTINGS_OPTION, false );
 
-		if ( ! $is_fresh && $installed < 2 ) {
-			self::migrate_to_2();
+		if ( ! $is_fresh ) {
+			if ( $installed < 2 ) {
+				self::migrate_to_2();
+			}
+			if ( $installed < 3 ) {
+				self::migrate_to_3();
+			}
 		}
 
+		delete_option( self::V2_VERSION_OPTION );
 		update_option( self::VERSION_OPTION, self::DB_VERSION, false );
 	}
 
@@ -67,10 +89,24 @@ final class Upgrade {
 	 * derived from a salt containing the old slug.
 	 */
 	private static function migrate_to_2(): void {
-		self::rename_option( self::LEGACY_CURSOR_OPTION, Barcode::CURSOR_OPTION );
+		self::rename_option( self::V1_CURSOR_OPTION, self::V2_CURSOR_OPTION );
 		self::migrate_settings();
-		self::rename_table( self::LEGACY_TABLE, Logs::TABLE_NAME );
-		self::rename_order_meta();
+		self::rename_table( self::V1_TABLE, self::V2_TABLE );
+		self::rename_order_meta( self::V1_META_PREFIX, self::V2_META_PREFIX );
+	}
+
+	/**
+	 * Version 3: the plugin was renamed to Barkoda, which moved every stored key onto
+	 * a prefix long enough for the directory's four-character rule.
+	 *
+	 * The AES salt is deliberately unchanged this time, so unlike version 2 there is
+	 * nothing to re-encrypt: the stored password is carried over as it is.
+	 */
+	private static function migrate_to_3(): void {
+		self::rename_option( self::V2_SETTINGS_OPTION, Settings::OPTION_KEY );
+		self::rename_option( self::V2_CURSOR_OPTION, Barcode::CURSOR_OPTION );
+		self::rename_table( self::V2_TABLE, Logs::TABLE_NAME );
+		self::rename_order_meta( self::V2_META_PREFIX, self::META_PREFIX );
 	}
 
 	/**
@@ -78,7 +114,7 @@ final class Upgrade {
 	 * re-encrypting the stored password under the new salt.
 	 */
 	private static function migrate_settings(): void {
-		$legacy = get_option( self::LEGACY_SETTINGS_OPTION, false );
+		$legacy = get_option( self::V1_SETTINGS_OPTION, false );
 
 		if ( ! is_array( $legacy ) ) {
 			return;
@@ -100,10 +136,10 @@ final class Upgrade {
 			$legacy['sifre_enc'] = '' === $plain ? '' : Settings::encrypt( $plain );
 		}
 
-		if ( false === get_option( Settings::OPTION_KEY, false ) ) {
-			add_option( Settings::OPTION_KEY, $legacy );
+		if ( false === get_option( self::V2_SETTINGS_OPTION, false ) ) {
+			add_option( self::V2_SETTINGS_OPTION, $legacy );
 		}
-		delete_option( self::LEGACY_SETTINGS_OPTION );
+		delete_option( self::V1_SETTINGS_OPTION );
 	}
 
 	/** Moves an option to a new name, preserving its autoload flag. */
@@ -149,8 +185,11 @@ final class Upgrade {
 	 * Orders may live in the HPOS tables, in post meta, or in both while a store is
 	 * mid-sync, so both are updated. A LIKE on the old prefix means new keys are never
 	 * touched, which keeps the step idempotent.
+	 *
+	 * @param string $from_prefix Meta key prefix to move away from.
+	 * @param string $to_prefix   Meta key prefix to move to.
 	 */
-	private static function rename_order_meta(): void {
+	private static function rename_order_meta( string $from_prefix, string $to_prefix ): void {
 		global $wpdb;
 
 		$tables = array( $wpdb->postmeta );
@@ -164,9 +203,9 @@ final class Upgrade {
 			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name is derived from $wpdb, values are prepared.
 				$wpdb->prepare(
 					"UPDATE `{$table}` SET meta_key = REPLACE(meta_key, %s, %s) WHERE meta_key LIKE %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name cannot be parameterised.
-					self::LEGACY_META_PREFIX,
-					self::META_PREFIX,
-					$wpdb->esc_like( self::LEGACY_META_PREFIX ) . '%'
+					$from_prefix,
+					$to_prefix,
+					$wpdb->esc_like( $from_prefix ) . '%'
 				)
 			);
 		}

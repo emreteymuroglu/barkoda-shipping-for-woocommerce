@@ -58,8 +58,8 @@
 		}
 
 		mediaFrame = wp.media({
-			title: PttKargoWC.i18n.mediaTitle,
-			button: { text: PttKargoWC.i18n.mediaButton },
+			title: Barkoda.i18n.mediaTitle,
+			button: { text: Barkoda.i18n.mediaButton },
 			library: { type: 'image' },
 			multiple: false
 		});
@@ -88,34 +88,34 @@
 		e.preventDefault();
 		var $btn  = $(this);
 		var $out  = $('#wc-ptt-test-result');
-		var nonce = (window.PttKargoWC && window.PttKargoWC.nonce) || '';
+		var nonce = (window.Barkoda && window.Barkoda.nonce) || '';
 
 		$out.removeClass('is-success is-error').addClass('is-loading')
 			.html('<span class="dashicons dashicons-update spin"></span> ' +
-				((window.PttKargoWC && window.PttKargoWC.i18n && window.PttKargoWC.i18n.testing) || 'Test ediliyor...'))
+				((window.Barkoda && window.Barkoda.i18n && window.Barkoda.i18n.testing) || 'Test ediliyor...'))
 			.show();
 		$btn.prop('disabled', true);
 
 		var data = {
-			action: 'ptt_kargo_wc_test_conn',
+			action: 'barkoda_test_conn',
 			nonce: nonce,
 			environment: $('#environment').val(),
 			musteri_id: $('#musteri_id').val(),
 			sifre: $('#sifre').val()
 		};
 
-		$.post((window.PttKargoWC && window.PttKargoWC.ajaxUrl) || ajaxurl, data)
+		$.post((window.Barkoda && window.Barkoda.ajaxUrl) || ajaxurl, data)
 			.done(function (res) {
 				$out.removeClass('is-loading');
 				if (res && res.success) {
 					$out.addClass('is-success').text(res.data.message);
 				} else {
-					$out.addClass('is-error').text((res && res.data && res.data.message) || PttKargoWC.i18n.genericErr);
+					$out.addClass('is-error').text((res && res.data && res.data.message) || Barkoda.i18n.genericErr);
 				}
 			})
 			.fail(function (xhr) {
 				$out.removeClass('is-loading').addClass('is-error')
-					.text((xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || PttKargoWC.i18n.serverErr);
+					.text((xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || Barkoda.i18n.serverErr);
 			})
 			.always(function () {
 				$btn.prop('disabled', false);

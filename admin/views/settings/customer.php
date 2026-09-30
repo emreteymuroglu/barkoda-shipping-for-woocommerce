@@ -2,7 +2,7 @@
 /**
  * Customer notices settings tab.
  *
- * @package PTT_Kargo_WC
+ * @package Barkoda_Shipping
  *
  * @var array  $opts
  * @var string $opt_key

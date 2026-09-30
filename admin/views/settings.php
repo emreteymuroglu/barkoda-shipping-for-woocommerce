@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 
-$settings = \PTT_Kargo_WC\Plugin::instance()->settings();
+$settings = \Barkoda_Shipping\Plugin::instance()->settings();
 $opts     = $settings->all();
-$opt_key  = \PTT_Kargo_WC\Settings::OPTION_KEY;
+$opt_key  = \Barkoda_Shipping\Settings::OPTION_KEY;
 
 $ptt_tabs = [
 	'connection' => [
@@ -47,7 +47,7 @@ $ptt_tabs = [
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the tab is a read-only view selector.
 $requested_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
 $current_tab   = isset( $ptt_tabs[ $requested_tab ] ) ? $requested_tab : 'connection';
-$base_url      = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-settings' );
+$base_url      = admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '-settings' );
 
 // Preview is shown for these tabs; others are just form fields
 $preview_tabs = [ 'connection', 'barcode', 'sender', 'label', 'products', 'defaults', 'payment' ];
@@ -55,7 +55,7 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-settings-wrap">
 	<h1><?php esc_html_e( 'Barkoda Shipping for WooCommerce — Settings', 'barkoda-shipping-for-woocommerce' ); ?></h1>
-	<?php settings_errors( \PTT_Kargo_WC\Settings::OPTION_KEY ); ?>
+	<?php settings_errors( \Barkoda_Shipping\Settings::OPTION_KEY ); ?>
 
 	<nav class="nav-tab-wrapper wc-ptt-tab-nav">
 		<?php
@@ -73,11 +73,11 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 	<div class="wc-ptt-settings-grid <?php echo $show_preview ? 'has-preview' : ''; ?>">
 		<div class="wc-ptt-settings-main">
 			<form id="wc-ptt-settings-form" method="post" action="options.php">
-				<?php settings_fields( 'ptt_kargo_wc_settings_group' ); ?>
+				<?php settings_fields( 'barkoda_settings_group' ); ?>
 				<input type="hidden" name="<?php echo esc_attr( $opt_key ); ?>[__tab]" value="<?php echo esc_attr( $current_tab ); ?>">
 
 				<?php
-				$tab_file = PTT_KARGO_WC_DIR . 'admin/views/settings/' . $current_tab . '.php';
+				$tab_file = BARKODA_DIR . 'admin/views/settings/' . $current_tab . '.php';
 				if ( file_exists( $tab_file ) ) {
 					include $tab_file;
 				}
@@ -101,8 +101,8 @@ $show_preview = in_array( $current_tab, $preview_tabs, true );
 					action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"
 					target="wc-ptt-preview-iframe"
 					style="display:none;">
-					<input type="hidden" name="action" value="ptt_kargo_wc_preview">
-					<?php wp_nonce_field( 'ptt_kargo_wc_preview' ); ?>
+					<input type="hidden" name="action" value="barkoda_preview">
+					<?php wp_nonce_field( 'barkoda_preview' ); ?>
 				</form>
 
 				<div class="wc-ptt-preview-frame-wrap">

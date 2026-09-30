@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -50,17 +50,17 @@ final class WC_Integration {
 		foreach ( $columns as $key => $label ) {
 			$new[ $key ] = $label;
 			if ( $key === 'order_status' || $key === 'shipping_address' ) {
-				$new['ptt_kargo_wc'] = __( 'Barkoda', 'barkoda-shipping-for-woocommerce' );
+				$new['barkoda'] = __( 'Barkoda', 'barkoda-shipping-for-woocommerce' );
 			}
 		}
-		if ( ! isset( $new['ptt_kargo_wc'] ) ) {
-			$new['ptt_kargo_wc'] = __( 'Barkoda', 'barkoda-shipping-for-woocommerce' );
+		if ( ! isset( $new['barkoda'] ) ) {
+			$new['barkoda'] = __( 'Barkoda', 'barkoda-shipping-for-woocommerce' );
 		}
 		return $new;
 	}
 
 	public function render_column_hpos( string $column_name, $order ): void {
-		if ( $column_name !== 'ptt_kargo_wc' ) {
+		if ( $column_name !== 'barkoda' ) {
 			return;
 		}
 		if ( ! $order instanceof \WC_Order ) {
@@ -73,7 +73,7 @@ final class WC_Integration {
 	}
 
 	public function render_column_legacy( string $column_name, int $post_id ): void {
-		if ( $column_name !== 'ptt_kargo_wc' ) {
+		if ( $column_name !== 'barkoda' ) {
 			return;
 		}
 		$order = wc_get_order( $post_id );
@@ -102,14 +102,14 @@ final class WC_Integration {
 	}
 
 	public function add_bulk_action( array $actions ): array {
-		$actions['ptt_kargo_wc_send']  = __( 'PTT Kargo: Send', 'barkoda-shipping-for-woocommerce' );
-		$actions['ptt_kargo_wc_label'] = __( 'PTT Kargo: Print Labels in Bulk', 'barkoda-shipping-for-woocommerce' );
+		$actions['barkoda_send']  = __( 'PTT Kargo: Send', 'barkoda-shipping-for-woocommerce' );
+		$actions['barkoda_label'] = __( 'PTT Kargo: Print Labels in Bulk', 'barkoda-shipping-for-woocommerce' );
 		return $actions;
 	}
 
 	public function handle_bulk_action( string $redirect, string $action, array $order_ids ): string {
 		// Bulk label printing redirects to the label endpoint, which opens the print dialog.
-		if ( $action === 'ptt_kargo_wc_label' ) {
+		if ( $action === 'barkoda_label' ) {
 			if ( ! current_user_can( 'manage_woocommerce' ) ) {
 				return $redirect;
 			}
@@ -120,7 +120,7 @@ final class WC_Integration {
 			return $this->label->bulk_url( $ids );
 		}
 
-		if ( $action !== 'ptt_kargo_wc_send' ) {
+		if ( $action !== 'barkoda_send' ) {
 			return $redirect;
 		}
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -166,7 +166,7 @@ final class WC_Integration {
 					(string) ( $result['request'] ?? '' ),
 					$barkod
 				);
-				do_action( 'ptt_kargo_wc_after_error', $order, (string) ( $result['mesaj'] ?? '' ), $result );
+				do_action( 'barkoda_after_error', $order, (string) ( $result['mesaj'] ?? '' ), $result );
 				++$err;
 				continue;
 			}
@@ -184,7 +184,7 @@ final class WC_Integration {
 				(string) ( $result['mesaj'] ?? '' ),
 				$dosya_adi
 			);
-			do_action( 'ptt_kargo_wc_after_send', $order, $returned_barkod, $result );
+			do_action( 'barkoda_after_send', $order, $returned_barkod, $result );
 			++$sent;
 		}
 
@@ -235,7 +235,7 @@ final class WC_Integration {
 
 		foreach ( $screens as $screen ) {
 			add_meta_box(
-				'ptt_kargo_wc_metabox',
+				'barkoda_metabox',
 				__( 'Barkoda', 'barkoda-shipping-for-woocommerce' ),
 				[ $this, 'render_metabox' ],
 				$screen,
@@ -262,6 +262,6 @@ final class WC_Integration {
 		$label  = $this->label;
 		$orders = $this->orders;
 
-		include PTT_KARGO_WC_DIR . 'admin/views/order-metabox.php';
+		include BARKODA_DIR . 'admin/views/order-metabox.php';
 	}
 }

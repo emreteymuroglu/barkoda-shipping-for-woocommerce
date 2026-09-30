@@ -1,12 +1,12 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class Settings {
-	public const OPTION_KEY = 'ptt_kargo_wc_settings';
+	public const OPTION_KEY = 'barkoda_settings';
 
 	private const ENC_SALT = 'ptt-kargo-for-woocommerce|';
 
@@ -98,7 +98,7 @@ final class Settings {
 
 	public function register_setting(): void {
 		register_setting(
-			'ptt_kargo_wc_settings_group',
+			'barkoda_settings_group',
 			self::OPTION_KEY,
 			[
 				'type'              => 'array',

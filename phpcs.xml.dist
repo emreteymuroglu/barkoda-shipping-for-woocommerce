@@ -50,9 +50,9 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="ptt_kargo_wc"/>
-				<element value="PTT_Kargo_WC"/>
-				<element value="PTT_KARGO_WC"/>
+				<element value="barkoda"/>
+				<element value="Barkoda_Shipping"/>
+				<element value="BARKODA"/>
 			</property>
 		</properties>
 		<!--

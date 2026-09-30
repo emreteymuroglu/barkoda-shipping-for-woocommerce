@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- the barcode cursor lives in the plugin's own table and is handed out inside a SELECT ... FOR UPDATE transaction. The options API cannot lock a row, and caching would defeat the lock that keeps two concurrent orders from taking the same barcode.
 
 final class Barcode {
-	public const CURSOR_OPTION = 'ptt_kargo_wc_barcode_cursor';
+	public const CURSOR_OPTION = 'barkoda_barcode_cursor';
 
 	private Settings $settings;
 
@@ -92,7 +92,7 @@ final class Barcode {
 
 		$barkod = $twelve . self::check_digit( $twelve );
 
-		$filtered = apply_filters( 'ptt_kargo_wc_barkod', $barkod, $current, $prefix );
+		$filtered = apply_filters( 'barkoda_barkod', $barkod, $current, $prefix );
 		return is_string( $filtered ) && $filtered !== '' ? $filtered : null;
 	}
 

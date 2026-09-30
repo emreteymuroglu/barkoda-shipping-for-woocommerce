@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 /**
- * @var \PTT_Kargo_WC\Settings $settings
+ * @var \Barkoda_Shipping\Settings $settings
  */
 
 // Sender preview
@@ -14,8 +14,8 @@ $opts      = $settings->all();
 
 // Show how many orders are pending collection (sent to PTT but not yet collected)
 $pending_count = 0;
-if ( class_exists( '\PTT_Kargo_WC\Plugin' ) ) {
-	$orders = \PTT_Kargo_WC\Plugin::instance()->orders();
+if ( class_exists( '\Barkoda_Shipping\Plugin' ) ) {
+	$orders = \Barkoda_Shipping\Plugin::instance()->orders();
 	if ( $orders ) {
 		$pending_count = count( $orders->eligible_orders( 200, 'sent' ) ); // already sent to PTT but not yet collected
 	}
@@ -122,7 +122,7 @@ if ( class_exists( '\PTT_Kargo_WC\Plugin' ) ) {
 					<?php endif; ?>
 				</p>
 				<p>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-settings&tab=sender' ) ); ?>"><?php esc_html_e( 'Edit sender settings →', 'barkoda-shipping-for-woocommerce' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '-settings&tab=sender' ) ); ?>"><?php esc_html_e( 'Edit sender settings →', 'barkoda-shipping-for-woocommerce' ); ?></a>
 				</p>
 			</div>
 

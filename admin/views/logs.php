@@ -12,9 +12,9 @@ $operation      = isset( $_GET['op'] ) ? sanitize_key( wp_unslash( $_GET['op'] )
 
 $only_success = 'success' === $current_filter ? true : ( 'error' === $current_filter ? false : null );
 
-$logs  = \PTT_Kargo_WC\Logs::get_recent( 200, $only_success, $operation );
-$total = \PTT_Kargo_WC\Logs::count();
-$nonce = wp_create_nonce( 'ptt_kargo_wc' );
+$logs  = \Barkoda_Shipping\Logs::get_recent( 200, $only_success, $operation );
+$total = \Barkoda_Shipping\Logs::count();
+$nonce = wp_create_nonce( 'barkoda' );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-logs-wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Logs', 'barkoda-shipping-for-woocommerce' ); ?></h1>
@@ -40,7 +40,7 @@ $nonce = wp_create_nonce( 'ptt_kargo_wc' );
 
 	<ul class="subsubsub">
 		<?php
-		$base           = admin_url( 'admin.php?page=' . \PTT_Kargo_WC\Admin_Page::MENU_SLUG . '-logs' );
+		$base           = admin_url( 'admin.php?page=' . \Barkoda_Shipping\Admin_Page::MENU_SLUG . '-logs' );
 		$filters        = [
 			''        => __( 'All', 'barkoda-shipping-for-woocommerce' ),
 			'success' => __( 'Successful', 'barkoda-shipping-for-woocommerce' ),

@@ -1,5 +1,5 @@
 <?php
-namespace PTT_Kargo_WC;
+namespace Barkoda_Shipping;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -11,16 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Admin_Page {
 	public const MENU_SLUG       = 'barkoda-shipping-for-woocommerce';
 	public const CAPABILITY      = 'manage_woocommerce';
-	public const AJAX_SEND       = 'ptt_kargo_wc_send';
-	public const AJAX_REFRESH    = 'ptt_kargo_wc_refresh';
-	public const AJAX_TAKIP      = 'ptt_kargo_wc_takip';
-	public const AJAX_PREPARE    = 'ptt_kargo_wc_prepare';
-	public const AJAX_TEST       = 'ptt_kargo_wc_test_conn';
-	public const AJAX_LOGS       = 'ptt_kargo_wc_clear_logs';
-	public const AJAX_CANCEL     = 'ptt_kargo_wc_cancel';
-	public const AJAX_COURIER    = 'ptt_kargo_wc_courier';
-	public const AJAX_DROP_POINT = 'ptt_kargo_wc_drop_point';
-	public const NONCE_ACTION    = 'ptt_kargo_wc';
+	public const AJAX_SEND       = 'barkoda_send';
+	public const AJAX_REFRESH    = 'barkoda_refresh';
+	public const AJAX_TAKIP      = 'barkoda_takip';
+	public const AJAX_PREPARE    = 'barkoda_prepare';
+	public const AJAX_TEST       = 'barkoda_test_conn';
+	public const AJAX_LOGS       = 'barkoda_clear_logs';
+	public const AJAX_CANCEL     = 'barkoda_cancel';
+	public const AJAX_COURIER    = 'barkoda_courier';
+	public const AJAX_DROP_POINT = 'barkoda_drop_point';
+	public const NONCE_ACTION    = 'barkoda';
 
 	private Settings $settings;
 	private Orders $orders;
@@ -103,8 +103,8 @@ final class Admin_Page {
 		// The admin hook string differs per WC/WP version and could not be pinned down on the
 		// HPOS edit screen. The JS handlers are delegated from `document` anyway, so enqueuing
 		// everywhere is the reliable option; ~50KB of CSS+JS, admin-only.
-		wp_enqueue_style( 'barkoda-shipping-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.css', [], PTT_KARGO_WC_VERSION );
-		wp_enqueue_script( 'barkoda-shipping-for-woocommerce-admin', PTT_KARGO_WC_URL . 'admin/assets/admin.js', [ 'jquery' ], PTT_KARGO_WC_VERSION, true );
+		wp_enqueue_style( 'barkoda-shipping-for-woocommerce-admin', BARKODA_URL . 'admin/assets/admin.css', [], BARKODA_VERSION );
+		wp_enqueue_script( 'barkoda-shipping-for-woocommerce-admin', BARKODA_URL . 'admin/assets/admin.js', [ 'jquery' ], BARKODA_VERSION, true );
 
 		// Settings page only: live preview, media library, connection test, product search.
 		$is_plugin_page = strpos( $hook, self::MENU_SLUG ) !== false;
@@ -119,15 +119,15 @@ final class Admin_Page {
 			}
 			wp_enqueue_script(
 				'barkoda-shipping-for-woocommerce-settings',
-				PTT_KARGO_WC_URL . 'admin/assets/settings.js',
+				BARKODA_URL . 'admin/assets/settings.js',
 				[ 'jquery', 'barkoda-shipping-for-woocommerce-admin' ],
-				PTT_KARGO_WC_VERSION,
+				BARKODA_VERSION,
 				true
 			);
 		}
 		wp_localize_script(
 			'barkoda-shipping-for-woocommerce-admin',
-			'PttKargoWC',
+			'Barkoda',
 			[
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( self::NONCE_ACTION ),
@@ -237,21 +237,21 @@ final class Admin_Page {
 		$show           = in_array( $requested_show, [ 'pending', 'sent', 'all' ], true ) ? $requested_show : 'pending';
 		$orders = $this->orders->eligible_orders( 100, $show );
 
-		include PTT_KARGO_WC_DIR . 'admin/views/orders-list.php';
+		include BARKODA_DIR . 'admin/views/orders-list.php';
 	}
 
 	public function render_settings_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
 			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
-		include PTT_KARGO_WC_DIR . 'admin/views/settings.php';
+		include BARKODA_DIR . 'admin/views/settings.php';
 	}
 
 	public function render_logs_page(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
 			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
-		include PTT_KARGO_WC_DIR . 'admin/views/logs.php';
+		include BARKODA_DIR . 'admin/views/logs.php';
 	}
 
 	public function render_courier_page(): void {
@@ -259,7 +259,7 @@ final class Admin_Page {
 			wp_die( esc_html__( 'Unauthorised', 'barkoda-shipping-for-woocommerce' ) );
 		}
 		$settings = $this->settings;
-		include PTT_KARGO_WC_DIR . 'admin/views/courier.php';
+		include BARKODA_DIR . 'admin/views/courier.php';
 	}
 
 	public function ajax_test_connection(): void {
@@ -332,7 +332,7 @@ final class Admin_Page {
 		$orders = $this->orders->eligible_orders( 100, $show );
 
 		ob_start();
-		include PTT_KARGO_WC_DIR . 'admin/views/orders-table.php';
+		include BARKODA_DIR . 'admin/views/orders-table.php';
 		$html = ob_get_clean();
 
 		wp_send_json_success(
@@ -520,7 +520,7 @@ final class Admin_Page {
 				(string) ( $result['request'] ?? '' ),
 				$pending_to_store
 			);
-			do_action( 'ptt_kargo_wc_after_error', $order, $err_msg, $result );
+			do_action( 'barkoda_after_error', $order, $err_msg, $result );
 			wp_send_json_error(
 				[
 					'message'       => $result['mesaj'] ?? __( 'Sending to PTT failed.', 'barkoda-shipping-for-woocommerce' ),
@@ -550,7 +550,7 @@ final class Admin_Page {
 			$this->orders->mark_parca( $order, $barkodlar, $irsaliye_no );
 		}
 
-		do_action( 'ptt_kargo_wc_after_send', $order, $returned_barkod, $result );
+		do_action( 'barkoda_after_send', $order, $returned_barkod, $result );
 
 		wp_send_json_success(
 			[
@@ -607,7 +607,7 @@ final class Admin_Page {
 
 		if ( empty( $result['success'] ) ) {
 			$err = (string) ( $result['mesaj'] ?? __( 'The PTT cancellation request failed.', 'barkoda-shipping-for-woocommerce' ) );
-			do_action( 'ptt_kargo_wc_after_cancel_error', $order, $barkod, $err, $result );
+			do_action( 'barkoda_after_cancel_error', $order, $barkod, $err, $result );
 			wp_send_json_error(
 				[
 					'message' => $err,
@@ -626,7 +626,7 @@ final class Admin_Page {
 			(string) ( $result['request'] ?? '' )
 		);
 
-		do_action( 'ptt_kargo_wc_after_cancel', $order, $barkod, $result );
+		do_action( 'barkoda_after_cancel', $order, $barkod, $result );
 
 		wp_send_json_success(
 			[
@@ -669,7 +669,7 @@ final class Admin_Page {
 		$result = $this->client->siparis_istek_ekle2( $params );
 
 		if ( ! empty( $result['success'] ) ) {
-			do_action( 'ptt_kargo_wc_after_courier', $params, $result );
+			do_action( 'barkoda_after_courier', $params, $result );
 			wp_send_json_success(
 				[
 					'message'    => $result['mesaj'] ?? __( 'Courier request accepted.', 'barkoda-shipping-for-woocommerce' ),
@@ -772,7 +772,7 @@ final class Admin_Page {
 		$result['ref_fallback'] = $ref_fallback;
 
 		// Drop point info needs a barcode; it cannot be looked up by reference number.
-		$with_drop = (bool) apply_filters( 'ptt_kargo_wc_takip_with_drop_point', true, $order );
+		$with_drop = (bool) apply_filters( 'barkoda_takip_with_drop_point', true, $order );
 		if ( $with_drop && $barkod !== '' ) {
 			$drop = $this->client->get_drop_point_info( $barkod );
 			if ( ! empty( $drop['success'] ) ) {

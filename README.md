@@ -66,32 +66,32 @@ Create a test shipment first, email the barcode to `entegrasyon@ptt.gov.tr` for 
 
 ```php
 // Envelope fields before they go to PTT
-apply_filters( 'ptt_kargo_wc_kabul_fields', $fields );
-apply_filters( 'ptt_kargo_wc_soap_request_body', $body, $operation, $context );
+apply_filters( 'barkoda_kabul_fields', $fields );
+apply_filters( 'barkoda_soap_request_body', $body, $operation, $context );
 
 // Transport
-apply_filters( 'ptt_kargo_wc_http_timeout', 30, $operation );
-apply_filters( 'ptt_kargo_wc_sslverify', true, $operation );
+apply_filters( 'barkoda_http_timeout', 30, $operation );
+apply_filters( 'barkoda_sslverify', true, $operation );
 
 // Barcode and order classification
-apply_filters( 'ptt_kargo_wc_barkod', $barkod, $cursor, $prefix );
-apply_filters( 'ptt_kargo_wc_is_cod_order', $is_cod, $order, $cod_methods );
+apply_filters( 'barkoda_barkod', $barkod, $cursor, $prefix );
+apply_filters( 'barkoda_is_cod_order', $is_cod, $order, $cod_methods );
 
 // Auto-computed shipment data
-apply_filters( 'ptt_kargo_wc_resolved_weight', $grams, $order, $source );
-apply_filters( 'ptt_kargo_wc_resolved_dimensions', $dims, $order, $source );
-apply_filters( 'ptt_kargo_wc_resolved_desi', $desi, $order, $dims, $source );
+apply_filters( 'barkoda_resolved_weight', $grams, $order, $source );
+apply_filters( 'barkoda_resolved_dimensions', $dims, $order, $source );
+apply_filters( 'barkoda_resolved_desi', $desi, $order, $dims, $source );
 
 // Label rendering
-apply_filters( 'ptt_kargo_wc_label_html', $html, $order, $barkod );
-apply_filters( 'ptt_kargo_wc_label_header', $header_data, $order );
-apply_filters( 'ptt_kargo_wc_label_products', $items, $order );
+apply_filters( 'barkoda_label_html', $html, $order, $barkod );
+apply_filters( 'barkoda_label_header', $header_data, $order );
+apply_filters( 'barkoda_label_products', $items, $order );
 
 // Lifecycle
-do_action( 'ptt_kargo_wc_after_send', $order, $barkod, $result );
-do_action( 'ptt_kargo_wc_after_error', $order, $message, $result );
-do_action( 'ptt_kargo_wc_after_cancel', $order, $old_barkod, $result );
-do_action( 'ptt_kargo_wc_after_courier', $params, $result );
+do_action( 'barkoda_after_send', $order, $barkod, $result );
+do_action( 'barkoda_after_error', $order, $message, $result );
+do_action( 'barkoda_after_cancel', $order, $old_barkod, $result );
+do_action( 'barkoda_after_courier', $params, $result );
 ```
 </details>
 
@@ -100,13 +100,13 @@ do_action( 'ptt_kargo_wc_after_courier', $params, $result );
 
 | Meta key | Description |
 |---|---|
-| `_ptt_kargo_wc_barkod` | 13-digit PTT barcode |
-| `_ptt_kargo_wc_ref` | Customer reference number |
-| `_ptt_kargo_wc_status` | `pending` / `sent` / `error` / `canceled` |
-| `_ptt_kargo_wc_takip_url` | Tracking URL returned by PTT |
-| `_ptt_kargo_wc_dosya_adi` | File name used for cancellation |
-| `_ptt_kargo_wc_pending_barkod` | Barcode held for retry after a failure |
-| `_ptt_kargo_wc_parca_barkodlar` | Per-package barcodes for multi-package shipments (JSON) |
+| `_barkoda_barkod` | 13-digit PTT barcode |
+| `_barkoda_ref` | Customer reference number |
+| `_barkoda_status` | `pending` / `sent` / `error` / `canceled` |
+| `_barkoda_takip_url` | Tracking URL returned by PTT |
+| `_barkoda_dosya_adi` | File name used for cancellation |
+| `_barkoda_pending_barkod` | Barcode held for retry after a failure |
+| `_barkoda_parca_barkodlar` | Per-package barcodes for multi-package shipments (JSON) |
 </details>
 
 ## Known limitations

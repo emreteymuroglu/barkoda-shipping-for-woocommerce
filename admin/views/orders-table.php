@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view partial included from a class method, so the variables below are function-scoped rather than global.
 /** @var array $orders */
 
-$label = \PTT_Kargo_WC\Plugin::instance()->label();
+$label = \Barkoda_Shipping\Plugin::instance()->label();
 ?>
 <table class="wp-list-table widefat fixed striped wc-ptt-table">
 	<thead>
@@ -26,10 +26,10 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 			<?php
 		else :
 			foreach ( $orders as $ptt_order ) :
-				$ptt_status  = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_STATUS );
-				$barkod  = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_BARKOD );
-				$takip   = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_TAKIP_URL );
-				$hata    = $ptt_status === \PTT_Kargo_WC\Orders::STATUS_ERROR ? (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_LOG ) : '';
+				$ptt_status  = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_STATUS );
+				$barkod  = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_BARKOD );
+				$takip   = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_TAKIP_URL );
+				$hata    = $ptt_status === \Barkoda_Shipping\Orders::STATUS_ERROR ? (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_LOG ) : '';
 				$alici   = trim( $ptt_order->get_shipping_first_name() . ' ' . $ptt_order->get_shipping_last_name() ) ?: trim( $ptt_order->get_billing_first_name() . ' ' . $ptt_order->get_billing_last_name() );
 				$tel     = $ptt_order->get_billing_phone();
 				$adres_1 = $ptt_order->get_shipping_address_1() ?: $ptt_order->get_billing_address_1();
@@ -68,13 +68,13 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 				</td>
 				<td class="col-status">
 					<?php
-					if ( $ptt_status === \PTT_Kargo_WC\Orders::STATUS_SENT ) :
-						$ptt_mesaj       = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_LOG );
-						$raw_resp        = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_RAW );
-						$raw_req         = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_REQ );
-						$parca_adet      = (int) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PARCA_ADET );
-						$parca_barkodlar = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PARCA_BARKODLAR );
-						$irsaliye        = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_IRSALIYE_NO );
+					if ( $ptt_status === \Barkoda_Shipping\Orders::STATUS_SENT ) :
+						$ptt_mesaj       = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_LOG );
+						$raw_resp        = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_RAW );
+						$raw_req         = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_REQ );
+						$parca_adet      = (int) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PARCA_ADET );
+						$parca_barkodlar = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PARCA_BARKODLAR );
+						$irsaliye        = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_IRSALIYE_NO );
 						?>
 						<span class="status-badge status-sent"><?php esc_html_e( 'Sent', 'barkoda-shipping-for-woocommerce' ); ?></span><br>
 						<small class="barkod-mini"><?php echo esc_html( $barkod ); ?></small>
@@ -119,16 +119,16 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 								<?php endif; ?>
 							</details>
 						<?php endif; ?>
-					<?php elseif ( $ptt_status === \PTT_Kargo_WC\Orders::STATUS_CANCELED ) : ?>
+					<?php elseif ( $ptt_status === \Barkoda_Shipping\Orders::STATUS_CANCELED ) : ?>
 						<span class="status-badge status-canceled"><?php esc_html_e( 'Cancel', 'barkoda-shipping-for-woocommerce' ); ?></span>
-						<?php $cancel_msg = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_LOG ); ?>
+						<?php $cancel_msg = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_LOG ); ?>
 						<?php if ( $cancel_msg !== '' ) : ?>
 							<small class="ptt-mesaj" style="color:#646970;"><?php echo esc_html( $cancel_msg ); ?></small>
 						<?php endif; ?>
 						<?php
-								elseif ( $ptt_status === \PTT_Kargo_WC\Orders::STATUS_ERROR ) :
-									$raw_resp = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_RAW );
-									$raw_req  = (string) $ptt_order->get_meta( \PTT_Kargo_WC\Orders::META_PTT_REQ );
+								elseif ( $ptt_status === \Barkoda_Shipping\Orders::STATUS_ERROR ) :
+									$raw_resp = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_RAW );
+									$raw_req  = (string) $ptt_order->get_meta( \Barkoda_Shipping\Orders::META_PTT_REQ );
 									?>
 						<span class="status-badge status-error"><?php esc_html_e( 'Error', 'barkoda-shipping-for-woocommerce' ); ?></span>
 						<small class="error-msg"><?php echo esc_html( $hata ); ?></small>
@@ -150,16 +150,16 @@ $label = \PTT_Kargo_WC\Plugin::instance()->label();
 					<?php endif; ?>
 				</td>
 				<td class="col-actions">
-								<?php if ( $ptt_status !== \PTT_Kargo_WC\Orders::STATUS_SENT ) : ?>
+								<?php if ( $ptt_status !== \Barkoda_Shipping\Orders::STATUS_SENT ) : ?>
 						<button type="button" class="button button-primary js-ptt-send" data-order-id="<?php echo esc_attr( $ptt_order->get_id() ); ?>">
 									<?php
-									echo $ptt_status === \PTT_Kargo_WC\Orders::STATUS_CANCELED
+									echo $ptt_status === \Barkoda_Shipping\Orders::STATUS_CANCELED
 									? esc_html__( 'Resend', 'barkoda-shipping-for-woocommerce' )
 									: esc_html__( 'Ship', 'barkoda-shipping-for-woocommerce' );
 									?>
 						</button>
 					<?php endif; ?>
-								<?php if ( $barkod && $ptt_status === \PTT_Kargo_WC\Orders::STATUS_SENT ) : ?>
+								<?php if ( $barkod && $ptt_status === \Barkoda_Shipping\Orders::STATUS_SENT ) : ?>
 						<a class="button" href="<?php echo esc_url( $label->label_url( $ptt_order->get_id() ) ); ?>" target="_blank">
 									<?php esc_html_e( 'Print Label', 'barkoda-shipping-for-woocommerce' ); ?>
 						</a>
