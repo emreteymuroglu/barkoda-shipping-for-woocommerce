@@ -60,6 +60,7 @@ final class Orders {
 		];
 
 		if ( $show === 'pending' ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- wc_get_orders() offers no other way to filter on the plugin's own status meta; the result is bounded by $limit and only the plugin's admin screen runs it.
 			$args['meta_query'] = [
 				'relation' => 'OR',
 				[
@@ -73,6 +74,7 @@ final class Orders {
 				],
 			];
 		} elseif ( $show === 'sent' ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- as above: the documented wc_get_orders() filter, bounded by $limit.
 			$args['meta_query'] = [
 				[
 					'key'   => self::META_STATUS,
