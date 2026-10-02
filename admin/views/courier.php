@@ -22,7 +22,7 @@ if ( class_exists( '\Barkoda_Shipping\Plugin' ) ) {
 }
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-courier-wrap">
-	<h1><?php esc_html_e( 'PTT Kargo — Request Courier', 'barkoda-shipping-for-woocommerce' ); ?></h1>
+	<h1><?php esc_html_e( 'Request Courier', 'barkoda-shipping-for-woocommerce' ); ?></h1>
 	<p class="description">
 		<?php esc_html_e( 'Places a pickup order so PTT collects your shipments from your address (siparisIstekEkle2). Sender details are taken from the Sender tab.', 'barkoda-shipping-for-woocommerce' ); ?>
 	</p>

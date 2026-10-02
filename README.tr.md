@@ -2,6 +2,7 @@
 
 > WooCommerce siparişlerinden PTT'nin SOAP servisleri üzerinden kargo oluşturan, barkod üreten, 80mm termal etiket basan ve takip yapan ücretsiz WordPress eklentisi.
 
+[![WordPress Plugin Directory](https://img.shields.io/wordpress/plugin/v/barkoda-shipping-for-woocommerce.svg)](https://wordpress.org/plugins/barkoda-shipping-for-woocommerce/)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 ![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4)
 ![WooCommerce 8.0+](https://img.shields.io/badge/WooCommerce-8.0%2B-96588a)
@@ -32,9 +33,9 @@ WordPress 6.0+ · WooCommerce 8.0+ · PHP 7.4+ · PTT entegrasyon sözleşmesi
 
 ## Kurulum
 
-1. Son sürümün ZIP'ini [Releases](../../releases) sayfasından indirin.
-2. **Eklentiler → Yeni Ekle → Eklenti Yükle** ile yükleyip etkinleştirin.
-3. **PTT Kargo → Ayarlar** sayfasını açın.
+WordPress panelinde **Eklentiler → Yeni Ekle** bölümünden **Barkoda** aratın, kurun ve etkinleştirin. Ardından **Barkoda → Ayarlar** sayfasını açın.
+
+Eklenti dizindeki adresi: [wordpress.org/plugins/barkoda-shipping-for-woocommerce](https://wordpress.org/plugins/barkoda-shipping-for-woocommerce/). Arşivi elle kurmayı tercih ederseniz her sürüm burada da etiketlenmiş durumda.
 
 ## Ayarlar
 
@@ -54,10 +55,10 @@ Ayarlar yedi sekmeye bölünmüştür; yalnızca ilk üçü zorunludur.
 
 ## Günlük kullanım
 
-- **PTT Kargo → Kargo Siparişleri** → **Kargoya İlet**. Popup'ta müşteri bilgileri (eksik alanlar kırmızı işaretli), değiştirilebilir otomatik ağırlık/desi, kapıda ödeme bilgisi, sigorta toggle'ı ve parça adedi yer alır. Onayladığınızda etiket yeni sekmede açılır.
-- **Sipariş düzenleme ekranındaki** PTT Kargo metabox'ı aynı işlemi sunar; gönderim sonrası barkod, takip linki, etiket ve iptal butonlarını gösterir.
+- **Barkoda → Kargo Siparişleri** → **Kargoya İlet**. Popup'ta müşteri bilgileri (eksik alanlar kırmızı işaretli), değiştirilebilir otomatik ağırlık/desi, kapıda ödeme bilgisi, sigorta toggle'ı ve parça adedi yer alır. Onayladığınızda etiket yeni sekmede açılır.
+- **Sipariş düzenleme ekranındaki** Barkoda paneli aynı işlemi sunar; gönderim sonrası barkod, takip linki, etiket ve iptal butonlarını gösterir.
 - WooCommerce sipariş listesindeki **toplu işlemler** ile seçili siparişleri topluca gönderebilir ya da etiketlerini bastırabilirsiniz.
-- **PTT Kargo → Kurye Çağır** adresinizden toplama talebi oluşturur.
+- **Barkoda → Kurye Çağır** adresinizden toplama talebi oluşturur.
 
 ## Geliştirici notları
 

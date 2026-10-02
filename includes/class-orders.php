@@ -501,7 +501,7 @@ final class Orders {
 		$order->add_order_note(
 			sprintf(
 			/* translators: 1: barcode 2: reference number 3: PTT response message */
-				__( 'PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s', 'barkoda-shipping-for-woocommerce' ),
+				__( 'Barkoda: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s', 'barkoda-shipping-for-woocommerce' ),
 				$barkod,
 				$ref,
 				$mesaj !== '' ? $mesaj : '-'
@@ -528,7 +528,7 @@ final class Orders {
 			$order->update_meta_data( self::META_PENDING_BARKOD, $pending_barkod );
 		}
 		$order->save();
-		$order->add_order_note( __( 'PTT Kargo error: ', 'barkoda-shipping-for-woocommerce' ) . $mesaj );
+		$order->add_order_note( __( 'Barkoda error: ', 'barkoda-shipping-for-woocommerce' ) . $mesaj );
 	}
 
 	/**
@@ -588,7 +588,7 @@ final class Orders {
 		$order->add_order_note(
 			sprintf(
 			/* translators: 1: previous barcode 2: PTT response message */
-				__( 'PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s', 'barkoda-shipping-for-woocommerce' ),
+				__( 'Barkoda: shipment cancelled (previous barcode: %1$s). PTT response: %2$s', 'barkoda-shipping-for-woocommerce' ),
 				$eski_barkod !== '' ? $eski_barkod : '-',
 				$mesaj !== '' ? $mesaj : '-'
 			)

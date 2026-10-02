@@ -36,8 +36,8 @@ msgid "Emre Teymuroglu"
 msgstr "Emre Teymuroglu"
 
 #: admin/views/courier.php:25
-msgid "PTT Kargo — Request Courier"
-msgstr "PTT Kargo — Kurye Çağır"
+msgid "Request Courier"
+msgstr "Kurye Çağır"
 
 #: admin/views/courier.php:27
 msgid "Places a pickup order so PTT collects your shipments from your address (siparisIstekEkle2). Sender details are taken from the Sender tab."
@@ -465,7 +465,7 @@ msgstr "Müşteri Bildirimleri"
 
 #: admin/views/settings.php:57
 msgid "Barkoda Shipping for WooCommerce — Settings"
-msgstr "WC PTT Kargo — Ayarlar"
+msgstr "Barkoda — Ayarlar"
 
 #: admin/views/settings.php:86
 msgid "Save Settings"
@@ -847,7 +847,7 @@ msgstr "Hatırlatma:"
 
 #: admin/views/settings/payment.php:90
 msgid "Cash-on-delivery shipments are sent to PTT as collect-on-delivery. PTT transfers the collected amount to your Postal Cheque account. Contact your PTT branch to verify the account."
-msgstr "Kapıda ödemeli kargolar PTT tarafına \\\"Tahsilatlı\\\" olarak iletilir. Toplanan tutar PTT tarafından senin Posta Çeki hesabına aktarılır. Hesap doğrulaması için PTT şubene başvur."
+msgstr "Kapıda ödemeli kargolar PTT tarafına \"Tahsilatlı\" olarak iletilir. Toplanan tutar PTT tarafından senin Posta Çeki hesabına aktarılır. Hesap doğrulaması için PTT şubene başvur."
 
 #: admin/views/settings/payment.php:95
 msgid "Insurance is toggled per order in the Ship popup. When enabled, the PTT envelope carries:"
@@ -1007,7 +1007,7 @@ msgstr "İade Telefon"
 
 #: admin/views/settings/sender.php:111
 msgid "10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
-msgstr "PTT 10 hane (5xxxxxxxxx). Başında 0 veya 90 olsa otomatik kırpılır."
+msgstr "10 hane (5xxxxxxxxx). Başında 0 veya 90 olsa otomatik kırpılır."
 
 #: admin/views/settings/sender.php:115
 msgid "Return Email"
@@ -1345,8 +1345,8 @@ msgstr "Hiçbir siparişte basılabilir barkod bulunamadı."
 #. translators: %d: number of labels in the document
 #: includes/class-label.php:131
 #, php-format
-msgid "PTT Bulk Labels (%d)"
-msgstr "PTT Toplu Etiket (%d adet)"
+msgid "Bulk Labels (%d)"
+msgstr "Toplu Etiket (%d adet)"
 
 #: includes/class-label.php:168
 msgid "No PTT barcode has been created for this order yet."
@@ -1387,18 +1387,18 @@ msgstr "Kargo Barkodu"
 #. translators: 1: barcode 2: reference number 3: PTT response message
 #: includes/class-orders.php:504
 #, php-format
-msgid "PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
-msgstr "PTT Kargo: Gönderi oluşturuldu. Barkod: %1$s, Referans: %2$s. PTT cevabı: %3$s"
+msgid "Barkoda: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
+msgstr "Gönderi oluşturuldu. Barkod: %1$s, Referans: %2$s. PTT cevabı: %3$s"
 
 #: includes/class-orders.php:531
-msgid "PTT Kargo error: "
-msgstr "PTT Kargo hatası: "
+msgid "Barkoda error: "
+msgstr "Kargo hatası: "
 
 #. translators: 1: previous barcode 2: PTT response message
 #: includes/class-orders.php:591
 #, php-format
-msgid "PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
-msgstr "PTT Kargo: Gönderi iptal edildi (eski barkod: %1$s). PTT cevabı: %2$s"
+msgid "Barkoda: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
+msgstr "Gönderi iptal edildi (eski barkod: %1$s). PTT cevabı: %2$s"
 
 #: includes/class-ptt-client.php:30
 #: includes/class-ptt-client.php:180
@@ -1512,29 +1512,25 @@ msgid "The barcode range start cannot be greater than the end."
 msgstr "Barkod aralığı başlangıcı bitişten büyük olamaz."
 
 #: includes/class-wc-integration.php:105
-msgid "PTT Kargo: Send"
-msgstr "PTT Kargo: Gönder"
+msgid "Barkoda: Send"
+msgstr "Barkoda: Kargoya İlet"
 
 #: includes/class-wc-integration.php:106
-msgid "PTT Kargo: Print Labels in Bulk"
-msgstr "PTT Kargo: Toplu Etiket Bas"
+msgid "Barkoda: Print Labels in Bulk"
+msgstr "Barkoda: Toplu Etiket Bas"
 
 #. translators: 1: sent count, 2: skipped count, 3: error count
 #: includes/class-wc-integration.php:216
 #, php-format
-msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
-msgstr "PTT Kargo bulk: %1$d gönderildi, %2$d atlandı (zaten barkodlu), %3$d hata."
+msgid "Barkoda bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
+msgstr "Toplu gönderim: %1$d gönderildi, %2$d atlandı (zaten barkodlu), %3$d hata."
 
 #: barkoda-shipping-for-woocommerce.php:92
 msgid "Barkoda Shipping for WooCommerce requires WooCommerce to be installed and active."
-msgstr "WC PTT Kargo eklentisi için WooCommerce gereklidir."
+msgstr "Barkoda Shipping for WooCommerce eklentisi WooCommerce gerektirir."
 
 #. translators: %s: PHP version running on the server.
 #: barkoda-shipping-for-woocommerce.php:39
 #, php-format
 msgid "Barkoda Shipping for WooCommerce requires PHP 7.4 or newer. This server runs %s."
 msgstr "Barkoda Shipping for WooCommerce PHP 7.4 veya üstünü gerektirir. Bu sunucuda %s çalışıyor."
-
-#: admin/views/logs.php:20
-msgid "PTT Logs"
-msgstr ""

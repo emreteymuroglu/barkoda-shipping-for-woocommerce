@@ -17,7 +17,7 @@ $total = \Barkoda_Shipping\Logs::count();
 $nonce = wp_create_nonce( 'barkoda' );
 ?>
 <div class="wrap wc-ptt-wrap wc-ptt-logs-wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Logs', 'barkoda-shipping-for-woocommerce' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Integration Log', 'barkoda-shipping-for-woocommerce' ); ?></h1>
 	<button type="button" class="page-title-action" id="wc-ptt-clear-logs" data-nonce="<?php echo esc_attr( $nonce ); ?>">
 		<?php esc_html_e( 'Clear All', 'barkoda-shipping-for-woocommerce' ); ?>
 	</button>

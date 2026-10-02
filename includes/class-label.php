@@ -128,7 +128,7 @@ final class Label {
 <html lang="<?php echo esc_attr( get_bloginfo( 'language' ) ); ?>">
 <head>
 	<meta charset="UTF-8">
-	<title><?php /* translators: %d: number of labels in the document */ echo esc_html( sprintf( __( 'PTT Bulk Labels (%d)', 'barkoda-shipping-for-woocommerce' ), $count ) ); ?></title>
+	<title><?php /* translators: %d: number of labels in the document */ echo esc_html( sprintf( __( 'Bulk Labels (%d)', 'barkoda-shipping-for-woocommerce' ), $count ) ); ?></title>
 	<?php wp_print_styles( self::STYLE_HANDLE ); ?>
 </head>
 <body class="ptt-label-bulk">

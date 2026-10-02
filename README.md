@@ -2,6 +2,7 @@
 
 > Create PTT Kargo shipments from WooCommerce orders over PTT's SOAP API: barcodes, 80mm thermal labels, tracking and courier pickup.
 
+[![WordPress Plugin Directory](https://img.shields.io/wordpress/plugin/v/barkoda-shipping-for-woocommerce.svg)](https://wordpress.org/plugins/barkoda-shipping-for-woocommerce/)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
 ![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-777bb4)
 ![WooCommerce 8.0+](https://img.shields.io/badge/WooCommerce-8.0%2B-96588a)
@@ -32,9 +33,9 @@ WordPress 6.0+ · WooCommerce 8.0+ · PHP 7.4+ · a PTT integration contract
 
 ## Installation
 
-1. Download the latest ZIP from [Releases](../../releases).
-2. **Plugins → Add New → Upload Plugin**, then activate.
-3. Open **PTT Kargo → Settings**.
+In WordPress, go to **Plugins → Add New**, search for **Barkoda**, install and activate. Then open **Barkoda → Settings**.
+
+The plugin is also on the directory at [wordpress.org/plugins/barkoda-shipping-for-woocommerce](https://wordpress.org/plugins/barkoda-shipping-for-woocommerce/), and each release is tagged here if you would rather install the archive by hand.
 
 ## Setup
 
@@ -54,10 +55,10 @@ Create a test shipment first, email the barcode to `entegrasyon@ptt.gov.tr` for 
 
 ## Daily use
 
-- **PTT Kargo → Shipping Orders** → **Ship**. The popup shows recipient data (missing fields flagged in red), auto-computed weight and dimensions you can override, the COD notice, the insurance toggle and a package count. Confirm and the label opens in a new tab.
-- The **order edit screen** has the same action in a PTT Kargo metabox, plus barcode, tracking link, label, and cancel once shipped.
+- **Barkoda → Shipping Orders** → **Ship**. The popup shows recipient data (missing fields flagged in red), auto-computed weight and dimensions you can override, the COD notice, the insurance toggle and a package count. Confirm and the label opens in a new tab.
+- The **order edit screen** has the same action in a Barkoda panel, plus barcode, tracking link, label, and cancel once shipped.
 - **Bulk actions** on the WooCommerce order list ship or print labels for a whole selection.
-- **PTT Kargo → Request Courier** sends a pickup request for collection from your address.
+- **Barkoda → Request Courier** sends a pickup request for collection from your address.
 
 ## Developer notes
 

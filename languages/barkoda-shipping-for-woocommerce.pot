@@ -36,7 +36,7 @@ msgid "Emre Teymuroglu"
 msgstr ""
 
 #: admin/views/courier.php:25
-msgid "PTT Kargo — Request Courier"
+msgid "Request Courier"
 msgstr ""
 
 #: admin/views/courier.php:27
@@ -140,10 +140,6 @@ msgstr ""
 
 #: admin/views/courier.php:125
 msgid "Edit sender settings →"
-msgstr ""
-
-#: admin/views/logs.php:20
-msgid "PTT Logs"
 msgstr ""
 
 #: admin/views/logs.php:22
@@ -1359,7 +1355,7 @@ msgstr ""
 #. translators: %d: number of labels in the document
 #: includes/class-label.php:131
 #, php-format
-msgid "PTT Bulk Labels (%d)"
+msgid "Bulk Labels (%d)"
 msgstr ""
 
 #: includes/class-label.php:168
@@ -1401,17 +1397,17 @@ msgstr ""
 #. translators: 1: barcode 2: reference number 3: PTT response message
 #: includes/class-orders.php:504
 #, php-format
-msgid "PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
+msgid "Barkoda: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
 msgstr ""
 
 #: includes/class-orders.php:531
-msgid "PTT Kargo error: "
+msgid "Barkoda error: "
 msgstr ""
 
 #. translators: 1: previous barcode 2: PTT response message
 #: includes/class-orders.php:591
 #, php-format
-msgid "PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
+msgid "Barkoda: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
 msgstr ""
 
 #: includes/class-ptt-client.php:30
@@ -1526,15 +1522,15 @@ msgid "The barcode range start cannot be greater than the end."
 msgstr ""
 
 #: includes/class-wc-integration.php:105
-msgid "PTT Kargo: Send"
+msgid "Barkoda: Send"
 msgstr ""
 
 #: includes/class-wc-integration.php:106
-msgid "PTT Kargo: Print Labels in Bulk"
+msgid "Barkoda: Print Labels in Bulk"
 msgstr ""
 
 #. translators: 1: sent count, 2: skipped count, 3: error count
 #: includes/class-wc-integration.php:216
 #, php-format
-msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
+msgid "Barkoda bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
 msgstr ""

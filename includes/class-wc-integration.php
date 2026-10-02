@@ -102,8 +102,8 @@ final class WC_Integration {
 	}
 
 	public function add_bulk_action( array $actions ): array {
-		$actions['barkoda_send']  = __( 'PTT Kargo: Send', 'barkoda-shipping-for-woocommerce' );
-		$actions['barkoda_label'] = __( 'PTT Kargo: Print Labels in Bulk', 'barkoda-shipping-for-woocommerce' );
+		$actions['barkoda_send']  = __( 'Barkoda: Send', 'barkoda-shipping-for-woocommerce' );
+		$actions['barkoda_label'] = __( 'Barkoda: Print Labels in Bulk', 'barkoda-shipping-for-woocommerce' );
 		return $actions;
 	}
 
@@ -213,7 +213,7 @@ final class WC_Integration {
 		echo esc_html(
 			sprintf(
 				/* translators: 1: sent count, 2: skipped count, 3: error count */
-				__( 'PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed.', 'barkoda-shipping-for-woocommerce' ),
+				__( 'Barkoda bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed.', 'barkoda-shipping-for-woocommerce' ),
 				$sent,
 				$skip,
 				$err

@@ -110,7 +110,7 @@ Yes. The Turkish translation is served through translate.wordpress.org, so WordP
 
 == Screenshots ==
 
-1. The order list with the Ship action and PTT status per order.
+1. The order list, with the shipping status of each order and the action that creates the shipment.
 2. The shipment popup, showing recipient data, auto-computed weight and dimensions, and the insurance toggle.
 3. An 80mm thermal label with the Code128 barcode.
 4. The panel on the order edit screen, with the barcode, the tracking link and the label and cancel actions.
