@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Barkoda Shipping for WooCommerce 2.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordpress-ptt-kargo\n"
+"Project-Id-Version: Barkoda Shipping for WooCommerce 2.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ptt-kargo-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-28T20:40:50+00:00\n"
+"POT-Creation-Date: 2026-10-02T14:19:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: barkoda-shipping-for-woocommerce\n"
@@ -35,990 +35,995 @@ msgstr ""
 msgid "Emre Teymuroglu"
 msgstr ""
 
-#: admin/views/courier.php:23
+#: admin/views/courier.php:25
 msgid "PTT Kargo — Request Courier"
 msgstr ""
 
-#: admin/views/courier.php:25
+#: admin/views/courier.php:27
 msgid "Places a pickup order so PTT collects your shipments from your address (siparisIstekEkle2). Sender details are taken from the Sender tab."
 msgstr ""
 
-#: admin/views/courier.php:30
+#: admin/views/courier.php:32
 msgid "Pickup Details"
 msgstr ""
 
-#: admin/views/courier.php:35
-#: includes/class-admin-page.php:192
+#: admin/views/courier.php:37
+#: includes/class-admin-page.php:195
 msgid "Package Count"
 msgstr ""
 
 #. translators: %d: number of orders sent to PTT but not yet collected
-#: admin/views/courier.php:42
+#: admin/views/courier.php:44
 #, php-format
 msgid "%d order(s) sent to PTT and awaiting acceptance — shown as a reference for the pickup quantity."
 msgstr ""
 
-#: admin/views/courier.php:49
+#: admin/views/courier.php:51
 msgid "Total Weight (grams)"
 msgstr ""
 
-#: admin/views/courier.php:51
-#: admin/views/courier.php:57
+#: admin/views/courier.php:53
+#: admin/views/courier.php:59
 msgid "Optional"
 msgstr ""
 
-#: admin/views/courier.php:55
+#: admin/views/courier.php:57
 msgid "Total Volumetric Weight"
 msgstr ""
 
-#: admin/views/courier.php:61
+#: admin/views/courier.php:63
 msgid "Estimated Dimensions (cm)"
 msgstr ""
 
-#: admin/views/courier.php:63
+#: admin/views/courier.php:65
 msgid "Width"
 msgstr ""
 
-#: admin/views/courier.php:65
+#: admin/views/courier.php:67
 msgid "Length"
 msgstr ""
 
-#: admin/views/courier.php:67
+#: admin/views/courier.php:69
 msgid "Height"
 msgstr ""
 
-#: admin/views/courier.php:71
+#: admin/views/courier.php:73
 msgid "Additional Services"
 msgstr ""
 
-#: admin/views/courier.php:73
+#: admin/views/courier.php:75
 msgid "e.g. DK (insured), DKUA (insured + charge recipient)"
 msgstr ""
 
-#: admin/views/courier.php:75
+#: admin/views/courier.php:77
 msgid "Ask your PTT regional office which additional service codes your contract includes. Multiple codes are merged alphabetically (e.g. DKUA)."
 msgstr ""
 
-#: admin/views/courier.php:80
-#: includes/class-admin-page.php:167
+#: admin/views/courier.php:82
+#: includes/class-admin-page.php:169
 msgid "Insured Value (TRY)"
 msgstr ""
 
-#: admin/views/courier.php:82
+#: admin/views/courier.php:84
 msgid "Leave empty if you do not want insurance"
 msgstr ""
 
-#: admin/views/courier.php:83
+#: admin/views/courier.php:85
 msgid "If you fill this in, you must add DK to the additional services field."
 msgstr ""
 
-#: admin/views/courier.php:87
+#: admin/views/courier.php:89
 msgid "Appointment (optional)"
 msgstr ""
 
-#: admin/views/courier.php:89
+#: admin/views/courier.php:91
 msgid "Start"
 msgstr ""
 
-#: admin/views/courier.php:91
+#: admin/views/courier.php:93
 msgid "End"
 msgstr ""
 
-#: admin/views/courier.php:92
+#: admin/views/courier.php:94
 msgid "The appointment format PTT accepts depends on your contract; leaving this empty is usually fine."
 msgstr ""
 
-#: admin/views/courier.php:100
+#: admin/views/courier.php:102
 #: includes/class-admin-page.php:76
 #: includes/class-admin-page.php:77
 msgid "Request Courier"
 msgstr ""
 
-#: admin/views/courier.php:110
+#: admin/views/courier.php:112
 msgid "Pickup Address"
 msgstr ""
 
-#: admin/views/courier.php:123
+#: admin/views/courier.php:125
 msgid "Edit sender settings →"
 msgstr ""
 
-#: admin/views/logs.php:16
-#: includes/class-admin-page.php:94
+#: admin/views/logs.php:20
 msgid "PTT Logs"
 msgstr ""
 
-#: admin/views/logs.php:18
+#: admin/views/logs.php:22
 msgid "Clear All"
 msgstr ""
 
 #. translators: %d: log count
-#: admin/views/logs.php:27
+#: admin/views/logs.php:31
 #, php-format
 msgid "The last %d integration records, newest first. Automatically capped at 500 records."
 msgstr ""
 
 #. translators: %d: total number of log records
-#: admin/views/logs.php:33
+#: admin/views/logs.php:37
 #, php-format
 msgid "%d records in total"
 msgstr ""
 
-#: admin/views/logs.php:41
-#: admin/views/orders-list.php:15
+#: admin/views/logs.php:45
+#: admin/views/orders-list.php:17
 msgid "All"
 msgstr ""
 
-#: admin/views/logs.php:42
+#: admin/views/logs.php:46
 msgid "Successful"
 msgstr ""
 
-#: admin/views/logs.php:43
-#: admin/views/order-metabox.php:68
-#: admin/views/orders-table.php:131
-#: includes/class-admin-page.php:221
+#: admin/views/logs.php:47
+#: admin/views/order-metabox.php:70
+#: admin/views/orders-table.php:133
+#: includes/class-admin-page.php:224
 #: includes/class-wc-integration.php:95
 msgid "Error"
 msgstr ""
 
-#: admin/views/logs.php:58
-#: admin/views/orders-table.php:13
+#: admin/views/logs.php:61
+#: admin/views/orders-table.php:15
 msgid "Date"
 msgstr ""
 
-#: admin/views/logs.php:59
+#: admin/views/logs.php:62
 msgid "Operation"
 msgstr ""
 
-#: admin/views/logs.php:60
-#: admin/views/orders-table.php:12
+#: admin/views/logs.php:63
+#: admin/views/orders-table.php:14
 msgid "Order"
 msgstr ""
 
-#: admin/views/logs.php:61
+#: admin/views/logs.php:64
 msgid "Status"
 msgstr ""
 
-#: admin/views/logs.php:62
+#: admin/views/logs.php:65
 msgid "Message"
 msgstr ""
 
-#: admin/views/logs.php:67
+#: admin/views/logs.php:70
 msgid "No log records yet."
 msgstr ""
 
-#: admin/views/logs.php:108
+#: admin/views/logs.php:111
 msgid "Raw data"
 msgstr ""
 
-#: admin/views/logs.php:110
+#: admin/views/logs.php:113
 msgid "Request:"
 msgstr ""
 
-#: admin/views/logs.php:114
+#: admin/views/logs.php:117
 msgid "Response:"
 msgstr ""
 
-#: admin/views/logs.php:134
-msgid "All log records will be deleted. Are you sure?"
-msgstr ""
-
-#: admin/views/order-metabox.php:18
-#: admin/views/orders-list.php:14
-#: admin/views/orders-table.php:77
+#: admin/views/order-metabox.php:20
+#: admin/views/orders-list.php:16
+#: admin/views/orders-table.php:79
 #: includes/class-wc-integration.php:92
 msgid "Sent"
 msgstr ""
 
-#: admin/views/order-metabox.php:21
-#: includes/class-admin-page.php:157
+#: admin/views/order-metabox.php:23
+#: includes/class-admin-page.php:159
 msgid "Barcode:"
 msgstr ""
 
-#: admin/views/order-metabox.php:28
-#: admin/views/orders-table.php:105
+#: admin/views/order-metabox.php:30
+#: admin/views/orders-table.php:107
 msgid "PTT tracking link"
 msgstr ""
 
-#: admin/views/order-metabox.php:33
-#: admin/views/orders-table.php:162
+#: admin/views/order-metabox.php:35
+#: admin/views/orders-table.php:164
 msgid "Print Label"
 msgstr ""
 
-#: admin/views/order-metabox.php:36
-#: admin/views/orders-table.php:165
+#: admin/views/order-metabox.php:38
+#: admin/views/orders-table.php:167
 msgid "Track"
 msgstr ""
 
-#: admin/views/order-metabox.php:42
-#: includes/class-admin-page.php:165
+#: admin/views/order-metabox.php:44
+#: includes/class-admin-page.php:167
 msgid "Cancel PTT Shipment"
 msgstr ""
 
-#: admin/views/order-metabox.php:45
+#: admin/views/order-metabox.php:47
 msgid "Only possible while PTT has not yet accepted the shipment."
 msgstr ""
 
-#: admin/views/order-metabox.php:50
+#: admin/views/order-metabox.php:52
 msgid "Cancelled"
 msgstr ""
 
-#: admin/views/order-metabox.php:56
+#: admin/views/order-metabox.php:58
 msgid "This order was cancelled at PTT. Resending will consume a new barcode."
 msgstr ""
 
-#: admin/views/order-metabox.php:60
-#: admin/views/orders-table.php:155
+#: admin/views/order-metabox.php:62
+#: admin/views/orders-table.php:157
 msgid "Resend"
 msgstr ""
 
-#: admin/views/order-metabox.php:70
-#: includes/class-admin-page.php:153
-#: includes/class-admin-page.php:305
-#: includes/class-admin-page.php:506
+#: admin/views/order-metabox.php:72
+#: includes/class-admin-page.php:155
+#: includes/class-admin-page.php:312
+#: includes/class-admin-page.php:513
 msgid "Unknown error"
 msgstr ""
 
 #. translators: %s: pending barcode
-#: admin/views/order-metabox.php:76
+#: admin/views/order-metabox.php:78
 #, php-format
 msgid "Consumed barcode: %s — it will be reused on the next attempt."
 msgstr ""
 
-#: admin/views/order-metabox.php:82
+#: admin/views/order-metabox.php:84
 msgid "Try Again"
 msgstr ""
 
-#: admin/views/order-metabox.php:87
+#: admin/views/order-metabox.php:89
 msgid "Not sent yet"
 msgstr ""
 
-#: admin/views/order-metabox.php:92
+#: admin/views/order-metabox.php:94
 msgid "Send to PTT Kargo"
 msgstr ""
 
-#: admin/views/orders-list.php:9
+#: admin/views/orders-list.php:11
 msgid "PTT Kargo Orders"
 msgstr ""
 
-#: admin/views/orders-list.php:13
+#: admin/views/orders-list.php:15
 msgid "Pending"
 msgstr ""
 
-#: admin/views/orders-list.php:20
+#: admin/views/orders-list.php:22
 msgid "Refresh"
 msgstr ""
 
 #. translators: %d: number of labels
-#: admin/views/orders-list.php:37
+#: admin/views/orders-list.php:39
 #, php-format
 msgid "Print Labels in Bulk (%d)"
 msgstr ""
 
-#: admin/views/orders-list.php:41
-#: includes/class-admin-page.php:151
+#: admin/views/orders-list.php:43
+#: includes/class-admin-page.php:153
 msgid "order"
 msgstr ""
 
-#: admin/views/orders-list.php:53
-#: includes/class-admin-page.php:146
+#: admin/views/orders-list.php:55
+#: includes/class-admin-page.php:148
 msgid "Shipment Summary"
 msgstr ""
 
-#: admin/views/orders-list.php:56
+#: admin/views/orders-list.php:58
 msgid "Some fields are missing — those outlined in red. You can leave them empty or fill them in; confirming sends the shipment."
 msgstr ""
 
-#: admin/views/orders-list.php:61
+#: admin/views/orders-list.php:63
 msgid "Customer Details"
 msgstr ""
 
-#: admin/views/orders-list.php:64
+#: admin/views/orders-list.php:66
 msgid "Shipment Details"
 msgstr ""
 
-#: admin/views/orders-list.php:65
+#: admin/views/orders-list.php:67
 msgid "(leave empty to use the auto-computed value)"
 msgstr ""
 
-#: admin/views/orders-list.php:71
-#: admin/views/settings/payment.php:91
+#: admin/views/orders-list.php:73
+#: admin/views/settings/payment.php:93
 msgid "Insurance (Valuable Goods)"
 msgstr ""
 
-#: admin/views/orders-list.php:74
+#: admin/views/orders-list.php:76
 msgid "Multiple Packages"
 msgstr ""
 
-#: admin/views/orders-list.php:75
+#: admin/views/orders-list.php:77
 msgid "(if the order ships as more than one package)"
 msgstr ""
 
-#: admin/views/orders-list.php:80
-#: admin/views/orders-table.php:121
-#: admin/views/orders-table.php:168
-#: includes/class-admin-page.php:150
+#: admin/views/orders-list.php:82
+#: admin/views/orders-table.php:123
+#: admin/views/orders-table.php:170
+#: includes/class-admin-page.php:152
 #: includes/class-wc-integration.php:97
 msgid "Cancel"
 msgstr ""
 
-#: admin/views/orders-list.php:81
-#: includes/class-admin-page.php:149
+#: admin/views/orders-list.php:83
+#: includes/class-admin-page.php:151
 msgid "Confirm and Send"
 msgstr ""
 
-#: admin/views/orders-table.php:14
-#: includes/class-admin-page.php:147
+#: admin/views/orders-table.php:16
+#: includes/class-admin-page.php:149
 msgid "Customer"
 msgstr ""
 
-#: admin/views/orders-table.php:15
-#: admin/views/settings/sender.php:29
-#: includes/class-admin-page.php:176
+#: admin/views/orders-table.php:17
+#: admin/views/settings/sender.php:31
+#: includes/class-admin-page.php:179
 msgid "Address"
 msgstr ""
 
-#: admin/views/orders-table.php:16
-#: includes/class-label.php:433
+#: admin/views/orders-table.php:18
+#: includes/class-label.php:390
 msgid "Products"
 msgstr ""
 
-#: admin/views/orders-table.php:17
+#: admin/views/orders-table.php:19
 msgid "PTT Status"
 msgstr ""
 
-#: admin/views/orders-table.php:18
-#: includes/class-admin-page.php:207
+#: admin/views/orders-table.php:20
+#: includes/class-admin-page.php:210
 msgid "Action"
 msgstr ""
 
-#: admin/views/orders-table.php:23
+#: admin/views/orders-table.php:25
 msgid "No orders to show."
 msgstr ""
 
 #. translators: %d: number of packages in the shipment
-#: admin/views/orders-table.php:85
+#: admin/views/orders-table.php:87
 #, php-format
 msgid "%d packages"
 msgstr ""
 
-#: admin/views/orders-table.php:109
-#: admin/views/orders-table.php:135
+#: admin/views/orders-table.php:111
+#: admin/views/orders-table.php:137
 msgid "Show raw data"
 msgstr ""
 
-#: admin/views/orders-table.php:111
-#: admin/views/orders-table.php:137
+#: admin/views/orders-table.php:113
+#: admin/views/orders-table.php:139
 msgid "Request (SOAP sent):"
 msgstr ""
 
-#: admin/views/orders-table.php:115
-#: admin/views/orders-table.php:141
+#: admin/views/orders-table.php:117
+#: admin/views/orders-table.php:143
 msgid "Response (from PTT):"
 msgstr ""
 
-#: admin/views/orders-table.php:147
+#: admin/views/orders-table.php:149
 msgid "Waiting"
 msgstr ""
 
-#: admin/views/orders-table.php:156
-#: includes/class-admin-page.php:152
+#: admin/views/orders-table.php:158
+#: includes/class-admin-page.php:154
 msgid "Ship"
 msgstr ""
 
-#: admin/views/orders-table.php:167
+#: admin/views/orders-table.php:169
 msgid "Cancel the PTT shipment (only while it has not been accepted)"
 msgstr ""
 
-#: admin/views/settings.php:12
+#: admin/views/settings.php:14
 msgid "PTT Connection"
 msgstr ""
 
-#: admin/views/settings.php:16
-#: admin/views/settings/label.php:56
+#: admin/views/settings.php:18
+#: admin/views/settings/label.php:58
 msgid "Barcode"
 msgstr ""
 
-#: admin/views/settings.php:20
+#: admin/views/settings.php:22
 msgid "Sender"
 msgstr ""
 
-#: admin/views/settings.php:24
+#: admin/views/settings.php:26
 msgid "Label"
 msgstr ""
 
-#: admin/views/settings.php:28
+#: admin/views/settings.php:30
 msgid "Products & Filters"
 msgstr ""
 
-#: admin/views/settings.php:32
-#: admin/views/settings/defaults.php:8
+#: admin/views/settings.php:34
+#: admin/views/settings/defaults.php:10
 msgid "Shipment Defaults"
 msgstr ""
 
-#: admin/views/settings.php:36
+#: admin/views/settings.php:38
 msgid "Payment"
 msgstr ""
 
-#: admin/views/settings.php:40
-#: admin/views/settings/customer.php:43
+#: admin/views/settings.php:42
+#: admin/views/settings/customer.php:45
 msgid "Customer Notices"
 msgstr ""
 
-#: admin/views/settings.php:53
+#: admin/views/settings.php:57
 msgid "Barkoda Shipping for WooCommerce — Settings"
 msgstr ""
 
-#: admin/views/settings.php:82
+#: admin/views/settings.php:86
 msgid "Save Settings"
 msgstr ""
 
-#: admin/views/settings.php:87
+#: admin/views/settings.php:91
 msgid "Label Preview"
 msgstr ""
 
-#: admin/views/settings.php:91
+#: admin/views/settings.php:95
 msgid "Live Label Preview"
 msgstr ""
 
-#: admin/views/settings.php:93
+#: admin/views/settings.php:97
 msgid "The preview refreshes automatically as you change the form."
 msgstr ""
 
-#: admin/views/settings.php:108
+#: admin/views/settings.php:112
 msgid "Label preview"
 msgstr ""
 
-#: admin/views/settings.php:112
+#: admin/views/settings.php:116
 msgid "⚠ Rendered with sample data — the order details are placeholders."
 msgstr ""
 
-#: admin/views/settings/barcode.php:10
+#: admin/views/settings/barcode.php:12
 msgid "Barcode Range and Reference"
 msgstr ""
 
-#: admin/views/settings/barcode.php:11
+#: admin/views/settings/barcode.php:13
 msgid "PTT allocates you a 13-digit barcode range. The first 8 digits are a fixed prefix, the next 4 are a sequential serial number, and the last digit is an automatically calculated check digit."
 msgstr ""
 
-#: admin/views/settings/barcode.php:15
+#: admin/views/settings/barcode.php:17
 msgid "Barcode Prefix (8 digits)"
 msgstr ""
 
-#: admin/views/settings/barcode.php:18
+#: admin/views/settings/barcode.php:20
 msgid "The fixed 8-digit prefix stated in your PTT integration letter."
 msgstr ""
 
-#: admin/views/settings/barcode.php:22
+#: admin/views/settings/barcode.php:24
 msgid "Serial Number Range"
 msgstr ""
 
-#: admin/views/settings/barcode.php:28
+#: admin/views/settings/barcode.php:30
 msgid "The start and end serial numbers PTT allocated to you. Prefix + serial = 12 digits."
 msgstr ""
 
-#: admin/views/settings/barcode.php:30
+#: admin/views/settings/barcode.php:32
 msgid "Next serial to be used:"
 msgstr ""
 
 #. translators: %d: barcodes left in the allocated range
-#: admin/views/settings/barcode.php:35
+#: admin/views/settings/barcode.php:37
 #, php-format
 msgid "%d remaining"
 msgstr ""
 
-#: admin/views/settings/barcode.php:42
+#: admin/views/settings/barcode.php:44
 msgid "Customer Reference Prefix"
 msgstr ""
 
-#: admin/views/settings/barcode.php:45
+#: admin/views/settings/barcode.php:47
 msgid "A prefix added before the order ID. For example SHOP- sends SHOP-12345 to PTT. Can be left empty."
 msgstr ""
 
-#: admin/views/settings/barcode.php:51
+#: admin/views/settings/barcode.php:53
 msgid "Example:"
 msgstr ""
 
-#: admin/views/settings/barcode.php:52
+#: admin/views/settings/barcode.php:54
 msgid "Prefix \"27918802\" + serial \"0001\" → 12 digits \"279188020001\" + check digit (automatic) → 13 digits \"2791880200017\"."
 msgstr ""
 
-#: admin/views/settings/connection.php:8
+#: admin/views/settings/connection.php:10
 msgid "PTT Connection Details"
 msgstr ""
 
-#: admin/views/settings/connection.php:9
+#: admin/views/settings/connection.php:11
 msgid "Enter the customer number and password PTT issued for the integration service. Verify against the Test environment first."
 msgstr ""
 
-#: admin/views/settings/connection.php:13
+#: admin/views/settings/connection.php:15
 msgid "Environment"
 msgstr ""
 
-#: admin/views/settings/connection.php:16
+#: admin/views/settings/connection.php:18
 msgid "Test"
 msgstr ""
 
-#: admin/views/settings/connection.php:17
+#: admin/views/settings/connection.php:19
 msgid "Live (Production)"
 msgstr ""
 
-#: admin/views/settings/connection.php:19
+#: admin/views/settings/connection.php:21
 msgid "Switch to Live after PTT approves your integration."
 msgstr ""
 
-#: admin/views/settings/connection.php:23
+#: admin/views/settings/connection.php:25
 msgid "Customer Number"
 msgstr ""
 
-#: admin/views/settings/connection.php:26
+#: admin/views/settings/connection.php:28
 msgid "The numeric customer ID PTT issued when approving your integration."
 msgstr ""
 
-#: admin/views/settings/connection.php:30
+#: admin/views/settings/connection.php:32
 msgid "Password"
 msgstr ""
 
-#: admin/views/settings/connection.php:32
+#: admin/views/settings/connection.php:34
 msgid "Enter a new password to change it"
 msgstr ""
 
-#: admin/views/settings/connection.php:34
+#: admin/views/settings/connection.php:36
 msgid "A password is stored (AES-256 encrypted). Leave empty to keep it unchanged."
 msgstr ""
 
-#: admin/views/settings/connection.php:36
+#: admin/views/settings/connection.php:38
 msgid "Stored AES-256 encrypted, keyed from the WordPress AUTH_KEY."
 msgstr ""
 
-#: admin/views/settings/connection.php:41
+#: admin/views/settings/connection.php:43
 msgid "Connection Test"
 msgstr ""
 
-#: admin/views/settings/connection.php:45
+#: admin/views/settings/connection.php:47
 msgid "Test Connection"
 msgstr ""
 
-#: admin/views/settings/connection.php:48
+#: admin/views/settings/connection.php:50
 msgid "Sends a sample query to the PTT services using the details above. Works before saving too."
 msgstr ""
 
-#: admin/views/settings/customer.php:45
+#: admin/views/settings/customer.php:47
 msgid "Show the tracking number and a tracking link to the customer once a shipment has been created. Nothing is shown for orders that have not been sent to PTT."
 msgstr ""
 
-#: admin/views/settings/customer.php:50
+#: admin/views/settings/customer.php:52
 msgid "Customer Tracking"
 msgstr ""
 
-#: admin/views/settings/customer.php:54
+#: admin/views/settings/customer.php:56
 msgid "Show tracking details to customers"
 msgstr ""
 
-#: admin/views/settings/customer.php:57
+#: admin/views/settings/customer.php:59
 msgid "Turn this off to keep tracking visible only to store administrators."
 msgstr ""
 
-#: admin/views/settings/customer.php:63
+#: admin/views/settings/customer.php:65
 msgid "Include in Emails"
 msgstr ""
 
-#: admin/views/settings/customer.php:67
+#: admin/views/settings/customer.php:69
 msgid "No WooCommerce customer emails were found."
 msgstr ""
 
-#: admin/views/settings/customer.php:78
+#: admin/views/settings/customer.php:80
 msgid "Tracking is appended to the selected emails. Pick the one your store sends after shipping, which is usually the completed order email."
 msgstr ""
 
-#: admin/views/settings/customer.php:85
+#: admin/views/settings/customer.php:87
 msgid "My Account Page"
 msgstr ""
 
-#: admin/views/settings/customer.php:89
+#: admin/views/settings/customer.php:91
 msgid "Show tracking on the customer's order detail page"
 msgstr ""
 
-#: admin/views/settings/customer.php:96
+#: admin/views/settings/customer.php:98
 msgid "Emails are delivered through WordPress, so any SMTP plugin your store uses handles them automatically. No extra configuration is needed."
 msgstr ""
 
-#: admin/views/settings/defaults.php:9
+#: admin/views/settings/defaults.php:11
 msgid "PTT requires a weight and volumetric weight on every shipment. The sources below control the auto-compute behaviour; you can override them per order in the Ship popup."
 msgstr ""
 
-#: admin/views/settings/defaults.php:11
+#: admin/views/settings/defaults.php:13
 msgid "Weight / Volumetric Weight Source"
 msgstr ""
 
-#: admin/views/settings/defaults.php:14
+#: admin/views/settings/defaults.php:16
 msgid "Weight Source"
 msgstr ""
 
-#: admin/views/settings/defaults.php:18
+#: admin/views/settings/defaults.php:20
 msgid "Use a fixed default"
 msgstr ""
 
-#: admin/views/settings/defaults.php:19
+#: admin/views/settings/defaults.php:21
 msgid "Calculate from WooCommerce product weight (Σ weight × quantity)"
 msgstr ""
 
-#: admin/views/settings/defaults.php:20
+#: admin/views/settings/defaults.php:22
 msgid "Calculate from product weight, falling back to the fixed default"
 msgstr ""
 
-#: admin/views/settings/defaults.php:23
+#: admin/views/settings/defaults.php:25
 msgid "The WooCommerce weight unit is converted to grams automatically (g/kg/lbs/oz supported). Current unit:"
 msgstr ""
 
-#: admin/views/settings/defaults.php:29
+#: admin/views/settings/defaults.php:31
 msgid "Fixed Weight (grams)"
 msgstr ""
 
-#: admin/views/settings/defaults.php:32
+#: admin/views/settings/defaults.php:34
 msgid "grams"
 msgstr ""
 
-#: admin/views/settings/defaults.php:33
+#: admin/views/settings/defaults.php:35
 msgid "When \"Use a fixed default\" is selected above, every shipment uses this value. It is also the fallback in fallback mode."
 msgstr ""
 
-#: admin/views/settings/defaults.php:37
+#: admin/views/settings/defaults.php:39
 msgid "Dimension Source"
 msgstr ""
 
-#: admin/views/settings/defaults.php:41
+#: admin/views/settings/defaults.php:43
 msgid "Do not send dimensions (volumetric weight only)"
 msgstr ""
 
-#: admin/views/settings/defaults.php:42
+#: admin/views/settings/defaults.php:44
 msgid "Calculate from WooCommerce product dimensions (maximum per axis)"
 msgstr ""
 
-#: admin/views/settings/defaults.php:45
+#: admin/views/settings/defaults.php:47
 msgid "With product dimensions selected, the maximum width/length/height across all line items is used, assuming a single package. The volumetric weight formula is width × length × height / 3000."
 msgstr ""
 
-#: admin/views/settings/defaults.php:47
+#: admin/views/settings/defaults.php:49
 msgid "Current WooCommerce dimension unit:"
 msgstr ""
 
-#: admin/views/settings/defaults.php:53
+#: admin/views/settings/defaults.php:55
 msgid "Fixed Volumetric Weight"
 msgstr ""
 
-#: admin/views/settings/defaults.php:56
+#: admin/views/settings/defaults.php:58
 msgid "Used when the dimension source is set to not send dimensions. Start with 1 and adjust to your package volume."
 msgstr ""
 
-#: admin/views/settings/defaults.php:60
+#: admin/views/settings/defaults.php:62
 msgid "Additional Service Code"
 msgstr ""
 
-#: admin/views/settings/defaults.php:62
+#: admin/views/settings/defaults.php:64
 msgid "Can be left empty"
 msgstr ""
 
-#: admin/views/settings/defaults.php:64
+#: admin/views/settings/defaults.php:66
 msgid "PTT service codes are uppercase and alphabetical (e.g. DK = Valuable Goods). Several codes can be combined, such as DKUA. When cash on delivery is active, OS is added automatically and does not need to be entered here."
 msgstr ""
 
-#: admin/views/settings/defaults.php:71
+#: admin/views/settings/defaults.php:73
 msgid "If a product has no weight, fill in Product → General → Weight. The weight unit can be changed under WooCommerce > Settings > Products > Measurements."
 msgstr ""
 
-#: admin/views/settings/label.php:8
+#: admin/views/settings/label.php:10
 msgid "Label Appearance"
 msgstr ""
 
-#: admin/views/settings/label.php:9
+#: admin/views/settings/label.php:11
 msgid "Controls the label text and which blocks appear. The live preview on the right updates as you make changes."
 msgstr ""
 
-#: admin/views/settings/label.php:11
+#: admin/views/settings/label.php:13
 msgid "Branding Block (Top)"
 msgstr ""
 
-#: admin/views/settings/label.php:14
+#: admin/views/settings/label.php:16
 msgid "Logo"
 msgstr ""
 
-#: admin/views/settings/label.php:18
+#: admin/views/settings/label.php:20
 msgid "Select Image"
 msgstr ""
 
-#: admin/views/settings/label.php:19
+#: admin/views/settings/label.php:21
 msgid "Remove"
 msgstr ""
 
-#: admin/views/settings/label.php:26
+#: admin/views/settings/label.php:28
 msgid "Pick from the WordPress Media Library or enter a URL directly. It appears at roughly 60mm × 18mm on the label."
 msgstr ""
 
-#: admin/views/settings/label.php:30
+#: admin/views/settings/label.php:32
 msgid "Title"
 msgstr ""
 
-#: admin/views/settings/label.php:33
+#: admin/views/settings/label.php:35
 msgid "The heading printed at the top of the label, in uppercase. If empty, the sender name is used; if that is also empty, the site name."
 msgstr ""
 
-#: admin/views/settings/label.php:37
+#: admin/views/settings/label.php:39
 msgid "Subtitle"
 msgstr ""
 
-#: admin/views/settings/label.php:40
+#: admin/views/settings/label.php:42
 msgid "Small text printed under the title. Can be left empty."
 msgstr ""
 
-#: admin/views/settings/label.php:45
+#: admin/views/settings/label.php:47
 msgid "Label Sections"
 msgstr ""
 
-#: admin/views/settings/label.php:46
+#: admin/views/settings/label.php:48
 msgid "Tick the sections you want on the label. Section headings are hidden automatically when empty."
 msgstr ""
 
-#: admin/views/settings/label.php:49
+#: admin/views/settings/label.php:51
 msgid "Visible Blocks"
 msgstr ""
 
-#: admin/views/settings/label.php:53
+#: admin/views/settings/label.php:55
 msgid "Order Number + Date"
 msgstr ""
 
-#: admin/views/settings/label.php:54
+#: admin/views/settings/label.php:56
 msgid "Recipient Details"
 msgstr ""
 
-#: admin/views/settings/label.php:55
+#: admin/views/settings/label.php:57
 msgid "Product List"
 msgstr ""
 
-#: admin/views/settings/label.php:57
+#: admin/views/settings/label.php:59
 msgid "Sender Block (Bottom)"
 msgstr ""
 
-#: admin/views/settings/payment.php:26
+#: admin/views/settings/payment.php:28
 msgid "Cash on Delivery (COD) Mapping"
 msgstr ""
 
-#: admin/views/settings/payment.php:28
+#: admin/views/settings/payment.php:30
 msgid "The WooCommerce payment methods you tick here count as cash on delivery. Orders paid with them are sent to PTT with:"
 msgstr ""
 
-#: admin/views/settings/payment.php:36
+#: admin/views/settings/payment.php:38
 msgid "⚠ When COD is active, Sender → Postal Cheque Account Number must be filled in, otherwise PTT rejects the shipment."
 msgstr ""
 
-#: admin/views/settings/payment.php:41
+#: admin/views/settings/payment.php:43
 msgid "Cash on Delivery Methods"
 msgstr ""
 
-#: admin/views/settings/payment.php:44
+#: admin/views/settings/payment.php:46
 msgid "No payment methods found. Enable at least one under WooCommerce > Settings > Payments."
 msgstr ""
 
-#: admin/views/settings/payment.php:59
+#: admin/views/settings/payment.php:61
 msgid "currently inactive"
 msgstr ""
 
-#: admin/views/settings/payment.php:65
+#: admin/views/settings/payment.php:67
 msgid "The usual choice is WooCommerce Cash on Delivery (cod). Card and online payments count as normal shipments and should not be ticked."
 msgstr ""
 
-#: admin/views/settings/payment.php:71
+#: admin/views/settings/payment.php:73
 msgid "COD Additional Service Code"
 msgstr ""
 
-#: admin/views/settings/payment.php:75
+#: admin/views/settings/payment.php:77
 msgid "PTT's payment-on-delivery service code — default: "
 msgstr ""
 
-#: admin/views/settings/payment.php:77
+#: admin/views/settings/payment.php:79
 msgid "Change this if the PTT integration team gave you a different code, such as the combination DKUA."
 msgstr ""
 
-#: admin/views/settings/payment.php:80
+#: admin/views/settings/payment.php:82
 msgid "The code is merged automatically with the fixed code in Shipment Defaults → Additional Service Code, for example DK + OS = DKOS."
 msgstr ""
 
-#: admin/views/settings/payment.php:87
+#: admin/views/settings/payment.php:89
 msgid "Reminder:"
 msgstr ""
 
-#: admin/views/settings/payment.php:88
+#: admin/views/settings/payment.php:90
 msgid "Cash-on-delivery shipments are sent to PTT as collect-on-delivery. PTT transfers the collected amount to your Postal Cheque account. Contact your PTT branch to verify the account."
 msgstr ""
 
-#: admin/views/settings/payment.php:93
+#: admin/views/settings/payment.php:95
 msgid "Insurance is toggled per order in the Ship popup. When enabled, the PTT envelope carries:"
 msgstr ""
 
-#: admin/views/settings/payment.php:102
+#: admin/views/settings/payment.php:104
 msgid "Insurance Additional Service Code"
 msgstr ""
 
-#: admin/views/settings/payment.php:106
+#: admin/views/settings/payment.php:108
 msgid "PTT's Valuable Goods code — default: "
 msgstr ""
 
-#: admin/views/settings/payment.php:114
+#: admin/views/settings/payment.php:116
 msgid "When both cash on delivery and valuable goods are active, the service codes are merged in the PTT envelope, for example DKUA + OS = DKUAOS."
 msgstr ""
 
-#: admin/views/settings/products.php:18
+#: admin/views/settings/products.php:20
 msgid "Order Filter"
 msgstr ""
 
-#: admin/views/settings/products.php:19
+#: admin/views/settings/products.php:21
 msgid "If you select products below, only orders containing them appear in the Orders list. Leave empty to list every order in an eligible status."
 msgstr ""
 
-#: admin/views/settings/products.php:23
+#: admin/views/settings/products.php:25
 msgid "Products to Include"
 msgstr ""
 
-#: admin/views/settings/products.php:30
+#: admin/views/settings/products.php:32
 msgid "Search by product name..."
 msgstr ""
 
-#: admin/views/settings/products.php:44
+#: admin/views/settings/products.php:46
 msgid "Search by product name or SKU. Orders containing the selected products are included."
 msgstr ""
 
-#: admin/views/settings/products.php:57
+#: admin/views/settings/products.php:49
 msgid "Comma-separated list of product IDs. The WooCommerce admin script needed for the product search widget could not be loaded."
 msgstr ""
 
-#: admin/views/settings/products.php:64
+#: admin/views/settings/products.php:56
 msgid "Order Statuses"
 msgstr ""
 
-#: admin/views/settings/products.php:67
+#: admin/views/settings/products.php:59
 msgid "Statuses to List"
 msgstr ""
 
-#: admin/views/settings/products.php:79
+#: admin/views/settings/products.php:71
 msgid "Only orders in the selected statuses appear in the Orders list."
 msgstr ""
 
-#: admin/views/settings/sender.php:8
+#: admin/views/settings/sender.php:10
 msgid "Sender Details"
 msgstr ""
 
-#: admin/views/settings/sender.php:9
+#: admin/views/settings/sender.php:11
 msgid "These details go into the shipment record sent to PTT and appear at the bottom of the label. Filling in every field avoids missing-data errors when sending."
 msgstr ""
 
-#: admin/views/settings/sender.php:13
+#: admin/views/settings/sender.php:15
 msgid "Sender Name"
 msgstr ""
 
-#: admin/views/settings/sender.php:16
+#: admin/views/settings/sender.php:18
 msgid "Your shop or company name, sent with kabulEkle2. Also used as the label title when the title field is empty."
 msgstr ""
 
-#: admin/views/settings/sender.php:20
+#: admin/views/settings/sender.php:22
 msgid "Sender Surname"
 msgstr ""
 
-#: admin/views/settings/sender.php:24
+#: admin/views/settings/sender.php:26
 msgid "Only the PTT courier service (siparisIstekEkle2) expects the first and last name separately. If empty, the last word of the sender name is used as the surname."
 msgstr ""
 
-#: admin/views/settings/sender.php:32
+#: admin/views/settings/sender.php:34
 msgid "Neighbourhood, street, building and apartment."
 msgstr ""
 
-#: admin/views/settings/sender.php:36
-#: includes/class-admin-page.php:177
+#: admin/views/settings/sender.php:38
+#: includes/class-admin-page.php:180
 msgid "Province"
 msgstr ""
 
-#: admin/views/settings/sender.php:40
-#: includes/class-admin-page.php:178
+#: admin/views/settings/sender.php:42
+#: includes/class-admin-page.php:181
 msgid "District"
 msgstr ""
 
-#: admin/views/settings/sender.php:44
+#: admin/views/settings/sender.php:46
 msgid "Postcode"
 msgstr ""
 
-#: admin/views/settings/sender.php:48
+#: admin/views/settings/sender.php:50
 msgid "Phone"
 msgstr ""
 
-#: admin/views/settings/sender.php:51
+#: admin/views/settings/sender.php:53
 msgid "PTT expects 10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
 msgstr ""
 
-#: admin/views/settings/sender.php:55
-#: includes/class-admin-page.php:180
+#: admin/views/settings/sender.php:57
+#: includes/class-admin-page.php:183
 msgid "Email"
 msgstr ""
 
-#: admin/views/settings/sender.php:59
+#: admin/views/settings/sender.php:61
 msgid "Postal Cheque Account Number"
 msgstr ""
 
-#: admin/views/settings/sender.php:63
+#: admin/views/settings/sender.php:65
 msgid "The 8-digit PTT Bank account number opened at a PTT branch. It is stated in your PTT integration email."
 msgstr ""
 
-#: admin/views/settings/sender.php:65
+#: admin/views/settings/sender.php:67
 msgid "Required for cash-on-delivery shipments — sent in the PTT envelope as the <code>rezerve1</code> field."
 msgstr ""
 
-#: admin/views/settings/sender.php:71
-#: admin/views/settings/sender.php:94
+#: admin/views/settings/sender.php:73
+#: admin/views/settings/sender.php:96
 msgid "Return Address"
 msgstr ""
 
-#: admin/views/settings/sender.php:73
+#: admin/views/settings/sender.php:75
 msgid "By default, undeliverable parcels are returned to the sender address. Fill in the fields below if returns should go somewhere else, such as a warehouse."
 msgstr ""
 
-#: admin/views/settings/sender.php:78
+#: admin/views/settings/sender.php:80
 msgid "Different Return Address"
 msgstr ""
 
-#: admin/views/settings/sender.php:82
+#: admin/views/settings/sender.php:84
 msgid "The return address differs from the sender address"
 msgstr ""
 
-#: admin/views/settings/sender.php:85
+#: admin/views/settings/sender.php:87
 msgid "When unticked, the fields below are not sent to PTT and returns go to the sender address."
 msgstr ""
 
-#: admin/views/settings/sender.php:90
+#: admin/views/settings/sender.php:92
 msgid "Return Recipient Name"
 msgstr ""
 
-#: admin/views/settings/sender.php:98
+#: admin/views/settings/sender.php:100
 msgid "Return Province"
 msgstr ""
 
-#: admin/views/settings/sender.php:102
+#: admin/views/settings/sender.php:104
 msgid "Return District"
 msgstr ""
 
-#: admin/views/settings/sender.php:106
+#: admin/views/settings/sender.php:108
 msgid "Return Phone"
 msgstr ""
 
-#: admin/views/settings/sender.php:109
+#: admin/views/settings/sender.php:111
 msgid "10 digits (5xxxxxxxxx). A leading 0 or 90 is trimmed automatically."
 msgstr ""
 
-#: admin/views/settings/sender.php:113
+#: admin/views/settings/sender.php:115
 msgid "Return Email"
+msgstr ""
+
+#. translators: %s: PHP version running on the server.
+#: barkoda-shipping-for-woocommerce.php:39
+#, php-format
+msgid "Barkoda Shipping for WooCommerce requires PHP 7.4 or newer. This server runs %s."
+msgstr ""
+
+#: barkoda-shipping-for-woocommerce.php:92
+msgid "Barkoda Shipping for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""
 
 #: includes/class-admin-page.php:57
 #: includes/class-wc-integration.php:53
 #: includes/class-wc-integration.php:57
-#: includes/class-wc-integration.php:237
-msgid "PTT Kargo"
+#: includes/class-wc-integration.php:239
+msgid "Barkoda"
 msgstr ""
 
 #: includes/class-admin-page.php:67
@@ -1031,287 +1036,295 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: includes/class-admin-page.php:94
+msgid "Integration Log"
+msgstr ""
+
 #: includes/class-admin-page.php:95
 msgid "Logs"
 msgstr ""
 
-#: includes/class-admin-page.php:143
+#: includes/class-admin-page.php:145
 msgid "Sending..."
 msgstr ""
 
-#: includes/class-admin-page.php:144
+#: includes/class-admin-page.php:146
 msgid "Success! Barcode: "
 msgstr ""
 
-#: includes/class-admin-page.php:145
+#: includes/class-admin-page.php:147
 msgid "Error: "
 msgstr ""
 
-#: includes/class-admin-page.php:148
+#: includes/class-admin-page.php:150
 msgid "Some fields are missing. You can leave them empty or fill them in below."
 msgstr ""
 
-#: includes/class-admin-page.php:154
+#: includes/class-admin-page.php:156
 msgid "Server error."
 msgstr ""
 
-#: includes/class-admin-page.php:155
+#: includes/class-admin-page.php:157
 msgid "Could not prepare the shipment."
 msgstr ""
 
-#: includes/class-admin-page.php:156
+#: includes/class-admin-page.php:158
 msgid "Could not query tracking."
 msgstr ""
 
-#: includes/class-admin-page.php:158
+#: includes/class-admin-page.php:160
 msgid "Status:"
 msgstr ""
 
-#: includes/class-admin-page.php:159
+#: includes/class-admin-page.php:161
 msgid "Movements:"
 msgstr ""
 
-#: includes/class-admin-page.php:160
+#: includes/class-admin-page.php:162
 msgid "Testing..."
 msgstr ""
 
-#: includes/class-admin-page.php:161
+#: includes/class-admin-page.php:163
 msgid "The record sent to PTT for this order will be deleted. The old barcode cannot be reused, and resending the order will consume a new one. Continue?"
 msgstr ""
 
-#: includes/class-admin-page.php:162
+#: includes/class-admin-page.php:164
 msgid "Cancelling..."
 msgstr ""
 
-#: includes/class-admin-page.php:163
-#: includes/class-admin-page.php:626
+#: includes/class-admin-page.php:165
+#: includes/class-admin-page.php:633
 msgid "The PTT shipment was cancelled."
 msgstr ""
 
-#: includes/class-admin-page.php:164
+#: includes/class-admin-page.php:166
 msgid "Cancellation failed: "
 msgstr ""
 
-#: includes/class-admin-page.php:166
+#: includes/class-admin-page.php:168
 msgid "Send Insured (Valuable Goods)"
 msgstr ""
 
-#: includes/class-admin-page.php:168
+#: includes/class-admin-page.php:170
 msgid "Cash on delivery active:"
 msgstr ""
 
-#: includes/class-admin-page.php:169
+#: includes/class-admin-page.php:171
 msgid "Current PTT branch"
 msgstr ""
 
-#: includes/class-admin-page.php:170
+#: includes/class-admin-page.php:172
 msgid "Requesting courier..."
 msgstr ""
 
-#: includes/class-admin-page.php:171
+#: includes/class-admin-page.php:173
 msgid "Courier request accepted!"
 msgstr ""
 
-#: includes/class-admin-page.php:172
+#: includes/class-admin-page.php:174
 msgid "Courier request failed: "
 msgstr ""
 
 #: includes/class-admin-page.php:175
+msgid "All log records will be deleted. Are you sure?"
+msgstr ""
+
+#: includes/class-admin-page.php:178
 msgid "Recipient Name"
 msgstr ""
 
-#: includes/class-admin-page.php:179
+#: includes/class-admin-page.php:182
 msgid "Phone (10 digits, no leading zero)"
 msgstr ""
 
-#: includes/class-admin-page.php:183
+#: includes/class-admin-page.php:186
 msgid "Weight (g)"
 msgstr ""
 
-#: includes/class-admin-page.php:184
+#: includes/class-admin-page.php:187
 msgid "Volumetric Weight"
 msgstr ""
 
-#: includes/class-admin-page.php:185
+#: includes/class-admin-page.php:188
 msgid "Width (cm)"
 msgstr ""
 
-#: includes/class-admin-page.php:186
+#: includes/class-admin-page.php:189
 msgid "Length (cm)"
 msgstr ""
 
-#: includes/class-admin-page.php:187
+#: includes/class-admin-page.php:190
 msgid "Height (cm)"
 msgstr ""
 
-#: includes/class-admin-page.php:190
+#: includes/class-admin-page.php:193
 msgid "Retry:"
 msgstr ""
 
-#: includes/class-admin-page.php:191
+#: includes/class-admin-page.php:194
 msgid "will be reused — no new barcode is consumed."
 msgstr ""
 
-#: includes/class-admin-page.php:193
+#: includes/class-admin-page.php:196
 msgid "Waybill Number (optional)"
 msgstr ""
 
-#: includes/class-admin-page.php:194
+#: includes/class-admin-page.php:197
 msgid "A count above 1 switches to PTT's kabulEkleParcaliBarkod service. Each package consumes one barcode from the same range."
 msgstr ""
 
-#: includes/class-admin-page.php:195
+#: includes/class-admin-page.php:198
 msgid "more packages"
 msgstr ""
 
-#: includes/class-admin-page.php:196
-#: includes/class-admin-page.php:659
+#: includes/class-admin-page.php:199
+#: includes/class-admin-page.php:666
 msgid "Enter a valid package count."
 msgstr ""
 
-#: includes/class-admin-page.php:197
+#: includes/class-admin-page.php:200
 msgid "Order ID: "
 msgstr ""
 
-#: includes/class-admin-page.php:200
+#: includes/class-admin-page.php:203
 #: includes/class-customer-tracking.php:134
 msgid "Shipment Tracking"
 msgstr ""
 
-#: includes/class-admin-page.php:201
+#: includes/class-admin-page.php:204
 msgid "The barcode query returned nothing; the shipment was found by reference number."
 msgstr ""
 
-#: includes/class-admin-page.php:202
+#: includes/class-admin-page.php:205
 msgid "Queried by reference number."
 msgstr ""
 
-#: includes/class-admin-page.php:203
+#: includes/class-admin-page.php:206
 msgid "No movements yet."
 msgstr ""
 
-#: includes/class-admin-page.php:204
+#: includes/class-admin-page.php:207
 msgid "Recipient:"
 msgstr ""
 
-#: includes/class-admin-page.php:205
+#: includes/class-admin-page.php:208
 msgid "Sender:"
 msgstr ""
 
-#: includes/class-admin-page.php:206
+#: includes/class-admin-page.php:209
 msgid "Date / Time"
 msgstr ""
 
-#: includes/class-admin-page.php:208
+#: includes/class-admin-page.php:211
 msgid "Branch"
 msgstr ""
 
-#: includes/class-admin-page.php:209
+#: includes/class-admin-page.php:212
 msgid "Close"
 msgstr ""
 
-#: includes/class-admin-page.php:212
+#: includes/class-admin-page.php:215
 msgid "Collection deadline:"
 msgstr ""
 
-#: includes/class-admin-page.php:213
+#: includes/class-admin-page.php:216
 msgid "Show on map"
 msgstr ""
 
-#: includes/class-admin-page.php:214
+#: includes/class-admin-page.php:217
 msgid "Could not retrieve drop point information: "
 msgstr ""
 
-#: includes/class-admin-page.php:215
+#: includes/class-admin-page.php:218
 msgid "Raw PTT response"
 msgstr ""
 
-#: includes/class-admin-page.php:216
+#: includes/class-admin-page.php:219
 msgid "Raw drop point response"
 msgstr ""
 
-#: includes/class-admin-page.php:219
+#: includes/class-admin-page.php:222
 msgid "Select Logo"
 msgstr ""
 
-#: includes/class-admin-page.php:220
+#: includes/class-admin-page.php:223
 msgid "Use this image"
 msgstr ""
 
-#: includes/class-admin-page.php:229
-#: includes/class-admin-page.php:240
-#: includes/class-admin-page.php:247
-#: includes/class-admin-page.php:254
-#: includes/class-admin-page.php:263
-#: includes/class-admin-page.php:311
-#: includes/class-admin-page.php:321
-#: includes/class-admin-page.php:342
-#: includes/class-admin-page.php:390
-#: includes/class-admin-page.php:570
-#: includes/class-admin-page.php:641
-#: includes/class-admin-page.php:692
-#: includes/class-admin-page.php:726
+#: includes/class-admin-page.php:232
+#: includes/class-admin-page.php:245
+#: includes/class-admin-page.php:252
+#: includes/class-admin-page.php:259
+#: includes/class-admin-page.php:268
+#: includes/class-admin-page.php:318
+#: includes/class-admin-page.php:328
+#: includes/class-admin-page.php:349
+#: includes/class-admin-page.php:397
+#: includes/class-admin-page.php:577
+#: includes/class-admin-page.php:648
+#: includes/class-admin-page.php:699
+#: includes/class-admin-page.php:733
 msgid "Unauthorised"
 msgstr ""
 
-#: includes/class-admin-page.php:315
+#: includes/class-admin-page.php:322
 msgid "Logs cleared."
 msgstr ""
 
-#: includes/class-admin-page.php:348
-#: includes/class-admin-page.php:398
-#: includes/class-admin-page.php:576
-#: includes/class-admin-page.php:732
-#: includes/class-label.php:183
+#: includes/class-admin-page.php:355
+#: includes/class-admin-page.php:405
+#: includes/class-admin-page.php:583
+#: includes/class-admin-page.php:739
+#: includes/class-label.php:163
 msgid "Order not found."
 msgstr ""
 
-#: includes/class-admin-page.php:353
-#: includes/class-admin-page.php:403
+#: includes/class-admin-page.php:360
+#: includes/class-admin-page.php:410
 msgid "A barcode already exists for this order: "
 msgstr ""
 
-#: includes/class-admin-page.php:475
+#: includes/class-admin-page.php:482
 msgid "The barcode range is exhausted. Please define a new range in the settings."
 msgstr ""
 
-#: includes/class-admin-page.php:487
+#: includes/class-admin-page.php:494
 msgid "The barcode range is too small; there are not enough barcodes for every package."
 msgstr ""
 
-#: includes/class-admin-page.php:519
+#: includes/class-admin-page.php:526
 msgid "Sending to PTT failed."
 msgstr ""
 
-#: includes/class-admin-page.php:554
+#: includes/class-admin-page.php:561
 msgid "Shipment created."
 msgstr ""
 
-#: includes/class-admin-page.php:586
+#: includes/class-admin-page.php:593
 msgid "No cancellable PTT record was found for this order."
 msgstr ""
 
-#: includes/class-admin-page.php:602
+#: includes/class-admin-page.php:609
 msgid "The PTT cancellation request failed."
 msgstr ""
 
-#: includes/class-admin-page.php:668
+#: includes/class-admin-page.php:675
 msgid "Courier request accepted."
 msgstr ""
 
-#: includes/class-admin-page.php:677
+#: includes/class-admin-page.php:684
 msgid "Courier request failed."
 msgstr ""
 
-#: includes/class-admin-page.php:705
+#: includes/class-admin-page.php:712
 msgid "A barcode is required."
 msgstr ""
 
-#: includes/class-admin-page.php:715
+#: includes/class-admin-page.php:722
 msgid "Could not retrieve drop point information."
 msgstr ""
 
-#: includes/class-admin-page.php:739
+#: includes/class-admin-page.php:746
 msgid "This order has no barcode or reference number to track."
 msgstr ""
 
@@ -1329,74 +1342,74 @@ msgstr ""
 msgid "Track your shipment"
 msgstr ""
 
-#: includes/class-label.php:33
-#: includes/class-label.php:176
-#: includes/class-label.php:204
+#: includes/class-label.php:49
+#: includes/class-label.php:156
+#: includes/class-label.php:184
 msgid "Unauthorised."
 msgstr ""
 
-#: includes/class-label.php:40
+#: includes/class-label.php:56
 msgid "No orders were selected for label printing."
 msgstr ""
 
-#: includes/class-label.php:83
+#: includes/class-label.php:99
 msgid "None of the selected orders has a printable barcode."
 msgstr ""
 
 #. translators: %d: number of labels in the document
-#: includes/class-label.php:115
+#: includes/class-label.php:131
 #, php-format
 msgid "PTT Bulk Labels (%d)"
 msgstr ""
 
-#: includes/class-label.php:188
+#: includes/class-label.php:168
 msgid "No PTT barcode has been created for this order yet."
 msgstr ""
 
-#: includes/class-label.php:297
+#: includes/class-label.php:279
 msgid "Sample Customer"
 msgstr ""
 
-#: includes/class-label.php:298
+#: includes/class-label.php:280
 msgid "Sample Neighbourhood, Example Street No:1 Apt:2"
 msgstr ""
 
-#: includes/class-label.php:299
+#: includes/class-label.php:281
 msgid "Kadıköy"
 msgstr ""
 
-#: includes/class-label.php:300
+#: includes/class-label.php:282
 msgid "İstanbul"
 msgstr ""
 
-#: includes/class-label.php:303
+#: includes/class-label.php:285
 msgid "Sample Product 1"
 msgstr ""
 
-#: includes/class-label.php:303
+#: includes/class-label.php:285
 msgid "Sample Product 2"
 msgstr ""
 
-#: includes/class-label.php:422
+#: includes/class-label.php:379
 msgid "Recipient"
 msgstr ""
 
-#: includes/class-label.php:443
+#: includes/class-label.php:400
 msgid "Shipment Barcode"
 msgstr ""
 
 #. translators: 1: barcode 2: reference number 3: PTT response message
-#: includes/class-orders.php:502
+#: includes/class-orders.php:504
 #, php-format
 msgid "PTT Kargo: shipment created. Barcode: %1$s, reference: %2$s. PTT response: %3$s"
 msgstr ""
 
-#: includes/class-orders.php:529
+#: includes/class-orders.php:531
 msgid "PTT Kargo error: "
 msgstr ""
 
 #. translators: 1: previous barcode 2: PTT response message
-#: includes/class-orders.php:589
+#: includes/class-orders.php:591
 #, php-format
 msgid "PTT Kargo: shipment cancelled (previous barcode: %1$s). PTT response: %2$s"
 msgstr ""
@@ -1405,9 +1418,9 @@ msgstr ""
 #: includes/class-ptt-client.php:180
 #: includes/class-ptt-client.php:221
 #: includes/class-ptt-client.php:383
-#: includes/class-ptt-client.php:524
-#: includes/class-ptt-client.php:604
-#: includes/class-ptt-client.php:696
+#: includes/class-ptt-client.php:525
+#: includes/class-ptt-client.php:605
+#: includes/class-ptt-client.php:697
 msgid "The PTT customer number or password is missing from the settings."
 msgstr ""
 
@@ -1421,18 +1434,18 @@ msgstr ""
 
 #. translators: %d: HTTP status code
 #: includes/class-ptt-client.php:314
-#: includes/class-ptt-client.php:508
-#: includes/class-ptt-client.php:781
-#: includes/class-ptt-client.php:981
+#: includes/class-ptt-client.php:509
+#: includes/class-ptt-client.php:783
+#: includes/class-ptt-client.php:984
 #, php-format
 msgid "The PTT service returned HTTP status %d."
 msgstr ""
 
 #: includes/class-ptt-client.php:329
-#: includes/class-ptt-client.php:1149
-#: includes/class-ptt-client.php:1358
-#: includes/class-ptt-client.php:1501
-#: includes/class-ptt-client.php:1586
+#: includes/class-ptt-client.php:1152
+#: includes/class-ptt-client.php:1361
+#: includes/class-ptt-client.php:1504
+#: includes/class-ptt-client.php:1589
 msgid "Empty response from the PTT service."
 msgstr ""
 
@@ -1456,45 +1469,45 @@ msgstr ""
 msgid "A sender phone number or email is required; PTT needs at least one of them."
 msgstr ""
 
-#: includes/class-ptt-client.php:614
+#: includes/class-ptt-client.php:615
 msgid "The reference number is empty."
 msgstr ""
 
-#: includes/class-ptt-client.php:707
+#: includes/class-ptt-client.php:708
 msgid "The package count is invalid."
 msgstr ""
 
-#: includes/class-ptt-client.php:880
+#: includes/class-ptt-client.php:882
 msgid "No customer number or password has been entered."
 msgstr ""
 
 #. translators: %s: network error message
-#: includes/class-ptt-client.php:948
+#: includes/class-ptt-client.php:950
 #, php-format
 msgid "Could not connect: %s"
 msgstr ""
 
 #. translators: %s: SOAP fault reason returned by PTT
-#: includes/class-ptt-client.php:971
+#: includes/class-ptt-client.php:973
 #, php-format
 msgid "PTT rejected the request: %s"
 msgstr ""
 
-#: includes/class-ptt-client.php:988
+#: includes/class-ptt-client.php:991
 msgid "LIVE"
 msgstr ""
 
-#: includes/class-ptt-client.php:988
+#: includes/class-ptt-client.php:991
 msgid "TEST"
 msgstr ""
 
 #. translators: %s: environment name, TEST or LIVE
-#: includes/class-ptt-client.php:993
+#: includes/class-ptt-client.php:996
 #, php-format
 msgid "✓ Connection successful (%s environment). The customer number and password are correct."
 msgstr ""
 
-#: includes/class-ptt-client.php:1177
+#: includes/class-ptt-client.php:1180
 msgid "The barcode is not in the PTT system yet, or has not been processed."
 msgstr ""
 
@@ -1521,11 +1534,7 @@ msgid "PTT Kargo: Print Labels in Bulk"
 msgstr ""
 
 #. translators: 1: sent count, 2: skipped count, 3: error count
-#: includes/class-wc-integration.php:214
+#: includes/class-wc-integration.php:216
 #, php-format
 msgid "PTT Kargo bulk: %1$d sent, %2$d skipped (already have a barcode), %3$d failed."
-msgstr ""
-
-#: barkoda-shipping-for-woocommerce.php:86
-msgid "Barkoda Shipping for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""

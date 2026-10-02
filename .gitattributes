@@ -33,7 +33,8 @@
 /assets         export-ignore
 /README.tr.md   export-ignore
 
-# Translations are served from translate.wordpress.org once the plugin is listed,
-# so the compiled catalogues stay in the repository but ship no longer.
+# Translations are delivered by translate.wordpress.org once the plugin is listed,
+# so the catalogues stay in the repository for translators but do not ship. Only
+# the .pot travels with the plugin, as the source string list.
 /languages/*.po export-ignore
 /languages/*.mo export-ignore

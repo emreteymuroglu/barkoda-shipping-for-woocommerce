@@ -1,0 +1,42 @@
+name: Deploy to WordPress.org
+
+# Pushing a plain version tag publishes that tag to the plugin directory. The tag
+# name becomes the Subversion tag, so it must match the readme's Stable tag and
+# carry no "v" prefix: the directory only accepts digits and periods there.
+#
+# It can also be started by hand, which runs everything except the final
+# Subversion commit. That is worth doing once before the first real release, to
+# check the credentials and see which files would be published.
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to rehearse, e.g. 2.2.0
+        required: true
+
+jobs:
+  deploy:
+    name: Publish ${{ github.event.inputs.version || github.ref_name }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@v4
+
+      - name: Deploy to the plugin directory
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          dry-run: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          VERSION: ${{ github.event.inputs.version || github.ref_name }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: barkoda-shipping-for-woocommerce
+          # Banners, icons and screenshots. The action copies this directory to
+          # the repository's top-level assets/, beside trunk and tags.
+          ASSETS_DIR: assets
+        # Which files reach trunk is decided by the export-ignore rules in
+        # .gitattributes, the same ones that shape the release archive.

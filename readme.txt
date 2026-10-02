@@ -106,14 +106,14 @@ PTT runs acceptance and tracking on separate databases in test, so a barcode acc
 
 = Is the plugin available in Turkish? =
 
-Yes. A Turkish translation ships with the plugin and is used automatically when your site language is Turkish.
+Yes. The Turkish translation is served through translate.wordpress.org, so WordPress fetches and applies it by itself on a site running in Turkish, and updates it whenever the translation improves. Corrections and other languages are welcome at https://translate.wordpress.org/projects/wp-plugins/barkoda-shipping-for-woocommerce/.
 
 == Screenshots ==
 
 1. The order list with the Ship action and PTT status per order.
 2. The shipment popup, showing recipient data, auto-computed weight and dimensions, and the insurance toggle.
 3. An 80mm thermal label with the Code128 barcode.
-4. The tracking modal with parcel movements and the current PTT branch.
+4. The panel on the order edit screen, with the barcode, the tracking link and the label and cancel actions.
 5. The settings screen with the live label preview.
 6. The integration log, showing the full request and response for each SOAP call.
 
