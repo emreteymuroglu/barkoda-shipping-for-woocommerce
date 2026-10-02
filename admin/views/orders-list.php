@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var string $show */
 ?>
 <div class="wrap wc-ptt-wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'PTT Kargo Orders', 'barkoda-shipping-for-woocommerce' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Shipping Orders', 'barkoda-shipping-for-woocommerce' ); ?></h1>
 	<hr class="wp-header-end">
 
 	<ul class="subsubsub">

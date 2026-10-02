@@ -292,7 +292,7 @@ msgid "Send to PTT Kargo"
 msgstr ""
 
 #: admin/views/orders-list.php:11
-msgid "PTT Kargo Orders"
+msgid "Shipping Orders"
 msgstr ""
 
 #: admin/views/orders-list.php:15
@@ -378,7 +378,7 @@ msgid "Products"
 msgstr ""
 
 #: admin/views/orders-table.php:19
-msgid "PTT Status"
+msgid "Shipping Status"
 msgstr ""
 
 #: admin/views/orders-table.php:20

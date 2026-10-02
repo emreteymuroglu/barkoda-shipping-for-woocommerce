@@ -296,8 +296,8 @@ msgid "Send to PTT Kargo"
 msgstr "PTT Kargoya Gönder"
 
 #: admin/views/orders-list.php:11
-msgid "PTT Kargo Orders"
-msgstr "PTT Kargo Siparişleri"
+msgid "Shipping Orders"
+msgstr "Kargo Siparişleri"
 
 #: admin/views/orders-list.php:15
 msgid "Pending"
@@ -382,8 +382,8 @@ msgid "Products"
 msgstr "Ürünler"
 
 #: admin/views/orders-table.php:19
-msgid "PTT Status"
-msgstr "PTT Durumu"
+msgid "Shipping Status"
+msgstr "Kargo Durumu"
 
 #: admin/views/orders-table.php:20
 #: includes/class-admin-page.php:210

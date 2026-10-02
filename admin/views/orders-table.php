@@ -16,7 +16,7 @@ $label = \Barkoda_Shipping\Plugin::instance()->label();
 			<th class="col-customer"><?php esc_html_e( 'Customer', 'barkoda-shipping-for-woocommerce' ); ?></th>
 			<th class="col-address"><?php esc_html_e( 'Address', 'barkoda-shipping-for-woocommerce' ); ?></th>
 			<th class="col-items"><?php esc_html_e( 'Products', 'barkoda-shipping-for-woocommerce' ); ?></th>
-			<th class="col-status"><?php esc_html_e( 'PTT Status', 'barkoda-shipping-for-woocommerce' ); ?></th>
+			<th class="col-status"><?php esc_html_e( 'Shipping Status', 'barkoda-shipping-for-woocommerce' ); ?></th>
 			<th class="col-actions"><?php esc_html_e( 'Action', 'barkoda-shipping-for-woocommerce' ); ?></th>
 		</tr>
 	</thead>
